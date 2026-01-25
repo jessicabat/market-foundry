@@ -15,20 +15,23 @@ def get_basename(file_path):
 
 # Load file based on its extension
 def load_file(file_path):
-    if file_path.endswith(".pdf"):
-        loader = PyPDFLoader(file_path)
-    elif file_path.endswith(".txt"):
-        loader = TextLoader(file_path)
-    elif file_path.endswith(".docx"):
-        loader = Docx2txtLoader(file_path)
-    elif file_path.endswith(".html"):
-        loader = BSHTMLLoader(file_path)
-    elif file_path.endswith(".json"):
-        loader = JSONLoader(file_path)
-    else:
-        raise ValueError("Unsupported file format")
-
-    return loader.load()
+    try:
+        if file_path.endswith(".pdf"):
+            loader = PyPDFLoader(file_path)
+        elif file_path.endswith(".txt"):
+            loader = TextLoader(file_path)
+        elif file_path.endswith(".docx"):
+            loader = Docx2txtLoader(file_path)
+        elif file_path.endswith(".html"):
+            loader = BSHTMLLoader(file_path)
+        elif file_path.endswith(".json"):
+            loader = JSONLoader(file_path, jq_schema=".text")
+        else:
+            raise ValueError("Unsupported file format")
+        return loader.load()
+    except Exception as e:
+        print(f"Skipping file due to load error: {file_path} ({e})")
+        return []
 
 # Load multiple files given a list of file paths
 def load_files(file_paths):
