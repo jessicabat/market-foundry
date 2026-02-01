@@ -65,5 +65,8 @@ def main():
     # Output the classifications
     output_classifications(classifications)
     
+    # Run OneKE for knowledge extraction
+    run_oneke_extraction(classifications)
+    
 if __name__ == "__main__":
     main()

@@ -249,7 +249,7 @@ class DeepSeek(BaseEngine):
         return response.choices[0].message.content
 
 class LocalServer(BaseEngine):
-    def __init__(self, model_name_or_path: str, base_url="http://localhost:8000/v1"):
+    def __init__(self, model_name_or_path: str, base_url="http://localhost:1234/v1"):
         self.name = model_name_or_path.split('/')[-1]
         self.model = model_name_or_path
         self.base_url = base_url
@@ -273,6 +273,6 @@ class LocalServer(BaseEngine):
             )
             return response.choices[0].message.content
         except ConnectionError:
-            print("Error: Unable to connect to the server. Please check if the vllm service is running and the port is 8080.")
+            print("Error: Unable to connect to the server. Please check if the vllm service is running and the port is 1234.")
         except Exception as e:
             print(f"Error: {e}")

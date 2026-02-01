@@ -3,6 +3,9 @@ Functions to process text and files for data extraction tasks. Supported file fo
 """
 
 import os
+import yaml
+import tempfile
+import subprocess
 import joblib
 import pandas as pd
 from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2txtLoader, BSHTMLLoader, JSONLoader
@@ -103,3 +106,65 @@ SECTION_HEADERS = {
     "conclusion": ["conclusion", "concluding remarks"],
 }
 
+"""
+Routing to OneKE/src.run.py for Knowledge Exraction
+"""
+
+
+# Resolve repository root (two levels up from this file)
+REPO_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..")
+)
+
+CONFIG_DIR = os.path.join(REPO_ROOT, "Configs")
+ONEKE_RUN = os.path.join(REPO_ROOT, "OneKE", "src", "run.py")
+
+CLASS_TO_CONFIG = {
+    "Balance Sheets": "balance_sheets.yaml",
+    "Cash Flow": "cash_flow.yaml",
+    "Income Statement": "income_statement.yaml",
+    "Earnings Call Transcript": "earnings_call.yaml",
+    "News Article": "news_article.yaml",
+    "Research Paper": "research_paper.yaml",
+    "SEC Filing": "sec_filing.yaml",
+    "Press Release": "press_release.yaml",
+    "Notes": "notes.yaml",
+}
+
+def run_oneke_extraction(classifications):
+    for file_path, document_type in classifications.items():
+        base_config_name = CLASS_TO_CONFIG.get(document_type)
+        if base_config_name is None:
+            continue
+
+        base_config_path = os.path.join(CONFIG_DIR, base_config_name)
+
+        # Load base config
+        with open(base_config_path, "r") as f:
+            config = yaml.safe_load(f)
+
+        # Overwrite file_path (and ensure use_file is true)
+        config["extraction"]["use_file"] = True
+        config["extraction"]["file_path"] = file_path
+
+        # Write temp config
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".yaml", delete=False
+        ) as tmp:
+            yaml.safe_dump(config, tmp)
+            temp_config_path = tmp.name
+
+        # Run OneKE with safe cleanup
+        try:
+            subprocess.run(
+                [
+                    "python",
+                    ONEKE_RUN,
+                    "--config",
+                    temp_config_path,
+                ],
+                check=True,
+            )
+        finally:
+            if os.path.exists(temp_config_path):
+                os.remove(temp_config_path)
