@@ -110,7 +110,6 @@ SECTION_HEADERS = {
 Routing to OneKE/src.run.py for Knowledge Exraction
 """
 
-
 # Resolve repository root (two levels up from this file)
 REPO_ROOT = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..")
@@ -143,7 +142,13 @@ def run_oneke_extraction(classifications):
         with open(base_config_path, "r") as f:
             config = yaml.safe_load(f)
 
-        # Overwrite file_path (and ensure use_file is true)
+        # Modify config for specified configuration
+        # See documentation in Configs/*.yaml for details
+        config['model']['category'] = "LocalServer"
+        config['model']['model_name_or_path'] = "qwen/qwen3-4b-2507"
+        config['model']['api_key'] = ""
+        config['model']['base_url'] = "http://localhost:1234/v1"
+        
         config["extraction"]["use_file"] = True
         config["extraction"]["file_path"] = file_path
 

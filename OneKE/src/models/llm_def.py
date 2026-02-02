@@ -12,6 +12,9 @@ import openai
 import os
 from openai import OpenAI
 
+SYSTEM_PROMPT = "You are a helpful assistant. Do not think, just do as you are instructed.\n\nExtract all factual triples directly supported by the text.\nA valid triple must describe an explicit relationship stated in the text, such as classifications, attributes, associations, actions, part–whole links, temporal or spatial relations, or cause–effect statements, using wording that appears directly in the text.\n\nDo not generate triples that are not grounded in the text.\nDo not infer, imagine, or hallucinate causal links.\nDo not include abstract concepts like \"probability,\" \"chain-of-thought,\" or model internal behavior.\n\nEnsure the extracted triples are interpretable and make sense in natural language.\nConvert all extracted knowledge to lowercase to prevent case sensitivity.\nUse the exact wording (in lowercase) from the input text for head, relation, and tail whenever possible.\nAlways extract all triples that meet the criteria — do not stop after one.\nLook to chain triples together to form a more complete knowledge graph.\nEnsure head and tail are not identical and contain no empty values.\nReject any extracted triple where head, relation, or tail exceeds 5 words.\nOnly output triples in the JSON format required by the schema:\n{\n  \"head\": \"\",\n  \"head_type\": \"\",\n  \"relation\": \"\",\n  \"relation_type\": \"\",\n  \"tail\": \"\",\n  \"tail_type\": \"\"\n}"
+
+
 # The inferencing code is taken from the official documentation
 
 class BaseEngine:
@@ -264,6 +267,7 @@ class LocalServer(BaseEngine):
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
                     {"role": "user", "content": input},
                 ],
                 stream=False,

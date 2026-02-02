@@ -1,14 +1,16 @@
 model:
   # Recommend using ChatGPT or DeepSeek APIs for complex IE task.
-  category: LocalServer # model category, chosen from ChatGPT, DeepSeek, LLaMA, Qwen, ChatGLM, MiniCPM, OneKE.
-  model_name_or_path: liquid/lfm2.5-1.2b # # model name, chosen from the model list of the selected category.
+  category: # model category, chosen from ChatGPT, DeepSeek, LLaMA, Qwen, ChatGLM, MiniCPM, OneKE.
+  model_name_or_path: # model name, chosen from the model list of the selected category.
   api_key: "" # your API key for the model with API service. No need for open-source models.
-  base_url: "http://localhost:1234/v1" # # base URL for the API service. No need for open-source models.
+  base_url: "" # # base URL for the API service. No need for open-source models.
   device: auto # device to run the model, chosen from auto, cpu, cuda, cuda:0 etc. Default set to auto.
 
 extraction:
   task: Triple # task type, chosen from Base, NER, RE, EE.
   instruction: >
+    You are a helpful assistant. Do not think, just do as you are instructed.
+
     Extract all factual triples directly supported by the text. 
     A valid triple must describe an explicit relationship stated in the text, such as classifications, attributes, associations, actions, part–whole links, temporal or spatial relations, or cause–effect statements, using wording that appears directly in the text.
 
@@ -22,7 +24,7 @@ extraction:
     Always extract all triples that meet the criteria — do not stop after one.
     Look to chain triples together to form a more complete knowledge graph.
     Ensure head and tail are not identical and contain no empty values.
-    Reject any extracted triple where head, relation, or tail exceeds 15 words.
+    Reject any extracted triple where head, relation, or tail exceeds 5 words.
     Only output triples in the JSON format required by the schema:
     {
       "head": "",
