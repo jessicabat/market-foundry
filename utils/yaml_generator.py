@@ -6,13 +6,17 @@ import os
 import copy
 
 MODEL = "meta-llama/Llama-3.2-1B-Instruct"
+
 tokenizer = AutoTokenizer.from_pretrained(MODEL)
 model = AutoModelForCausalLM.from_pretrained(
     MODEL,
     dtype=torch.float16,
-    device_map="auto")
+    device_map="auto"
+)
 
-
+# -------------------------
+# BASE YAML TEMPLATE
+# -------------------------
 BASE_YAML_TEMPLATE = {
     "model": {
         "category": "Qwen",
@@ -29,7 +33,22 @@ BASE_YAML_TEMPLATE = {
     }
 }
 
+# -------------------------
+# SAFE JSON PARSE (LLM GUARD)
+# -------------------------
+def safe_json_parse(text):
+    try:
+        return json.loads(text)
+    except:
+        start = text.find("{")
+        end = text.rfind("}") + 1
+        if start != -1 and end != -1:
+            return json.loads(text[start:end])
+        raise ValueError("No valid JSON found in model output")
 
+# -------------------------
+# YAML CONFIG GENERATION
+# -------------------------
 def generate_yaml_configs(document_type, topic_map):
 
     messages = [
@@ -70,10 +89,12 @@ OUTPUT FORMAT:
   ]
 }}
 
-RULES:
+STRICT RULES:
 - Generate 2 to 4 YAML configs
-- Each config must focus on a different semantic extraction angle
-- Consider document structure + topic coverage
+- EACH file_name MUST be UNIQUE
+- Use naming pattern:
+  {document_type}_focus_area_X.yaml
+- Each config must focus on different semantic angle
 - Think like a knowledge graph engineer
 """
         }
@@ -98,7 +119,7 @@ RULES:
         skip_special_tokens=True
     ).strip()
 
-    print("\nRAW YAML MODEL RESPONSE:")
+    print("\n🔎 RAW YAML MODEL RESPONSE:")
     print("------------------------------------------------")
     print(response)
     print("------------------------------------------------")
@@ -106,14 +127,18 @@ RULES:
     if not response:
         raise ValueError("Model returned empty response")
 
-    return json.loads(response)
+    return safe_json_parse(response)
 
-
+# -------------------------
+# WRITE YAML FILES (WITH DUPLICATE GUARD)
+# -------------------------
 def write_yaml_files(config_json, output_dir="generated_yamls", input_file_path=""):
 
     os.makedirs(output_dir, exist_ok=True)
 
-    for config in config_json.get("yaml_files", []):
+    seen_files = set()
+
+    for i, config in enumerate(config_json.get("yaml_files", [])):
 
         yaml_obj = copy.deepcopy(BASE_YAML_TEMPLATE)
 
@@ -129,7 +154,15 @@ def write_yaml_files(config_json, output_dir="generated_yamls", input_file_path=
 
         yaml_obj["extraction"]["file_path"] = input_file_path
 
-        file_name = config.get("file_name", "generated_config.yaml")
+        file_name = config.get("file_name", f"generated_config_{i}.yaml")
+
+        # ✅ Python uniqueness enforcement
+        if file_name in seen_files:
+            base = file_name.replace(".yaml", "")
+            file_name = f"{base}_{i}.yaml"
+
+        seen_files.add(file_name)
+
         file_path = os.path.join(output_dir, file_name)
 
         with open(file_path, "w") as f:
@@ -137,7 +170,9 @@ def write_yaml_files(config_json, output_dir="generated_yamls", input_file_path=
 
         print(f"✅ Created YAML → {file_path}")
 
-
+# -------------------------
+# EXAMPLE RUN
+# -------------------------
 if __name__ == "__main__":
 
     topic_map = {

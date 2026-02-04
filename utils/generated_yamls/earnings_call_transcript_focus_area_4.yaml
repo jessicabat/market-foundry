@@ -1,0 +1,15 @@
+model:
+  category: Qwen
+  model_name_or_path: Qwen/Qwen2.5-0.5B-Instruct
+  device: auto
+extraction:
+  task: Triple
+  instruction: Designing knowledge extraction configurations for earnings call transcripts
+    focusing on macroeconomic risks and enterprise AI adoption.
+  constraint:
+  - - Risk Factors
+  - - Macroeconomic Risks
+    - Enterprise AI Adoption
+  use_file: true
+  file_path: example_document.pdf
+  mode: customized

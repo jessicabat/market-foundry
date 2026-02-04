@@ -1,0 +1,16 @@
+model:
+  category: Qwen
+  model_name_or_path: Qwen/Qwen2.5-0.5B-Instruct
+  device: auto
+extraction:
+  task: Triple
+  instruction: Optimizing knowledge extraction configurations for earnings call transcripts
+    focusing on enterprise AI adoption and infrastructure costs.
+  constraint:
+  - - Enterprise AI Adoption
+    - Infrastructure Costs
+  - - Revenue Growth
+    - Risk Factors
+  use_file: true
+  file_path: example_document.pdf
+  mode: customized
