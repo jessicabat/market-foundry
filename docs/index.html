@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MarketFoundry - Causal Knowledge Graphs from Financial Documents</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#overview" class="nav-logo">MarketFoundry</a>
+      <ul class="nav-menu">
+        <li><a href="#overview" class="nav-link">Overview</a></li>
+        <li><a href="#problem" class="nav-link">Problem</a></li>
+        <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+        <li><a href="#examples" class="nav-link">Examples</a></li>
+        <li><a href="#demo" class="nav-link">Demo</a></li>
+        <li><a href="#about" class="nav-link">About Us</a></li>
+        <li><a href="https://github.com/jessicabat/market-foundry" class="nav-link nav-github" target="_blank">GitHub</a></li>
+      </ul>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero / Overview Section -->
+  <section id="overview" class="hero">
+    <div class="hero-content">
+      <!-- TODO: Add logo image here -->
+      <!-- <img src="assets/marketfoundry-logo.png" alt="MarketFoundry Logo" class="logo"> -->
+      <h1 class="hero-title">MarketFoundry</h1>
+      <p class="hero-tagline">Extract causal knowledge from financial documents</p>
+      <p class="hero-subtitle">
+        Turn earnings calls, strategy decks, and internal memos into queryable causal graphs
+      </p>
+      <p class="hero-hook">
+        Financial analysts dedicate hours reading reports to understand the causal relationships 
+        driving revenue, risk, and growth. MarketFoundry treats unstructured text as a first-class 
+        data source, automatically building custom knowledge graphs that answer "Why did Q3 miss?" 
+        or "What caused churn?" with evidence from across your entire document corpus.
+      </p>
+
+      <div class="cta-buttons">
+        <a href="#demo" class="btn btn-primary">See the Demo</a>
+        <a href="#how-it-works" class="btn btn-secondary">How it Works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem Section -->
+<section id="problem" class="section">
+  <div class="container">
+    <h2 class="section-title">The Problem We Solve</h2>
+    <div class="problem-content">
+      <div class="problem-text">
+        <h3>The Challenge</h3>
+        <p>
+          Financial decision-making relies heavily on <strong>unstructured text data</strong>—
+          earnings call transcripts, strategy memos, press releases—yet this qualitative 
+          information is just as critical as numerical data. Causal claims like "higher pricing 
+          drove 15% revenue lift" or "omnichannel expansion accelerated branded TPV growth" 
+          contain the <em>why</em> behind the numbers.
+        </p>
+        <p>
+          Analysts dedicate countless hours manually reading through hundreds of pages across 
+          PDFs, Word documents, and HTML to piece together causal relationships. This manual 
+          process doesn't scale, and valuable insights remain scattered across document silos.
+        </p>
+        <h3>Our Solution</h3>
+        <p class="overview-summary">
+          We built a document-aware pipeline with <strong>custom extraction configurations</strong> 
+          for every financial document type. Each document—whether an earnings call, strategy deck, 
+          or internal memo—gets intelligently classified, sectioned, and routed to specialized schemas 
+          that capture the most accurate causal relationships. The result: a unified knowledge graph 
+          treating your unstructured text as rigorously as numerical data.
+        </p>
+
+        <!-- <p>
+          Instead of reading 100+ pages to answer "What drove Q3's margin expansion?", query 
+          a unified knowledge graph built from all your documents. Our system synthesizes evidence 
+          from 50+ sources with complete citations and causal chains, treating unstructured text 
+          as a first-class data source alongside your quantitative metrics.
+        </p> -->
+      </div>
+      <div class="problem-visual">
+        <!-- TODO: Add before/after diagram -->
+        <!-- <img src="assets/before-after.png" alt="Raw PDF to Knowledge Graph"> -->
+        <div class="visual-placeholder">
+          <div class="visual-icon">📄 📄 📄</div>
+          <div class="visual-arrow">↓</div>
+          <div class="visual-icon">🕸️</div>
+          <p class="visual-caption">Unstructured Documents → Structured Knowledge Graph</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-intro">
+        MarketFoundry uses a document-aware pipeline that intelligently processes each financial 
+        document type to extract the most valuable causal relationships.
+      </p>
+      
+      <div class="architecture-diagram">
+        <!-- TODO: Add architecture diagram image -->
+        <!-- <img src="assets/architecture.png" alt="MarketFoundry Architecture"> -->
+        <div class="visual-placeholder architecture-placeholder">
+          <p>📊 Architecture Diagram</p>
+          <p class="visual-caption">Pipeline: Upload → Classify → Section → Extract → Graph</p>
+        </div>
+      </div>
+
+      <div class="pipeline-steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Document Ingestion</h3>
+          <p>Upload PDF, DOCX, HTML, or TXT files. Our system handles any financial document format.</p>
+          <code>python src/run.py --file your_docs/</code>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Document Classification</h3>
+          <p>ML model automatically detects document types: Earnings Calls, Strategy Decks, Internal Memos, SEC Filings, Technical Reports, etc.</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Intelligent Sectioning</h3>
+          <p>Each document type is sectioned differently. We're relying on LLMs to capture as valuable information as possible from each document. </p>
+        
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Schema Routing</h3>
+          <!-- <p>Zero-shot topic classification routes each section to specialized YAML schemas (ml_model_performance.yaml, revenue_drivers.yaml, etc.).</p> -->
+        </div>
+        
+        <div class="step">
+          <div class="step-number">5</div>
+          <h3>Causal Extraction</h3>
+          <p>OneKE + Qwen2.5-7B extracts structured causal triples (subject, predicate, object) with confidence scores and source citations.</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">6</div>
+          <h3>Knowledge Graph</h3>
+          <p>All triples are stored in Neo4j, creating a unified causal graph you can query to gain a better understanding of the causal relationships.</p>
+        </div>
+      </div>
+
+      <div class="tech-stack">
+        <h3>Built With</h3>
+        <div class="tech-badges">
+          <span class="badge">Python</span>
+          <span class="badge">OneKE</span>
+          <span class="badge">Qwen2.5-7B</span>
+          <span class="badge">Neo4j</span>
+          <span class="badge">LangChain</span>
+          <span class="badge">SentenceTransformers</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Examples Section -->
+  <section id="examples" class="section">
+    <div class="container">
+      <h2 class="section-title">Sample Outputs</h2>
+      <p class="section-intro">
+        See how MarketFoundry transforms real financial documents into structured knowledge graphs.
+      </p>
+      
+      <div class="examples-grid">
+        <div class="example-card">
+          <h3>📊 PayPal Q3 Earnings Call</h3>
+          <div class="example-visual">
+            <!-- TODO: Add sample graph screenshot -->
+            <div class="visual-placeholder">
+              <p>Knowledge Graph Preview</p>
+            </div>
+          </div>
+          <div class="example-triples">
+            <h4>Extracted Causal Triples:</h4>
+            <ul>
+              <li><span class="subject">BNPL Volume Growth</span> → <span class="predicate">drove</span> → <span class="object">Revenue Acceleration</span></li>
+              <li><span class="subject">Venmo Debit Adoption</span> → <span class="predicate">contributed_to</span> → <span class="object">Transaction Margin Expansion</span></li>
+              <li><span class="subject">Omnichannel Expansion</span> → <span class="predicate">accelerated</span> → <span class="object">Branded TPV Growth</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="example-card">
+          <h3>📈 Strategy Deck Analysis</h3>
+          <div class="example-visual">
+            <div class="visual-placeholder">
+              <p>Causal Chain Visualization</p>
+            </div>
+          </div>
+          <div class="example-triples">
+            <h4>Key Relationships:</h4>
+            <ul>
+              <li><span class="subject">AI Investment</span> → <span class="predicate">enables</span> → <span class="object">Checkout Optimization</span></li>
+              <li><span class="subject">Checkout Conversion</span> → <span class="predicate">drives</span> → <span class="object">Merchant Growth</span></li>
+              <li><span class="subject">Partnership Strategy</span> → <span class="predicate">expands</span> → <span class="object">Addressable Market</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="example-card">
+          <h3>📝 Internal Performance Report</h3>
+          <div class="example-visual">
+            <div class="visual-placeholder">
+              <p>Multi-Document Synthesis</p>
+            </div>
+          </div>
+          <div class="example-triples">
+            <h4>Cross-Document Insights:</h4>
+            <ul>
+              <li><span class="subject">Pricing Increase</span> → <span class="predicate">caused</span> → <span class="object">SMB Churn Spike</span></li>
+              <li><span class="subject">Support Quality Drop</span> → <span class="predicate">contributed_to</span> → <span class="object">NPS Decline</span></li>
+              <li><span class="subject">Feature Launch Delay</span> → <span class="predicate">resulted_in</span> → <span class="object">Competitive Loss</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="query-examples">
+        <h3>Query the Knowledge Graph</h3>
+        <div class="query-box">
+          <div class="query-item">
+            <span class="query-icon">💬</span>
+            <div>
+              <strong>Query:</strong> "Why did PayPal's Q3 margin grow?"<br>
+              <strong>Answer:</strong> <em>BNPL adoption increased 20%+ and Venmo debit usage surged 43%, 
+              driving higher-margin payment volume while transaction costs remained stable.</em>
+              <span class="sources">[Sources: Q3 Earnings Call, Internal Performance Report]</span>
+            </div>
+          </div>
+          <div class="query-item">
+            <span class="query-icon">💬</span>
+            <div>
+              <strong>Query:</strong> "What caused SMB churn to increase?"<br>
+              <strong>Answer:</strong> <em>Pricing changes in Q2 combined with degraded support response times 
+              led to 15% higher churn in SMB segment.</em>
+              <span class="sources">[Sources: 3 Internal Memos, Customer Health Report]</span>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Section -->
+  <section id="demo" class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Demo</h2>
+      <p class="section-intro">
+        See MarketFoundry in action: from document upload to knowledge graph query.
+      </p>
+      
+      <div class="demo-container">
+        <!-- TODO: Embed demo video -->
+        <div class="video-placeholder">
+          <div class="visual-placeholder">
+            <p>🎥 Demo Video</p>
+            <p class="visual-caption">Coming Soon: Upload → Extract → Query walkthrough</p>
+          </div>
+          <!-- Uncomment when video is ready:
+          <video controls width="100%">
+            <source src="assets/demo-video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          -->
+        </div>
+
+        <div class="demo-quickstart">
+          <h3>Try It Yourself</h3>
+          <div class="code-block">
+            <code>
+# Clone the repository<br>
+git clone https://github.com/jessicabat/market-foundry<br>
+cd market-foundry<br>
+<br>
+<!-- # Install dependencies<br>
+pip install -e .<br>
+<br>
+# Run on your documents<br>
+python src/run.py --file your_docs/<br>
+<br>
+# Build knowledge graph<br>
+python src/build_graph.py --input-dir your_docs/<br> -->
+            </code>
+          </div>
+          <a href="https://github.com/jessicabat/market-foundry#quickstart" class="btn btn-primary" target="_blank">View Full Quickstart Guide →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Us Section -->
+  <section id="about" class="section">
+    <div class="container">
+      <h2 class="section-title">About Us</h2>
+      <!-- <p class="section-intro">
+        MarketFoundry is ...
+      </p> -->
+      
+      <div class="team-grid">
+        <div class="team-member">
+          <!-- TODO: Add team member photo -->
+          <div class="member-photo-placeholder">
+            <span>👤</span>
+          </div>
+          <h3>Team Member 1</h3>
+          <p class="member-role"></p>
+          <p class="member-bio">
+            ...
+          </p>
+          <div class="member-links">
+            <a href="#" target="_blank">GitHub</a>
+            <a href="#" target="_blank">LinkedIn</a>
+          </div>
+        </div>
+
+        <!-- TODO: Add more team members -->
+        <div class="team-member">
+          <div class="member-photo-placeholder">
+            <span>👤</span>
+          </div>
+          <h3>Team Member 2</h3>
+          <p class="member-role">Role</p>
+          <p class="member-bio">
+              ...
+          </p>
+          <div class="member-links">
+            <a href="#" target="_blank">GitHub</a>
+            <a href="#" target="_blank">LinkedIn</a>
+          </div>
+        </div>
+
+        <div class="team-member">
+          <div class="member-photo-placeholder">
+            <span>👤</span>
+          </div>
+          <h3>Team Member 3</h3>
+          <p class="member-role">Role</p>
+          <p class="member-bio">
+              ...
+          </p>
+          <div class="member-links">
+            <a href="#" target="_blank">GitHub</a>
+            <a href="#" target="_blank">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-info">
+        <h3>UCSD DSC Capstone</h3>
+        <p><strong>Domain:</strong> NLP & IR</p>
+        <p><strong>Mentor:</strong> Biwei Huang</p>
+        <p><strong>Course:</strong> Data Science Capstone Project</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-info">
+          <h3>MarketFoundry</h3>
+          <p>Open source toolkit for extracting causal knowledge graphs from financial documents.</p>
+          <p>UCSD DSC Capstone</p>
+        </div>
+        <div class="footer-links">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="https://github.com/jessicabat/market-foundry">GitHub Repository</a></li>
+            <li><a href="report.pdf">Full Report (PDF)</a></li>
+            <li><a href="#how-it-works">Documentation</a></li>
+            <li><a href="#examples">Examples</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#problem">Problem</a></li>
+            <li><a href="#demo">Demo</a></li>
+            <li><a href="#about">About Us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 MarketFoundry, turn documents into intelligence — built your way</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
