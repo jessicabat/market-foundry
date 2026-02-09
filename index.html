@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MarketFoundry - Causal Knowledge Graphs from Financial Documents</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <!-- TODO: Add logo image here -->
+      <!-- <img src="assets/marketfoundry-logo.png" alt="MarketFoundry Logo" class="logo"> -->
+      <h1 class="hero-title">MarketFoundry</h1>
+      <p class="hero-tagline">Extract causal knowledge from financial documents</p>
+      <p class="hero-subtitle">
+        Turn earnings calls, strategy decks, and internal memos into queryable causal graphs
+      </p>
+      <p class="hero-hook">
+        Financial analysts spend hours manually reading reports to understand what drives revenue, 
+        risk, or growth. MarketFoundry automates this, building knowledge graphs that answer 
+        "why did Q3 miss?" or "what caused churn?"
+      </p>
+      <div class="cta-buttons">
+        <a href="#results" class="btn btn-primary">See the Demo</a>
+        <a href="methods.html" class="btn btn-secondary">How it Works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem Section -->
+  <section id="problem" class="section">
+    <div class="container">
+      <h2 class="section-title">What Problem Do We Solve?</h2>
+      <div class="problem-content">
+        <div class="problem-text">
+          <h3>The Challenge</h3>
+          <p>
+            Financial texts are full of causal claims—"higher pricing drove 15% revenue lift," 
+            "omnichannel expansion accelerated branded TPV growth"—but they're buried in 
+            unstructured PDFs, Word docs, and HTML pages scattered across hundreds of documents.
+          </p>
+          <h3>The Impact</h3>
+          <p>
+            With MarketFoundry's knowledge graphs, Causal Copilot can answer questions like 
+            "What drove PayPal's margin growth in Q3?" with evidence synthesized from 50+ 
+            documents, complete with source citations and causal chains.
+          </p>
+        </div>
+        <div class="problem-visual">
+          <!-- TODO: Add before/after diagram -->
+          <!-- <img src="assets/before-after.png" alt="Raw PDF to Knowledge Graph"> -->
+          <div class="visual-placeholder">
+            <p>📄 → 🕸️</p>
+            <p>Raw Documents → Knowledge Graph</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project Overview -->
+  <section id="overview" class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Project Overview</h2>
+      <p class="overview-summary">
+        We built a document-aware pipeline that automatically classifies financial documents, 
+        intelligently sections them by content type, routes each section to specialized extraction 
+        schemas, and builds comprehensive causal knowledge graphs—all open source and ready to fork.
+      </p>
+      
+      <div class="pipeline-steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Upload Documents</h3>
+          <p>PDF, DOCX, HTML—any financial text</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Classify & Section</h3>
+          <p>Earnings calls, strategy decks, memos</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Extract Triples</h3>
+          <p>Schema-driven causal relationship extraction</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Build Graph</h3>
+          <p>Queryable knowledge graph in Neo4j</p>
+        </div>
+      </div>
+
+      <div class="links-grid">
+        <a href="https://github.com/jessicabat/market-foundry" class="link-card">
+          <h3>🔧 GitHub Repository</h3>
+          <p>Fork the code, customize schemas, contribute</p>
+        </a>
+        <a href="report.pdf" class="link-card">
+          <h3>📄 Full Report</h3>
+          <p>Technical details and methodology</p>
+        </a>
+        <a href="methods.html" class="link-card">
+          <h3>⚙️ How It Works</h3>
+          <p>Deep dive into the pipeline</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Results Preview -->
+  <section id="results" class="section">
+    <div class="container">
+      <h2 class="section-title">What You Get</h2>
+      <p class="results-intro">
+        Transform your pile of financial documents into an interactive knowledge graph 
+        that reveals the causal relationships driving business outcomes.
+      </p>
+      
+      <!-- TODO: Add sample graph visualization -->
+      <div class="graph-preview">
+        <div class="visual-placeholder">
+          <p>📊 Sample Knowledge Graph</p>
+          <p>BNPL Volume Growth → Revenue Acceleration → Transaction Margin Expansion</p>
+        </div>
+      </div>
+
+      <div class="example-queries">
+        <h3>Example Queries</h3>
+        <ul>
+          <li>"Why did PayPal's Q3 margin grow?" → <em>BNPL adoption + Venmo debit expansion</em></li>
+          <li>"What caused SMB churn to increase?" → <em>Evidence from 3 internal memos</em></li>
+          <li>"How did pricing changes impact revenue?" → <em>Traced across 5 quarters</em></li>
+        </ul>
+      </div>
+
+      <a href="results.html" class="btn btn-primary">See Full Results →</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-info">
+          <h3>MarketFoundry</h3>
+          <p>UCSD DSC Capstone - Quarter 2, 2026</p>
+          <p><strong>Team:</strong><!-- Add other team members --> </p>
+          <p><strong>Mentor:</strong> <!-- Add mentor name --></p>
+        </div>
+        <div class="footer-links">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="https://github.com/jessicabat/market-foundry">GitHub</a></li>
+            <li><a href="report.pdf">Report</a></li>
+            <li><a href="methods.html">Methods</a></li>
+            <li><a href="results.html">Results</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 MarketFoundry.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
