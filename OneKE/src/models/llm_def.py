@@ -256,7 +256,7 @@ class LocalServer(BaseEngine):
         self.name = model_name_or_path.split('/')[-1]
         self.model = model_name_or_path
         self.base_url = base_url
-        self.temperature = 0.2
+        self.temperature = 0
         self.top_p = 0.9
         self.max_tokens = 1024
         self.api_key = "EMPTY_API_KEY"

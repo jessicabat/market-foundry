@@ -9,6 +9,7 @@ import subprocess
 import joblib
 import pandas as pd
 from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2txtLoader, BSHTMLLoader, JSONLoader
+import time
 
 SUPPORTED_EXTENSIONS = {".pdf", ".txt", ".docx", ".html", ".json"}
 
@@ -38,11 +39,12 @@ def load_file(file_path):
 
 # Load multiple files given a list of file paths
 def load_files(file_paths):
+    start_time = time.time()
     loaded_files = []
     for file_path in file_paths:
         loaded_file = load_file(file_path)
         loaded_files.append(loaded_file)
-    print(f"Loaded {len(loaded_files)} files.")
+    print(f"Loaded {len(loaded_files)} files in {time.time() - start_time:.2f} seconds.")
     return loaded_files
 
 # Expand a given path if it is a directory to process all supported files
@@ -63,7 +65,7 @@ def expand_path(path):
 def extract_text(loaded_files):
     texts = []
     for loaded_file in loaded_files:
-        combined_text = " ".join(page.page_content for page in loaded_file)
+        combined_text = "\n".join(page.page_content for page in loaded_file)
         texts.append((loaded_file[0].metadata.get('source'), combined_text))
     return texts
 
@@ -92,22 +94,125 @@ def classify_document_types(model, vectorizer, texts):
 def output_classifications(classifications):
     df_classifications = pd.DataFrame(list(classifications.items()), columns=["File", "Document Type"])
     df_classifications["File"] = df_classifications["File"].apply(get_basename)
-    print("Document Classifications:\n", df_classifications)
+    print("Document Classifications:\n", df_classifications, "\n")
     
 """ Document Sectioning for src/run.py
 Functions to run the document sectioning pipeline.
 """
 
 SECTION_HEADERS = {
-    "introduction": ["introduction", "intro"],
-    "methodology": ["methodology", "methods", "method"],
-    "analysis": ["analysis", "results"],
-    "discussion": ["discussion"],
-    "conclusion": ["conclusion", "concluding remarks"],
+    "overview": [
+        "overview", "business overview", "company overview",
+        "about the company", "item 1.", "item 1 ", "corporate overview",
+        "company description", "business description"
+    ],
+    "financials": [
+        "financial statements", "consolidated statements",
+        "balance sheet", "income statement",
+        "statement of operations", "cash flow", "item 8.",
+        "statement of financial position", "statement of comprehensive income",
+        "statements of cash flows", "financial position"
+    ],
+    "mdna": [
+        "management's discussion", "md&a", "results of operations", 
+        "item 7.", "management discussion and analysis",
+        "operating performance", "financial performance", "performance analysis"
+    ],
+    "risk_factors": [
+        "risk factors", "risks and uncertainties",
+        "forward-looking statements", "item 1a.", "risk management",
+        "potential risks", "business risks", "market risks"
+    ],
+    "notes": [
+        "notes to financial statements", "accounting policies",
+        "significant accounting", "footnotes", "note disclosures",
+        "accounting standards", "financial note"
+    ],
+    "outlook": [
+        "outlook", "guidance", "future outlook",
+        "expectations", "forecast", "future prospects", "forward guidance"
+    ],
+    "legal": [
+        "legal proceedings", "regulatory matters",
+        "compliance", "litigation", "legal notices", "regulatory compliance",
+        "legal issues", "court proceedings"
+    ],
+    "introduction": [
+        "introduction", "executive summary", "summary",
+        "background", "item 1.", "related work", "preface", "prologue", "abstract"
+    ],
+    "methodology": [
+        "methodology", "approach", "data and methods",
+        "research design", "experimental setup", "experiments",
+        "methods and materials", "research methodology", "techniques"
+    ],
+    "results": [
+        "results", "findings", "outcomes", "item 2.", "empirical results", "key findings"
+    ],
+    "discussion": [
+        "discussion", "interpretation", "implications", "item 3.",
+        "analysis and discussion", "interpretation of results"
+    ],
+    "conclusion": [
+        "conclusion", "conclusions", "summary of findings",
+        "final thoughts", "item 4.", "concluding remarks", "summary"
+    ],
 }
 
+# Heuristic to determine if a line is likely a section header based on formatting and content cues
+def is_header_like(line):
+    stripped = line.strip()
+    return (
+        5 < len(stripped) < 80 and
+        not stripped.endswith(".") and
+        (
+            stripped.isupper() or
+            stripped[0].isdigit() or
+            stripped.istitle()
+        )
+    )
+
+# Section a single document based on the defined headers and heuristics
+def section_document(text):
+    sections = {key: [] for key in SECTION_HEADERS.keys()}
+    current_section = None
+
+    for line in text.splitlines():
+        line_lower = line.lower()
+
+        if is_header_like(line):
+            for section, headers in SECTION_HEADERS.items():
+                if any(h in line_lower for h in headers):
+                    current_section = section
+                    break
+
+        if current_section:
+            sections[current_section].append(line)
+
+    return {k: "\n".join(v) for k, v in sections.items()}
+
+# Section documents based on their classifications
+def section_documents(texts):
+    sectioned_documents = {}
+    # For each document, run the sectioning algorithm to identify sections based on the defined headers and heuristics. Store the identified sections in a dictionary for each document.
+    for file, text in texts:
+        sections = section_document(text)
+        # keep only filled sections
+        filled_sections_only = {
+            section: content
+            for section, content in sections.items()
+            if content.strip()
+        }
+        # List the identified sections for each document
+        # print(
+        #     f"Sections for {get_basename(file)}:\n",
+        #     list(filled_sections_only.keys())
+        # )
+        sectioned_documents[file] = filled_sections_only
+    return sectioned_documents
+
 """
-Routing to OneKE/src.run.py for Knowledge Exraction
+Routing to OneKE/src.run.py for Knowledge Extraction
 """
 
 # Resolve repository root (two levels up from this file)
@@ -130,46 +235,93 @@ CLASS_TO_CONFIG = {
     "Notes": "notes.yaml",
 }
 
-def run_oneke_extraction(classifications):
-    for file_path, document_type in classifications.items():
-        base_config_name = CLASS_TO_CONFIG.get(document_type)
-        if base_config_name is None:
-            continue
+# Fallback to document-wide extraction if sectioning fails or is not applicable
+# def run_oneke_extraction_document_wide(classifications):
+#     for file_path, document_type in classifications.items():
+#         start_time = time.time()
+#         base_config_name = CLASS_TO_CONFIG.get(document_type)
+#         if base_config_name is None:
+#             continue
 
-        base_config_path = os.path.join(CONFIG_DIR, base_config_name)
+#         base_config_path = os.path.join(CONFIG_DIR, base_config_name)
 
-        # Load base config
-        with open(base_config_path, "r") as f:
-            config = yaml.safe_load(f)
+#         # Load base config
+#         with open(base_config_path, "r") as f:
+#             config = yaml.safe_load(f)
 
-        # Modify config for specified configuration
-        # See documentation in Configs/*.yaml for details
-        config['model']['category'] = "LocalServer"
-        config['model']['model_name_or_path'] = "qwen/qwen3-4b-2507"
-        config['model']['api_key'] = ""
-        config['model']['base_url'] = "http://localhost:1234/v1"
+#         # Modify config for specified configuration
+#         # See documentation in Configs/*.yaml for details
+#         config['model']['category'] = "LocalServer"
+#         config['model']['model_name_or_path'] = "liquid/lfm2.5-1.2b"
+#         config['model']['api_key'] = ""
+#         config['model']['base_url'] = "http://localhost:1234/v1"
         
-        config["extraction"]["use_file"] = True
-        config["extraction"]["file_path"] = file_path
+#         config["extraction"]["use_file"] = True
+#         config["extraction"]["file_path"] = file_path
 
-        # Write temp config
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".yaml", delete=False
-        ) as tmp:
-            yaml.safe_dump(config, tmp)
-            temp_config_path = tmp.name
+#         # Write temp config
+#         with tempfile.NamedTemporaryFile(
+#             mode="w", suffix=".yaml", delete=False
+#         ) as tmp:
+#             yaml.safe_dump(config, tmp)
+#             temp_config_path = tmp.name
 
-        # Run OneKE with safe cleanup
-        try:
-            subprocess.run(
-                [
-                    "python",
-                    ONEKE_RUN,
-                    "--config",
-                    temp_config_path,
-                ],
-                check=True,
-            )
-        finally:
-            if os.path.exists(temp_config_path):
-                os.remove(temp_config_path)
+#         # Run OneKE with safe cleanup
+#         try:
+#             subprocess.run(
+#                 [
+#                     "python",
+#                     ONEKE_RUN,
+#                     "--config",
+#                     temp_config_path,
+#                 ],
+#                 check=True,
+#             )
+#         finally:
+#             if os.path.exists(temp_config_path):
+#                 os.remove(temp_config_path)
+#         print(f"Processed {get_basename(file_path)} in {time.time() - start_time:.2f} seconds.")
+
+def run_oneke_from_text(file_path, text, document_type):
+    start_time = time.time()
+    base_config_name = CLASS_TO_CONFIG.get(document_type)
+    if base_config_name is None:
+        return
+
+    base_config_path = os.path.join(CONFIG_DIR, base_config_name)
+
+    # Load base config
+    with open(base_config_path, "r") as f:
+        config = yaml.safe_load(f)
+
+    # Modify config for specified configuration
+    config['model']['category'] = "LocalServer"
+    config['model']['model_name_or_path'] = "liquid/lfm2.5-1.2b"
+    config['model']['api_key'] = ""
+    config['model']['base_url'] = "http://localhost:1234/v1"
+    
+    config["extraction"]["use_file"] = False
+    config["extraction"]["text"] = text
+
+    # Write temp config
+    with tempfile.NamedTemporaryFile(
+        mode="w", suffix=".yaml", delete=False
+    ) as tmp:
+        yaml.safe_dump(config, tmp)
+        temp_config_path = tmp.name
+
+    # Run OneKE with safe cleanup
+    try:
+        subprocess.run(
+            [
+                "python",
+                ONEKE_RUN,
+                "--config",
+                temp_config_path,
+            ],
+            check=True,
+        )
+    finally:
+        if os.path.exists(temp_config_path):
+            os.remove(temp_config_path)
+    print(f"Processed {get_basename(file_path)} in {time.time() - start_time:.2f} seconds.\n")
