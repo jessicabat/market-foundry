@@ -14,12 +14,7 @@ from utils.process import load_file
 # Keep your existing text normalizer for general whitespace cleanup
 from utils.text_clean import normalize_text
 
-# IMPORTANT: import from your actual file name.
-# You called it html_cleanup.py in the message; use that.
-from utils.html_clean import (
-    strip_html_boilerplate,
-    dedupe_repeated_paragraphs,
-)
+from utils.html_clean import normalize_text_for_embedding
 
 # ----------------------------
 # CONFIG
@@ -40,7 +35,7 @@ _classifier_instance: Optional[KNNClassifier] = None
 def get_classifier() -> KNNClassifier:
     global _classifier_instance
     if _classifier_instance is None:
-        ref_dir = os.path.join(os.path.dirname(__file__), "..", "reference_docs")
+        ref_dir = os.path.join(os.path.dirname(__file__), "..", "reference_docs_clean")
         print(f"⚡ Initializing KNN Classifier from {ref_dir}...")
         _classifier_instance = KNNClassifier(ref_dir)
     return _classifier_instance
@@ -303,11 +298,23 @@ def ingest_and_classify(file_path: str) -> DocumentMF:
 
     # Clean
     if is_html(file_path):
-        raw_text = clean_html_text(raw_text)
+        raw_text = _safe_compact(raw_text)
+        raw_text = normalize_text_for_embedding(raw_text)
     else:
         raw_text = _safe_compact(raw_text)
 
-    print("raw_text[:200]:", raw_text[:200])
+
+    raw0 = to_full_text(loaded)
+    print("before_clean[:200]:", raw0[:200])
+    
+    if is_html(file_path):
+        raw_text = _safe_compact(raw0)
+        raw_text = normalize_text_for_embedding(raw_text)
+    else:
+        raw_text = _safe_compact(raw0)
+    
+    print("after_clean[:200]:", raw_text[:200])
+
 
     print("   ...Chunking text...")
     chunks = chunk_str(raw_text)

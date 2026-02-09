@@ -9,6 +9,14 @@ CLASSES = {"press_release", "earnings_call", "sec_filing"}
 def normalize_label(s: str) -> str:
     return s.strip().lower()
 
+def canonical_pred(label: str) -> str:
+    l = normalize_label(label)
+    if l in {"sec_filing", "sec filing", "sec_filing"}: return "sec_filing"
+    if l in {"press_release", "press release", "press_release"}: return "press_release"
+    if l in {"earnings_call", "earnings call", "earnings_call_transcript"}: return "earnings_call"
+    return "other"
+
+
 def main():
     eval_root = Path("FinancialPapers/eval")  # change if needed
     if not eval_root.exists():
@@ -35,7 +43,7 @@ def main():
             continue
 
         doc = ingest_and_classify(str(p))
-        pred_label = normalize_label(doc.document_type)
+        pred_label = canonical_pred(doc.document_type)
 
         y_true.append(true_label)
         y_pred.append(pred_label)

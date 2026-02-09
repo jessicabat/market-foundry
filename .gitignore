@@ -1,1 +1,4 @@
 .DS_StoreFinancialPapers/test
+src/.ipynb_checkpoints/
+src/utils/.ipynb_checkpoints/
+src/utils/__pycache__/
