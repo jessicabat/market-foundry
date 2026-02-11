@@ -10,95 +10,155 @@ MODEL = "meta-llama/Llama-3.2-1B-Instruct"
 tokenizer = AutoTokenizer.from_pretrained(MODEL)
 model = AutoModelForCausalLM.from_pretrained(
     MODEL,
-    dtype=torch.float16,
+    dtype=torch.float32,
     device_map="auto"
 )
 
-# -------------------------
-# BASE YAML TEMPLATE
-# -------------------------
+
 BASE_YAML_TEMPLATE = {
     "model": {
         "category": "Qwen",
         "model_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+        "api_key": "",
+        "base_url": "",
         "device": "auto"
     },
     "extraction": {
         "task": "Triple",
-        "instruction": "",
-        "constraint": [],
-        "use_file": True,
+        "constraint": [[], []],
+        "use_file": False,
         "file_path": "",
-        "mode": "customized"
+        "mode": "customized",
+        "update_case": False,
+        "show_trajectory": False
     }
 }
 
-# -------------------------
-# SAFE JSON PARSE (LLM GUARD)
-# -------------------------
+
 def safe_json_parse(text):
+
+    # Try direct parse first
     try:
         return json.loads(text)
     except:
-        start = text.find("{")
-        end = text.rfind("}") + 1
-        if start != -1 and end != -1:
-            return json.loads(text[start:end])
-        raise ValueError("No valid JSON found in model output")
+        pass
 
-# -------------------------
-# YAML CONFIG GENERATION
-# -------------------------
+    # Attempt to extract FIRST valid JSON object
+    brace_stack = 0
+    start_idx = None
+
+    for i, ch in enumerate(text):
+
+        if ch == "{":
+            if start_idx is None:
+                start_idx = i
+            brace_stack += 1
+
+        elif ch == "}":
+            brace_stack -= 1
+
+            if brace_stack == 0 and start_idx is not None:
+                candidate = text[start_idx:i+1]
+
+                try:
+                    return json.loads(candidate)
+                except:
+                    break
+
+    print("⚠️ Could not parse JSON — returning empty fallback")
+    return {"yaml_files": []}
+
+
 def generate_yaml_configs(document_type, topic_map):
 
     messages = [
-        {
-            "role": "system",
-            "content": """
-You are a structured configuration generator.
+    {
+        "role": "system",
+        "content": """
+You are a structured JSON generator.
 
-You MUST output valid JSON.
-You MUST NOT output explanations.
-You MUST NOT output markdown.
-If unsure, output {"yaml_files": []}.
+CRITICAL RULES:
+
+- Output ONLY valid JSON.
+- NEVER output explanations.
+- NEVER output markdown.
+- NEVER output text before or after JSON.
+- If unsure, output:
+
+{"yaml_files":[]}
 """
-        },
-        {
-            "role": "user",
-            "content": f"""
-You are designing knowledge extraction YAML configurations.
+    },
+    {
+        "role": "user",
+        "content": f"""
+You are designing knowledge extraction constraints for a knowledge graph.
 
 INPUTS:
-Document Type: {document_type}
 
-Topics:
+Document Type:
+{document_type}
+
+Topic Map:
 {json.dumps(topic_map, indent=2)}
 
 TASK:
-Design multiple YAML extraction configurations optimized for knowledge graph extraction.
+
+Generate YAML extraction plans grounded in the topic map.
 
 OUTPUT FORMAT:
+
 {{
   "yaml_files": [
     {{
       "file_name": "string.yaml",
-      "instruction_focus": "What this YAML focuses on extracting",
-      "entity_constraints": ["Entity_Type_1", "Entity_Type_2"],
-      "relation_constraints": ["Relation_1", "Relation_2"]
+      "instruction_focus": "short semantic focus",
+      "entities": ["entity1","entity2"],
+      "relations": ["relation1","relation2"]
     }}
   ]
 }}
 
-STRICT RULES:
-- Generate 2 to 4 YAML configs
-- EACH file_name MUST be UNIQUE
-- Use naming pattern:
-  {document_type}_focus_area_X.yaml
-- Each config must focus on different semantic angle
-- Think like a knowledge graph engineer
+RULES (CRITICAL):
+
+- Generate EXACTLY 3 YAML files.
+- Each YAML must focus on ONE main topic from the topic map.
+- file_name MUST be unique:
+  {document_type}_focus_1.yaml
+  {document_type}_focus_2.yaml
+  {document_type}_focus_3.yaml
+
+ENTITY GENERATION PROCESS (FOLLOW STRICTLY):
+
+Step 1:
+Identify the CORE concept of the topic.
+
+Step 2:
+List related BUSINESS OBJECTS discussed under this concept.
+Examples of object types:
+- financial metrics
+- business operations
+- costs
+- forecasts
+- stakeholders
+- investments
+- risks
+
+Step 3:
+Convert those objects into canonical noun phrases.
+
+Step 4:
+Return 12–18 DISTINCT entities.
+
+IMPORTANT:
+- Entities must be DIFFERENT concepts, not paraphrases.
+- Do NOT repeat the topic words directly.
+- Expand outward from the topic into related domain concepts.
+
+Return ONLY valid JSON.
 """
-        }
-    ]
+    }
+]
+
 
     inputs = tokenizer.apply_chat_template(
         messages,
@@ -110,7 +170,7 @@ STRICT RULES:
 
     outputs = model.generate(
         **inputs,
-        max_new_tokens=1600,
+        max_new_tokens=1200,
         temperature=0.2
     )
 
@@ -119,65 +179,70 @@ STRICT RULES:
         skip_special_tokens=True
     ).strip()
 
-    print("\n🔎 RAW YAML MODEL RESPONSE:")
-    print("------------------------------------------------")
-    print(response)
-    print("------------------------------------------------")
-
-    if not response:
-        raise ValueError("Model returned empty response")
+    print("\nRAW MODEL RESPONSE:\n", response)
 
     return safe_json_parse(response)
 
-# -------------------------
-# WRITE YAML FILES (WITH DUPLICATE GUARD)
-# -------------------------
+
 def write_yaml_files(config_json, output_dir="generated_yamls", input_file_path=""):
 
     os.makedirs(output_dir, exist_ok=True)
 
     seen_files = set()
 
-    for i, config in enumerate(config_json.get("yaml_files", [])):
+    for i, config in enumerate(config_json.get("yaml_files", [])[:3]):
 
         yaml_obj = copy.deepcopy(BASE_YAML_TEMPLATE)
 
-        yaml_obj["extraction"]["instruction"] = config.get(
-            "instruction_focus",
-            "Extract factual triples grounded in the text."
-        )
+        entities = config.get("entities", [])
+        relations = config.get("relations", [])
 
-        yaml_obj["extraction"]["constraint"] = [
-            config.get("entity_constraints", []),
-            config.get("relation_constraints", [])
-        ]
-
+        yaml_obj["extraction"]["constraint"] = [entities, relations]
         yaml_obj["extraction"]["file_path"] = input_file_path
 
-        file_name = config.get("file_name", f"generated_config_{i}.yaml")
+        file_name = config.get("file_name", f"generated_{i}.yaml")
 
-        # ✅ Python uniqueness enforcement
         if file_name in seen_files:
-            base = file_name.replace(".yaml", "")
-            file_name = f"{base}_{i}.yaml"
+            file_name = file_name.replace(".yaml", f"_{i}.yaml")
 
         seen_files.add(file_name)
 
         file_path = os.path.join(output_dir, file_name)
 
+        # ---------- CUSTOM YAML WRITE ----------
         with open(file_path, "w") as f:
-            yaml.dump(yaml_obj, f, sort_keys=False)
 
-        print(f"✅ Created YAML → {file_path}")
+            f.write("model:\n")
+            f.write("  category: Qwen\n")
+            f.write("  model_name_or_path: Qwen/Qwen2.5-0.5B-Instruct\n")
+            f.write("  api_key: \"\"\n")
+            f.write("  base_url: \"\"\n")
+            f.write("  device: auto\n\n")
 
-# -------------------------
-# EXAMPLE RUN
-# -------------------------
+            f.write("extraction:\n")
+            f.write("  task: Triple\n")
+
+            # INLINE constraint formatting
+            f.write("  constraint: [\n")
+            f.write("  " + json.dumps(entities) + ",\n")
+            f.write("  " + json.dumps(relations) + "\n")
+            f.write("  ]\n")
+
+            f.write("  use_file: false\n")
+            f.write(f"  file_path: {input_file_path}\n")
+            f.write("  mode: customized\n")
+            f.write("  update_case: false\n")
+            f.write("  show_trajectory: false\n")
+
+        print(f"Created YAML → {file_path}")
+
+#testing 
 if __name__ == "__main__":
 
     topic_map = {
         "Revenue Growth": ["Enterprise AI Adoption", "Infrastructure Costs"],
-        "Risk Factors": ["Macroeconomic Risks"]
+        "Operating Margins": ["Infrastructure Costs"],
+        "Growth Expectations": ["Continued Growth"]
     }
 
     document_type = "earnings_call_transcript"
