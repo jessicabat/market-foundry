@@ -14,16 +14,7 @@ except ImportError:
 from oneke_runner import run_oneke_extraction
 from graph_builder import push_to_neo4j
 
-SCHEMA_MAP = {
-    "EARNINGS_CALL_TRANSCRIPT": "schemas/earnings_call.yaml",
-    "SEC_FILING": "schemas/sec_filing.yaml",
-    "PRESS_RELEASE": "schemas/press_release.yaml",
-    "STRATEGY_DECK": "schemas/strategy_deck.yaml",  # fallbacks for now
-    "PERFORMANCE_REPORT": "schemas/performance_report.yaml",
-    "INTERNAL_MEMO": "schemas/internal_memo.yaml",
-    "TECHNICAL_REPORT": "schemas/technical_report.yaml",
-    "UNKNOWN": "schemas/fallback_general.yaml"  # low confidence fallback
-}
+# ... [SCHEMA_MAP remains same] ...
 
 def save_triples_to_file(triples, filename, output_dir="output/raw_triples"):
     # Ensure output directory is relative to where script is run (usually project root)

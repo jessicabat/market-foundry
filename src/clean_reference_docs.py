@@ -2,12 +2,12 @@ import os
 import argparse
 from pathlib import Path
 
-from utils.text_io import read_text_robust
-from utils.text_clean import normalize_text
-from utils.html_clean import drop_nav_blocks
+from mf_utils.text_io import read_text_robust
+from mf_utils.text_clean import normalize_text
+from mf_utils.html_clean import drop_nav_blocks
 
 # Reuse your existing cleaners
-from utils.html_clean import (
+from mf_utils.html_clean import (
     strip_html_boilerplate,
     dedupe_repeated_paragraphs,
 )

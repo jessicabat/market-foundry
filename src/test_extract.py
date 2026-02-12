@@ -2,8 +2,8 @@ import argparse
 import os
 import yaml
 from nltk.tokenize import sent_tokenize
-from utils import *
-from utils.process import load_file
+from mf_utils import *
+from mf_utils.process import load_file
 
 def main():
     # Create command-line argument parser

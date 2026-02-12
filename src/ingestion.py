@@ -9,12 +9,12 @@ import yaml
 from nltk.tokenize import sent_tokenize
 
 from classifier_knn import KNNClassifier
-from utils.process import load_file
+from mf_utils.process import load_file
 
 # Keep your existing text normalizer for general whitespace cleanup
-from utils.text_clean import normalize_text
+from mf_utils.text_clean import normalize_text
 
-from utils.html_clean import normalize_text_for_embedding
+from mf_utils.html_clean import normalize_text_for_embedding
 
 # ----------------------------
 # CONFIG

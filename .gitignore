@@ -2,3 +2,4 @@
 src/.ipynb_checkpoints/
 src/utils/.ipynb_checkpoints/
 src/utils/__pycache__/
+.env

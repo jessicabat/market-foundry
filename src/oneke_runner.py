@@ -6,7 +6,7 @@ import json
 
 # --- Add OneKE to path if needed, or ensure these imports work ---
 # Assuming you have OneKE code in your PYTHONPATH or subdirectory
-ONEKE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../OneKE/src"))
+ONEKE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../OneKE/src"))
 if ONEKE_PATH not in sys.path:
     sys.path.insert(0, ONEKE_PATH)
 

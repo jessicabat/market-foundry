@@ -4,7 +4,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from typing import Tuple
 
-from utils.text_io import read_text_robust  # <-- ADD
+from mf_utils.text_io import read_text_robust  # <-- ADD
 
 MODEL_NAME = 'all-MiniLM-L6-v2'
 _embedder = None
