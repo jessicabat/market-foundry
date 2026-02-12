@@ -1,0 +1,10 @@
+[
+  {
+    "head": "Target Corporation",
+    "head_type": "Entity",
+    "relation": "causes",
+    "relation_type": "leads_to",
+    "tail": "Form 10-K",
+    "tail_type": "Concept"
+  }
+]

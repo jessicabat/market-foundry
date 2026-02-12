@@ -1,0 +1,114 @@
+[
+  {
+    "head": "Target Corporation",
+    "head_type": "Entity",
+    "relation": "reports_to",
+    "relation_type": "related_to",
+    "tail": "Third Quarter Earnings",
+    "tail_type": "Event"
+  },
+  {
+    "head": "Target Corporation",
+    "head_type": "Entity",
+    "relation": "manages",
+    "relation_type": "managed_by",
+    "tail": "asset impairments, severance, and other items",
+    "tail_type": "Concept"
+  },
+  {
+    "head": "EBIT",
+    "head_type": "Metric",
+    "relation": "is_not_in_conformity_with",
+    "relation_type": "causes",
+    "tail": "GAAP",
+    "tail_type": "Concept"
+  },
+  {
+    "head": "EBITDA",
+    "head_type": "Metric",
+    "relation": "is_not_in_conformity_with",
+    "relation_type": "causes",
+    "tail": "GAAP",
+    "tail_type": "Concept"
+  },
+  {
+    "head": "EBIT",
+    "head_type": "Metric",
+    "relation": "is_not_an_alternative_to",
+    "relation_type": "causes",
+    "tail": "GAAP",
+    "tail_type": "Concept"
+  },
+  {
+    "head": "EBITDA",
+    "head_type": "Metric",
+    "relation": "is_not_an_alternative_to",
+    "relation_type": "causes",
+    "tail": "GAAP",
+    "tail_type": "Concept"
+  },
+  {
+    "head": "Provision for income taxes",
+    "head_type": "Metric",
+    "relation": "is_part_of",
+    "relation_type": "part_of",
+    "tail": "Net earnings",
+    "tail_type": "Metric"
+  },
+  {
+    "head": "Net interest expense",
+    "head_type": "Metric",
+    "relation": "is_part_of",
+    "relation_type": "part_of",
+    "tail": "Net earnings",
+    "tail_type": "Metric"
+  },
+  {
+    "head": "Total depreciation and amortization",
+    "head_type": "Metric",
+    "relation": "is_part_of",
+    "relation_type": "part_of",
+    "tail": "EBIT",
+    "tail_type": "Metric"
+  },
+  {
+    "head": "Operating income",
+    "head_type": "Metric",
+    "relation": "is_part_of",
+    "relation_type": "part_of",
+    "tail": "Net operating profit after taxes",
+    "tail_type": "Metric"
+  },
+  {
+    "head": "Operating lease interest",
+    "head_type": "Metric",
+    "relation": "is_part_of",
+    "relation_type": "part_of",
+    "tail": "Operating income",
+    "tail_type": "Metric"
+  },
+  {
+    "head": "Income taxes",
+    "head_type": "Metric",
+    "relation": "is_part_of",
+    "relation_type": "part_of",
+    "tail": "Net operating profit after taxes",
+    "tail_type": "Metric"
+  },
+  {
+    "head": "After-tax ROIC",
+    "head_type": "Metric",
+    "relation": "is_not_in_conformity_with",
+    "relation_type": "causes",
+    "tail": "GAAP",
+    "tail_type": "Concept"
+  },
+  {
+    "head": "After-tax return on invested capital",
+    "head_type": "Metric",
+    "relation": "is_not_in_conformity_with",
+    "relation_type": "causes",
+    "tail": "GAAP",
+    "tail_type": "Concept"
+  }
+]

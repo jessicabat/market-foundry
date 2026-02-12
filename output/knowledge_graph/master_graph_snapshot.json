@@ -1,0 +1,18 @@
+[
+  {
+    "doc_id": "216c2419-2f6a-42c8-9f11-063e1ce0e944",
+    "filename": "Target-Corporation-Reports-Third-Quarter-Earnings.pdf",
+    "doc_type": "EARNINGS_CALL",
+    "triples": [
+      {
+        "head": "Target Corporation",
+        "head_type": "Entity",
+        "relation": "causes",
+        "relation_type": "leads_to",
+        "tail": "Form 10-K",
+        "tail_type": "Concept"
+      }
+    ],
+    "processed_at": "2026-02-12T06:29:52.276943"
+  }
+]

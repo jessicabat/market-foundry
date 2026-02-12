@@ -70,26 +70,35 @@ def run_oneke_extraction(raw_text, schema_path):
         iskg=False
     )
 
-    # 5. Result Parsing (OneKE returns different formats based on mode)
-    # Usually it returns (result, trajectory, ...)
-    # result might be a list of triples or a JSON string.
-    
-    triples = []
-    # If result is a tuple, unpack it (OneKE signature varies by version)
+    # 5. Result Parsing
     if isinstance(result, tuple):
         extraction_output = result[0]
     else:
         extraction_output = result
 
-    # Normalize output to list of dicts
-    if isinstance(extraction_output, list):
-        triples = extraction_output
-    elif isinstance(extraction_output, str):
+    triples = []
+    
+    # CASE A: JSON String -> Parse it first
+    if isinstance(extraction_output, str):
         try:
-            # Attempt to parse JSON string
             import json
-            triples = json.loads(extraction_output)
+            extraction_output = json.loads(extraction_output)
         except json.JSONDecodeError:
             print(f"  [OneKE] Warning: Could not parse output JSON. Raw: {extraction_output[:50]}...")
-    
+            return []
+
+    # CASE B: Dictionary Wrapper ({"triple_list": [...]}) <--- THIS IS YOUR ISSUE
+    if isinstance(extraction_output, dict):
+        if "triple_list" in extraction_output:
+            triples = extraction_output["triple_list"]
+        else:
+            # Maybe it returned a single object or wrong schema?
+            # Start debugging by dumping what keys exist
+            # print(f"DEBUG: Keys found: {extraction_output.keys()}")
+            triples = [extraction_output] # Fallback, might be wrong format but saves data
+
+    # CASE C: Direct List ([...])
+    elif isinstance(extraction_output, list):
+        triples = extraction_output
+        
     return triples
