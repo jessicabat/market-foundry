@@ -227,15 +227,11 @@ CONFIG_DIR = os.path.join(REPO_ROOT, "Configs")
 ONEKE_RUN = os.path.join(REPO_ROOT, "OneKE", "src", "run.py")
 
 CLASS_TO_CONFIG = {
-    "Balance Sheets": "balance_sheets.yaml",
-    "Cash Flow": "cash_flow.yaml",
-    "Income Statement": "income_statement.yaml",
     "Earnings Call Transcript": "earnings_call.yaml",
     "News Article": "news_article.yaml",
     "Research Paper": "research_paper.yaml",
     "SEC Filing": "sec_filing.yaml",
     "Press Release": "press_release.yaml",
-    "Notes": "notes.yaml",
 }
 
 # Fallback to document-wide extraction if sectioning fails or is not applicable
