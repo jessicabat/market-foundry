@@ -9,12 +9,34 @@ model:
 extraction:
   task: Triple # task type, chosen from Base, NER, RE, EE, Triple. Default set to Triple.
   constraint: [
-    [
-      "revenue", "profit", "earnings", "investment", "stock", "market", "price", "dividend", "debt", "asset", "liability", "equity", "cash flow", "budget", "expense", "income", "financial", "fiscal", "quarterly", "annual", "merger", "acquisition", "ipo", "valuation", "shareholder", "analyst", "forecast", "trading", "portfolio", "return"  ],
-    [
-      "acquires", "divests", "merges with", "partners with", "invests in", "funds", "finances", "refinances", "defaults on", "writes down", "impairs", "restructures", "liquidates", "downgrades", "upgrades", "outperforms", "underperforms", "rallies", "plunges", "surges", "crashes", "rebounds", "corrects", "stabilizes", "volatility", "rallies on", "declines on", "responds to", "reacts to"
-    ]
+  [
+    "company", "corporation", "firm", "startup", "subsidiary",
+    "ceo", "cfo", "executive", "board", "investor", "shareholder",
+    "analyst", "fund", "bank", "regulator",
+    "revenue", "profit", "net income", "earnings",
+    "operating income", "gross margin", "cash flow",
+    "assets", "liabilities", "debt", "equity",
+    "market capitalization", "valuation",
+    "stock", "shares", "share price",
+    "dividend", "buyback",
+    "merger", "acquisition", "ipo", "offering",
+    "forecast", "guidance", "outlook",
+    "quarter", "fiscal year"
+  ],
+  [
+    "reported", "posted", "announced", "said",
+    "increased", "decreased", "rose", "fell",
+    "grew", "declined", "surged", "plunged",
+    "beat", "missed", "exceeded",
+    "expects", "forecast", "projects",
+    "acquired", "merged with",
+    "issued", "sold", "raised",
+    "traded at", "closed at",
+    "was up", "was down",
+    "compared to", "year over year", "quarter over quarter",
+    "as of", "on", "during"
   ]
+]
   use_file: true # whether to use a file for the input text. Default set to false.
   file_path: # path to the input file. No need if use_file is set to false.
   mode: customized # extraction mode, chosen from quick, detailed, customized. Default set to quick. See src/config.yaml for more details.

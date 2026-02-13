@@ -8,60 +8,48 @@ model:
 
 extraction:
   task: Triple # task type, chosen from Base, NER, RE, EE.
-  instruction: >
-    You are a helpful assistant. Do not think, just do as you are instructed.
-
-    Extract all factual triples directly supported by the text. 
-    A valid triple must describe an explicit relationship stated in the text, such as classifications, attributes, associations, actions, part–whole links, temporal or spatial relations, or cause–effect statements, using wording that appears directly in the text.
-
-    Do not generate triples that are not grounded in the text. 
-    Do not infer, imagine, or hallucinate causal links.
-    Do not include abstract concepts like "probability," "chain-of-thought," or model internal behavior.
-
-    Ensure the extracted triples are interpretable and make sense in natural language.
-    Convert all extracted knowledge to lowercase to prevent case sensitivity.
-    Use the exact wording (in lowercase) from the input text for head, relation, and tail whenever possible.
-    Always extract all triples that meet the criteria — do not stop after one.
-    Look to chain triples together to form a more complete knowledge graph.
-    Ensure head and tail are not identical and contain no empty values.
-    Reject any extracted triple where head, relation, or tail exceeds 5 words.
-    Only output triples in the JSON format required by the schema:
-    {
-      "head": "",
-      "head_type": "",
-      "relation": "",
-      "relation_type": "",
-      "tail": "",
-      "tail_type": ""
-    }
-    For example:
-    [
-      {
-        "head": "higher revenue",
-        "head_type": "financial_metric",
-        "relation": "drives",
-        "relation_type": "causal",
-        "tail": "profit growth",
-        "tail_type": "financial_outcome"
-      },
-      {
-        "head": "investment in marketing",
-        "head_type": "financial_action",
-        "relation": "leads to",
-        "relation_type": "causal",
-        "tail": "increased sales",
-        "tail_type": "financial_metric"
-      }
-    ]
-    
   constraint: [
-    [
-      
-    ],
-    [
-      
-    ]
+  [
+    "paper", "study", "research", "analysis", "experiment",
+    "method", "model", "approach", "framework", "algorithm",
+    "dataset", "corpus", "benchmark",
+    "training set", "test set", "validation set",
+    "hyperparameter", "regression model", "panel model",
+    "neural network", "classifier",
+
+    "accuracy", "precision", "recall", "f1 score",
+    "auc", "loss", "error rate",
+    "results", "performance", "statistical significance", "p-value",
+
+    "revenue", "net income", "profit", "earnings",
+    "cash flow", "assets", "liabilities", "equity",
+    "market capitalization", "valuation",
+    "stock return", "excess return", "volatility",
+    "alpha", "beta", "risk premium",
+    "interest rate", "inflation", "gdp",
+    "financial statement", "balance sheet", "income statement",
+    "portfolio", "investment strategy",
+    "credit risk", "default risk", "liquidity",
+    "cost of capital"
+  ],
+  [
+    "proposes", "introduces", "presents", "develops",
+    "uses", "applies", "employs", "estimates",
+    "models", "predicts", "analyzes",
+    "is based on", "consists of", "includes",
+    "is trained on", "is evaluated on",
+    "compares with", "outperforms", "improves",
+    "achieves", "obtains", "reports",
+    "increases", "decreases", "reduces",
+    "affects", "influences", "impacts",
+    "is associated with", "is correlated with",
+    "is defined as", "is calculated as",
+    "was conducted on", "was performed on",
+    "as shown in", "as reported in",
+    "compared to", "relative to",
+    "explains", "drives", "results in"
   ]
+]
   use_file: true # whether to use a file for the input text. Default set to false.
   file_path: # path to the input file. No need if use_file is set to false.
   mode: customized # extraction mode, chosen from quick, detailed, customized. Default set to quick. See src/config.yaml for more details.

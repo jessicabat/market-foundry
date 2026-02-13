@@ -234,54 +234,7 @@ CLASS_TO_CONFIG = {
     "Press Release": "press_release.yaml",
 }
 
-# Fallback to document-wide extraction if sectioning fails or is not applicable
-# def run_oneke_extraction_document_wide(classifications):
-#     for file_path, document_type in classifications.items():
-#         start_time = time.time()
-#         base_config_name = CLASS_TO_CONFIG.get(document_type)
-#         if base_config_name is None:
-#             continue
-
-#         base_config_path = os.path.join(CONFIG_DIR, base_config_name)
-
-#         # Load base config
-#         with open(base_config_path, "r") as f:
-#             config = yaml.safe_load(f)
-
-#         # Modify config for specified configuration
-#         # See documentation in Configs/*.yaml for details
-#         config['model']['category'] = "LocalServer"
-#         config['model']['model_name_or_path'] = "liquid/lfm2.5-1.2b"
-#         config['model']['api_key'] = ""
-#         config['model']['base_url'] = "http://localhost:1234/v1"
-        
-#         config["extraction"]["use_file"] = True
-#         config["extraction"]["file_path"] = file_path
-
-#         # Write temp config
-#         with tempfile.NamedTemporaryFile(
-#             mode="w", suffix=".yaml", delete=False
-#         ) as tmp:
-#             yaml.safe_dump(config, tmp)
-#             temp_config_path = tmp.name
-
-#         # Run OneKE with safe cleanup
-#         try:
-#             subprocess.run(
-#                 [
-#                     "python",
-#                     ONEKE_RUN,
-#                     "--config",
-#                     temp_config_path,
-#                 ],
-#                 check=True,
-#             )
-#         finally:
-#             if os.path.exists(temp_config_path):
-#                 os.remove(temp_config_path)
-#         print(f"Processed {get_basename(file_path)} in {time.time() - start_time:.2f} seconds.")
-
-def run_oneke_from_text(file_path, text, document_type):
+def run_oneke_from_text(file_path, text, document_type, section_name=None):
     start_time = time.time()
     base_config_name = CLASS_TO_CONFIG.get(document_type)
     if base_config_name is None:
@@ -298,8 +251,8 @@ def run_oneke_from_text(file_path, text, document_type):
     config['model']['category'] = "LocalServer"
     config['model']['model_name_or_path'] = "liquid/lfm2.5-1.2b"
     config['model']['api_key'] = os.getenv("LM_STUDIO_API_KEY") 
-    config['model']['base_url'] = os.getenv("LM_STUDIO_LOCAL_URL")
-    # config['model']['base_url'] = os.getenv("LM_STUDIO_NETWORK_URL") 
+    # config['model']['base_url'] = os.getenv("LM_STUDIO_LOCAL_URL")
+    config['model']['base_url'] = os.getenv("LM_STUDIO_NETWORK_URL") 
     
     config["extraction"]["use_file"] = False
     config["extraction"]["text"] = text
@@ -330,4 +283,25 @@ def run_oneke_from_text(file_path, text, document_type):
     finally:
         if os.path.exists(temp_config_path):
             os.remove(temp_config_path)
-    print(f"Processed {get_basename(file_path)} in {time.time() - start_time:.2f} seconds.\n")
+    if section_name:
+        print(f"Processed {get_basename(file_path)} - Section: {section_name} in {time.time() - start_time:.2f} seconds.\n")
+    else:
+        print(f"Processed {get_basename(file_path)} in {time.time() - start_time:.2f} seconds.\n")
+            
+# Run OneKE for knowledge extraction on each section of each document
+def run_oneke_pipeline(sectioned_documents, text_lookup, classifications):
+    for file, sections in sectioned_documents.items():
+        if not any(sections.values()):
+            start_time = time.time()
+            print(f"No sections identified for {get_basename(file)}.")
+            print(f"Running OneKE on the entire document.\n")
+            run_oneke_from_text(file, text_lookup[file], classifications[file])
+            end_time = time.time()
+            print(f"Time taken for {get_basename(file)}: {end_time - start_time:.2f} seconds\n")
+        else:
+            start_time = time.time()
+            for section_name, section_text in sections.items():
+                print(f"Running OneKE on {get_basename(file)} - Section: {section_name}")
+                run_oneke_from_text(file, section_text, classifications[file], section_name=section_name)
+            end_time = time.time()
+            print(f"Time taken for {get_basename(file)}: {end_time - start_time:.2f} seconds\n")

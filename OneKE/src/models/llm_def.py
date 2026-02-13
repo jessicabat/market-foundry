@@ -12,7 +12,7 @@ import openai
 import os
 from openai import OpenAI
 
-SYSTEM_PROMPT = "You are an expert at text extraction. Do not think, just do as you are instructed.\n\nExtract all factual triples directly supported by the text.\nA valid triple must describe an explicit relationship stated in the text, such as classifications, attributes, associations, actions, part–whole links, temporal or spatial relations, or cause–effect statements, using wording that appears directly in the text.\n\nDo not generate triples that are not grounded in the text.\nDo not infer, imagine, or hallucinate causal links.\nDo not include abstract concepts like \"probability,\" \"chain-of-thought,\" or model internal behavior.\n\nEnsure the extracted triples are interpretable and make sense in natural language.\nConvert all extracted knowledge to lowercase to prevent case sensitivity.\nUse the exact wording (in lowercase) from the input text for head, relation, and tail whenever possible.\nAlways extract all triples that meet the criteria — do not stop after one.\nLook to chain triples together to form a more complete knowledge graph.\nEnsure head, relation, and tail are not identical and contain no empty values.\nShorten any extracted triple where head, relation, or tail exceeds 10 words.\nYOU MUST ONLY output triples in the JSON format required by the schema:\n{\n  \"head\": \"\",\n  \"head_type\": \"\",\n  \"relation\": \"\",\n  \"relation_type\": \"\",\n  \"tail\": \"\",\n  \"tail_type\": \"\"\n}"
+SYSTEM_PROMPT = "You are an expert at text extraction. Do not think, just do as you are instructed.\n\nExtract all factual triples directly supported by the text.\nA valid triple must describe an explicit relationship stated in the text, such as classifications, attributes, associations, actions, part–whole links, temporal or spatial relations, or cause–effect statements, using wording that appears directly in the text.\n\nDo not generate triples that are not grounded in the text.\nDo not infer, imagine, or hallucinate causal links.\nDo not include abstract concepts like \"probability,\" \"chain-of-thought,\" or model internal behavior.\n\nEnsure the extracted triples are interpretable and make sense in natural language.\nConvert all extracted knowledge to lowercase to prevent case sensitivity.\nUse the exact wording (in lowercase) from the input text for head, relation, and tail whenever possible.\nAlways extract all triples that meet the criteria — do not stop after one.\nLook to chain triples together to form a more complete knowledge graph.\nEnsure head, relation, and tail are not identical and contain no empty values.\nYOU MUST ONLY output triples in the EXACT JSON format specified by the schema:\n{\n  \"head\": \"\",\n  \"head_type\": \"\",\n  \"relation\": \"\",\n  \"relation_type\": \"\",\n  \"tail\": \"\",\n  \"tail_type\": \"\"\n}\n\nDO NOT output anything other than the JSON. DO NOT include any explanations, reasoning, or text outside the JSON schema.\n\nHere is the text to extract from:\n"
 
 # The inferencing code is taken from the official documentation
 
@@ -310,7 +310,7 @@ class LocalServer(BaseEngine):
         self.name = model_name_or_path.split('/')[-1]
         self.model = model_name_or_path
         self.base_url = base_url
-        self.temperature = 0
+        self.temperature = 0.0
         self.top_p = 1.0
         self.max_tokens = 2048
         self.stop = "<|end|>"
@@ -328,7 +328,7 @@ class LocalServer(BaseEngine):
                 stream=False,
                 temperature=self.temperature,
                 top_p=self.top_p,
-                max_tokens=self.max_tokens, 
+                max_tokens=self.max_tokens,
                 stop=self.stop
             )
             return response.choices[0].message.content

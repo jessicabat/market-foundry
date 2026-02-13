@@ -120,15 +120,61 @@ class ExtractionAgent:
         data.set_result_list(result_list)
         data.update_trajectory(function_name, result_list)
         return data
+    
+    def merge_triple_lists(results):
+        merged = []
+
+        for item in results:
+            triples = item.get("triple_list", [])
+            if isinstance(triples, list):
+                merged.extend(triples)
+
+        return {"triple_list": merged}
 
     def summarize_answer(self, data: DataPoint):
+        # If no results, return immediately
         if len(data.result_list) == 0:
             return data
+
+        # If only one chunk, use it directly
         if len(data.result_list) == 1:
             data.set_pred(data.result_list[0])
             return data
-        summarized_result = self.module.summarize_answer(instruction=data.instruction, answer_list=data.result_list, schema=data.output_schema, additional_info=data.constraint)
-        funtion_name = current_function_name()
+
+        # For Triple task, DO NOT summarize — just merge all chunk results
+        if data.task == "Triple":
+            merged_triples = []
+
+            for result in data.result_list:
+                if isinstance(result, dict) and "triple_list" in result:
+                    merged_triples.extend(result["triple_list"])
+                elif isinstance(result, list):
+                    merged_triples.extend(result)
+
+            data.set_pred({"triple_list": merged_triples})
+            return data
+
+        # Default behavior for other tasks (keep summarization)
+        summarized_result = self.module.summarize_answer(
+            instruction=data.instruction,
+            answer_list=data.result_list,
+            schema=data.output_schema,
+            additional_info=data.constraint
+        )
+        function_name = current_function_name()
         data.set_pred(summarized_result)
-        data.update_trajectory(funtion_name, summarized_result)
+        data.update_trajectory(function_name, summarized_result)
         return data
+    
+    # Old summarize_answer function before handling Triple task differently
+    # def summarize_answer(self, data: DataPoint):
+    #     if len(data.result_list) == 0:
+    #         return data
+    #     if len(data.result_list) == 1:
+    #         data.set_pred(data.result_list[0])
+    #         return data
+    #     summarized_result = self.module.summarize_answer(instruction=data.instruction, answer_list=data.result_list, schema=data.output_schema, additional_info=data.constraint)
+    #     funtion_name = current_function_name()
+    #     data.set_pred(summarized_result)
+    #     data.update_trajectory(funtion_name, summarized_result)
+    #     return data
