@@ -3,6 +3,7 @@ Functions to process text and files for data extraction tasks. Supported file fo
 """
 
 import os
+from dotenv import load_dotenv
 import yaml
 import tempfile
 import subprocess
@@ -10,6 +11,8 @@ import joblib
 import pandas as pd
 from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2txtLoader, BSHTMLLoader, JSONLoader
 import time
+
+load_dotenv()  # Load environment variables from .env file
 
 SUPPORTED_EXTENSIONS = {".pdf", ".txt", ".docx", ".html", ".json"}
 
@@ -297,13 +300,18 @@ def run_oneke_from_text(file_path, text, document_type):
     # Modify config for specified configuration
     # In this case LocalServer is LM Studio
     config['model']['category'] = "LocalServer"
-    config['model']['model_name_or_path'] = "qwen2.5-3b-instruct"
-    config['model']['api_key'] = "sk-lm-ONu0o5TE:BRAHjJ26SSxkuM6dmghz" 
-    # config['model']['base_url'] = "http://localhost:1234/v1"
-    config['model']['base_url'] = "http://192.168.1.93:1234/v1"
+    config['model']['model_name_or_path'] = "liquid/lfm2.5-1.2b"
+    config['model']['api_key'] = os.getenv("LM_STUDIO_API_KEY") 
+    config['model']['base_url'] = os.getenv("LM_STUDIO_LOCAL_URL")
+    # config['model']['base_url'] = os.getenv("LM_STUDIO_NETWORK_URL") 
     
     config["extraction"]["use_file"] = False
     config["extraction"]["text"] = text
+    
+    # config['construct']['database'] = "Neo4j"
+    # config['construct']['url'] = os.getenv("NEO4J_URL")
+    # config['construct']['username'] = os.getenv("NEO4J_USERNAME")
+    # config['construct']['password'] = os.getenv("NEO4J_PASSWORD")
 
     # Write temp config
     with tempfile.NamedTemporaryFile(
