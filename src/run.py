@@ -73,6 +73,7 @@ def main():
     for file, sections in sectioned_documents.items():
         if not any(sections.values()):
             print(f"No sections identified for {get_basename(file)}.")
+            print(f"Running OneKE on the entire document.\n")
             run_oneke_from_text(file, text_lookup[file], classifications[file])
         else:
             for section_name, section_text in sections.items():

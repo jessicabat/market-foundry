@@ -295,10 +295,12 @@ def run_oneke_from_text(file_path, text, document_type):
         config = yaml.safe_load(f)
 
     # Modify config for specified configuration
+    # In this case LocalServer is LM Studio
     config['model']['category'] = "LocalServer"
-    config['model']['model_name_or_path'] = "liquid/lfm2.5-1.2b"
-    config['model']['api_key'] = ""
-    config['model']['base_url'] = "http://localhost:1234/v1"
+    config['model']['model_name_or_path'] = "qwen2.5-3b-instruct"
+    config['model']['api_key'] = "sk-lm-ONu0o5TE:BRAHjJ26SSxkuM6dmghz" 
+    # config['model']['base_url'] = "http://localhost:1234/v1"
+    config['model']['base_url'] = "http://192.168.1.93:1234/v1"
     
     config["extraction"]["use_file"] = False
     config["extraction"]["text"] = text

@@ -12,8 +12,7 @@ import openai
 import os
 from openai import OpenAI
 
-SYSTEM_PROMPT = "You are a helpful assistant. Do not think, just do as you are instructed.\n\nExtract all factual triples directly supported by the text.\nA valid triple must describe an explicit relationship stated in the text, such as classifications, attributes, associations, actions, part–whole links, temporal or spatial relations, or cause–effect statements, using wording that appears directly in the text.\n\nDo not generate triples that are not grounded in the text.\nDo not infer, imagine, or hallucinate causal links.\nDo not include abstract concepts like \"probability,\" \"chain-of-thought,\" or model internal behavior.\n\nEnsure the extracted triples are interpretable and make sense in natural language.\nConvert all extracted knowledge to lowercase to prevent case sensitivity.\nUse the exact wording (in lowercase) from the input text for head, relation, and tail whenever possible.\nAlways extract all triples that meet the criteria — do not stop after one.\nLook to chain triples together to form a more complete knowledge graph.\nEnsure head and tail are not identical and contain no empty values.\nReject any extracted triple where head, relation, or tail exceeds 5 words.\nOnly output triples in the JSON format required by the schema:\n{\n  \"head\": \"\",\n  \"head_type\": \"\",\n  \"relation\": \"\",\n  \"relation_type\": \"\",\n  \"tail\": \"\",\n  \"tail_type\": \"\"\n}"
-
+SYSTEM_PROMPT = "You are an expert at text extraction. Do not think, just do as you are instructed.\n\nExtract all factual triples directly supported by the text.\nA valid triple must describe an explicit relationship stated in the text, such as classifications, attributes, associations, actions, part–whole links, temporal or spatial relations, or cause–effect statements, using wording that appears directly in the text.\n\nDo not generate triples that are not grounded in the text.\nDo not infer, imagine, or hallucinate causal links.\nDo not include abstract concepts like \"probability,\" \"chain-of-thought,\" or model internal behavior.\n\nEnsure the extracted triples are interpretable and make sense in natural language.\nConvert all extracted knowledge to lowercase to prevent case sensitivity.\nUse the exact wording (in lowercase) from the input text for head, relation, and tail whenever possible.\nAlways extract all triples that meet the criteria — do not stop after one.\nLook to chain triples together to form a more complete knowledge graph.\nEnsure head, relation, and tail are not identical and contain no empty values.\nReword any extracted triple where head, relation, or tail exceeds 10 words.\nYOU MUST ONLY output triples in the JSON format required by the schema:\n{\n  \"head\": \"\",\n  \"head_type\": \"\",\n  \"relation\": \"\",\n  \"relation_type\": \"\",\n  \"tail\": \"\",\n  \"tail_type\": \"\"\n}"
 
 # The inferencing code is taken from the official documentation
 
@@ -21,18 +20,73 @@ class BaseEngine:
     def __init__(self, model_name_or_path: str):
         self.name = None
         self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, trust_remote_code=True)
-        self.temperature = 0.2
-        self.top_p = 0.9
+        self.temperature = 0.0
+        self.top_p = 0.95
         self.max_tokens = 1024
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        if torch.cuda.is_available():
+            self.device = torch.device("cuda")
+        elif torch.backends.mps.is_available():
+            self.device = torch.device("mps")
+        else:
+            self.device = torch.device("cpu")
 
     def get_chat_response(self, prompt):
         raise NotImplementedError
 
-    def set_hyperparameter(self, temperature: float = 0.2, top_p: float = 0.9, max_tokens: int = 1024):
+    def set_hyperparameter(self, temperature: float = 0.0, top_p: float = 0.95, max_tokens: int = 1024):
         self.temperature = temperature
         self.top_p = top_p
         self.max_tokens = max_tokens
+        
+class LFM(BaseEngine):
+    def __init__(self, model_name_or_path: str):
+        super().__init__(model_name_or_path)
+        self.name = "LFM"
+        self.model_id = model_name_or_path
+        self.tokenizer.padding_side = "left"
+        self.tokenizer.truncation_side = "right"
+        if self.device.type == "cuda":
+            dtype = torch.float16
+        else:
+            dtype = torch.float32 
+        self.generation_config = GenerationConfig(
+            do_sample=True,
+            temperature=self.temperature,
+            top_p=self.top_p,
+            max_new_tokens=1024,
+            eos_token_id=self.tokenizer.eos_token_id,
+            pad_token_id=self.tokenizer.eos_token_id,
+        )
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            self.model_id,
+            trust_remote_code=True
+        )     
+        self.model = AutoModelForCausalLM.from_pretrained(
+            self.model_id,
+            trust_remote_code=False,
+            dtype=dtype,
+            device_map="auto",
+        )
+
+    def get_chat_response(self, prompt: str):
+        full_prompt = (
+            SYSTEM_PROMPT
+            + "\n\n### input text\n"
+            + prompt 
+            +"\n\n### extracted triples in JSON format\n"
+        ) 
+        inputs = self.tokenizer(
+            full_prompt,
+            return_tensors="pt",
+            truncation=True,
+            max_length=8192
+        ).to(self.device)
+        outputs = self.model.generate(
+            **inputs,
+            generation_config=self.generation_config
+        )
+        generated = outputs[0][inputs["input_ids"].shape[1]:]
+        return self.tokenizer.decode(generated, skip_special_tokens=True).strip()
 
 class LLaMA(BaseEngine):
     def __init__(self, model_name_or_path: str):
@@ -252,14 +306,15 @@ class DeepSeek(BaseEngine):
         return response.choices[0].message.content
 
 class LocalServer(BaseEngine):
-    def __init__(self, model_name_or_path: str, base_url="http://localhost:1234/v1"):
+    def __init__(self, model_name_or_path: str, api_key: str = "", base_url="http://localhost:1234/v1"):
         self.name = model_name_or_path.split('/')[-1]
         self.model = model_name_or_path
         self.base_url = base_url
         self.temperature = 0
-        self.top_p = 0.9
-        self.max_tokens = 1024
-        self.api_key = "EMPTY_API_KEY"
+        self.top_p = 1.0
+        self.max_tokens = 2048
+        self.stop = "<|end|>"
+        self.api_key = api_key if api_key != "" else "EMPTY_API_KEY"
         self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
 
     def get_chat_response(self, input):
@@ -272,11 +327,12 @@ class LocalServer(BaseEngine):
                 ],
                 stream=False,
                 temperature=self.temperature,
-                max_tokens=self.max_tokens,
-                stop=None
+                top_p=self.top_p,
+                max_tokens=self.max_tokens, 
+                stop=self.stop
             )
             return response.choices[0].message.content
         except ConnectionError:
-            print("Error: Unable to connect to the server. Please check if the vllm service is running and the port is 1234.")
+            print("Error: Unable to connect to the server. Please check if the local service is running and the port is 1234.")
         except Exception as e:
             print(f"Error: {e}")
