@@ -8,61 +8,52 @@ model:
 
 extraction:
   task: Triple # task type, chosen from Base, NER, RE, EE.
-  instruction: >
-    You are a helpful assistant. Do not think, just do as you are instructed.
-
-    Extract all factual triples directly supported by the text. 
-    A valid triple must describe an explicit relationship stated in the text, such as classifications, attributes, associations, actions, part–whole links, temporal or spatial relations, or cause–effect statements, using wording that appears directly in the text.
-
-    Do not generate triples that are not grounded in the text. 
-    Do not infer, imagine, or hallucinate causal links.
-    Do not include abstract concepts like "probability," "chain-of-thought," or model internal behavior.
-
-    Ensure the extracted triples are interpretable and make sense in natural language.
-    Convert all extracted knowledge to lowercase to prevent case sensitivity.
-    Use the exact wording (in lowercase) from the input text for head, relation, and tail whenever possible.
-    Always extract all triples that meet the criteria — do not stop after one.
-    Look to chain triples together to form a more complete knowledge graph.
-    Ensure head and tail are not identical and contain no empty values.
-    Reject any extracted triple where head, relation, or tail exceeds 5 words.
-    Only output triples in the JSON format required by the schema:
-    {
-      "head": "",
-      "head_type": "",
-      "relation": "",
-      "relation_type": "",
-      "tail": "",
-      "tail_type": ""
-    }
-    For example:
-    [
-      {
-        "head": "higher revenue",
-        "head_type": "financial_metric",
-        "relation": "drives",
-        "relation_type": "causal",
-        "tail": "profit growth",
-        "tail_type": "financial_outcome"
-      },
-      {
-        "head": "investment in marketing",
-        "head_type": "financial_action",
-        "relation": "leads to",
-        "relation_type": "causal",
-        "tail": "increased sales",
-        "tail_type": "financial_metric"
-      }
-    ]
-    
   constraint: [
-    [
-      
-    ],
-    [
-      
-    ]
+  [
+    "company", "corporation", "subsidiary", "board of directors",
+    "chief executive officer", "chief financial officer",
+    "executive", "shareholder", "investor",
+
+    "press release", "announcement", "earnings call",
+    "quarter", "fiscal year", "guidance", "outlook",
+
+    "revenue", "net income", "operating income",
+    "earnings per share", "eps",
+    "gross margin", "operating margin",
+    "cash flow", "free cash flow",
+    "assets", "liabilities", "equity",
+
+    "dividend", "share repurchase", "buyback",
+    "acquisition", "merger", "partnership",
+    "product launch", "service launch",
+
+    "market capitalization", "valuation",
+    "stock price", "share price",
+    "growth rate", "percentage",
+    "cost reduction", "restructuring",
+
+    "segment", "business unit",
+    "geographic region", "market",
+    "date", "location"
+  ],
+  [
+    "announces", "reports", "declares",
+    "guides", "expects", "forecasts",
+    "increases", "decreases", "improves",
+    "achieves", "generates", "delivers",
+    "acquires", "merges with", "partners with",
+    "launches", "introduces",
+    "appoints", "resigns",
+    "approves", "authorizes",
+    "results in", "leads to",
+    "reflects", "represents",
+    "compared to", "relative to",
+    "drives", "supports",
+    "is effective on", "is announced on",
+    "operates in", "expands into"
   ]
-  use_file: true # whether to use a file for the input text. Default set to false.
+]
+  use_file: false # whether to use a file for the input text. Default set to false.
   file_path: # path to the input file. No need if use_file is set to false.
   mode: customized # extraction mode, chosen from quick, detailed, customized. Default set to quick. See src/config.yaml for more details.
   update_case: false # whether to update the case repository. Default set to false.

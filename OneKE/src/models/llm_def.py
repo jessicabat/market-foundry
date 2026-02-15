@@ -20,8 +20,8 @@ class BaseEngine:
     def __init__(self, model_name_or_path: str):
         self.name = None
         self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, trust_remote_code=True)
-        self.temperature = 0.0
-        self.top_p = 0.95
+        self.temperature = 0.1
+        self.top_p = 1.0
         self.max_tokens = 1024
         if torch.cuda.is_available():
             self.device = torch.device("cuda")
@@ -33,7 +33,7 @@ class BaseEngine:
     def get_chat_response(self, prompt):
         raise NotImplementedError
 
-    def set_hyperparameter(self, temperature: float = 0.0, top_p: float = 0.95, max_tokens: int = 1024):
+    def set_hyperparameter(self, temperature: float = 0.1, top_p: float = 1.0, max_tokens: int = 1024):
         self.temperature = temperature
         self.top_p = top_p
         self.max_tokens = max_tokens
@@ -124,9 +124,13 @@ class Qwen(BaseEngine):
         super().__init__(model_name_or_path)
         self.name = "Qwen"
         self.model_id = model_name_or_path
+        if self.device.type == "cuda":
+            dtype = torch.float16
+        else:
+            dtype = torch.float32 
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_id,
-            torch_dtype="auto",
+            dtype=dtype,
             device_map="auto"
         )
 
@@ -310,7 +314,7 @@ class LocalServer(BaseEngine):
         self.name = model_name_or_path.split('/')[-1]
         self.model = model_name_or_path
         self.base_url = base_url
-        self.temperature = 0.0
+        self.temperature = 0.1
         self.top_p = 1.0
         self.max_tokens = 1024
         self.api_key = api_key if api_key != "" else "EMPTY_API_KEY"

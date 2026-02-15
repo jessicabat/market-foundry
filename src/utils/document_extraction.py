@@ -43,26 +43,28 @@ def run_oneke_from_text(file_path, text, document_type, section_name=None):
     with open(base_config_path, "r") as f:
         config = yaml.safe_load(f)
         
-    # For model config, we use LocalServer (LM Studio)
-    config['model']['category'] = "LocalServer"
-    config['model']['model_name_or_path'] = "qwen/qwen3-4b-2507"
+    # --- SCHEMA CONFIG HERE ---
+    
+    # Supports:
+    # - Open Source: LLaMA, Qwen, MiniCPM, ChatGLM
+    # - Closed Source: ChatGPT, DeepSeek, LocalServer
+    
+    config['model']['category'] = "LocalServer" 
+    config['model']['model_name_or_path'] = "lfm2-8b-a1b"
     config['model']['api_key'] = os.getenv("LM_STUDIO_API_KEY") 
-    # config['model']['base_url'] = os.getenv("LM_STUDIO_LOCAL_URL")
+    # config['model']['base_url'] = os.getenv("LM_STUDIO_LOCAL_URL") 
     config['model']['base_url'] = os.getenv("LM_STUDIO_NETWORK_URL") 
     
-    '''For extraction config, we set the text to be the section text, and set use_file to false since we are directly passing the text. We also set mode to "customized" to use the customized 3-agent process for better performance on financial documents. You can further customize the process by modifying the "customized" mode in src/config.yaml.
-    '''
-    
-    config["extraction"]["use_file"] = False
     config["extraction"]["text"] = text
-    config['extraction']["mode"] = "customized"
-    config['extraction']["update_case"] = False
-    config['extraction']["show_trajectory"] = False
+    config['extraction']["update_case"] = False # Controls whether to update the case repository with new extraction results.
+    config['extraction']["show_trajectory"] = False # Controls whether to display the intermediate steps of extraction.
     
     # config['construct']['database'] = "Neo4j"
     # config['construct']['url'] = os.getenv("NEO4J_URL")
     # config['construct']['username'] = os.getenv("NEO4J_USERNAME")
     # config['construct']['password'] = os.getenv("NEO4J_PASSWORD")
+    
+    # --- END CONFIG SETUP ---
 
     # Write temp config
     with tempfile.NamedTemporaryFile(

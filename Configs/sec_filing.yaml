@@ -35,7 +35,7 @@ extraction:
     "consists of", "includes", "represents"
   ]
 ]
-  use_file: true # whether to use a file for the input text. Default set to false.
+  use_file: false # whether to use a file for the input text. Default set to false.
   file_path: # path to the input file. No need if use_file is set to false.
   mode: customized # extraction mode, chosen from quick, detailed, customized. Default set to quick. See src/config.yaml for more details.
   update_case: false # whether to update the case repository. Default set to false.
