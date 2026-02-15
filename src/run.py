@@ -21,12 +21,12 @@ Example:
 
 import os
 import argparse
-import yaml
-import array
 from annotated_types import doc
 from utils import *
 from models import *
-from utils.process import *
+from utils.document_classification import *
+from utils.document_sectioning import *
+from utils.document_extraction import *
 
 def main():
     # Create command-line argument parser
@@ -69,24 +69,8 @@ def main():
     # Section documents based on their classifications
     sectioned_documents = section_documents(texts)
     
+    # Run OneKE pipeline for knowledge extraction on the sectioned documents
     run_oneke_pipeline(sectioned_documents, text_lookup, classifications)
-    
-    # # Run OneKE for knowledge extraction on each section of each document
-    # for file, sections in sectioned_documents.items():
-    #     if not any(sections.values()):
-    #         start_time = time.time()
-    #         print(f"No sections identified for {get_basename(file)}.")
-    #         print(f"Running OneKE on the entire document.\n")
-    #         run_oneke_from_text(file, text_lookup[file], classifications[file])
-    #         end_time = time.time()
-    #         print(f"Time taken for {get_basename(file)}: {end_time - start_time:.2f} seconds\n")
-    #     else:
-    #         start_time = time.time()
-    #         for section_name, section_text in sections.items():
-    #             print(f"Running OneKE on {get_basename(file)} - Section: {section_name}")
-    #             run_oneke_from_text(file, section_text, classifications[file], section_name=section_name)
-    #         end_time = time.time()
-    #         print(f"Time taken for {get_basename(file)}: {end_time - start_time:.2f} seconds\n")
     
 if __name__ == "__main__":
     main()

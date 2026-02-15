@@ -19,3 +19,4 @@ agent:
     customized:
       schema_agent:  get_retrieved_schema
       extraction_agent: extract_information_direct
+      reflection_agent: reflect_with_case

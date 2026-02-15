@@ -312,8 +312,7 @@ class LocalServer(BaseEngine):
         self.base_url = base_url
         self.temperature = 0.0
         self.top_p = 1.0
-        self.max_tokens = 2048
-        self.stop = "<|end|>"
+        self.max_tokens = 1024
         self.api_key = api_key if api_key != "" else "EMPTY_API_KEY"
         self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
 
@@ -329,7 +328,6 @@ class LocalServer(BaseEngine):
                 temperature=self.temperature,
                 top_p=self.top_p,
                 max_tokens=self.max_tokens,
-                stop=self.stop
             )
             return response.choices[0].message.content
         except ConnectionError:
