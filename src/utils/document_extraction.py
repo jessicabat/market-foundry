@@ -49,20 +49,30 @@ def run_oneke_from_text(file_path, text, document_type, section_name=None):
     # - Open Source: LLaMA, Qwen, MiniCPM, ChatGLM
     # - Closed Source: ChatGPT, DeepSeek, LocalServer
     
-    config['model']['category'] = "Qwen" 
-    config['model']['model_name_or_path'] = "Qwen/Qwen2.5-0.5B-Instruct"
-    # config['model']['api_key'] = os.getenv("LM_STUDIO_API_KEY") 
-    # config['model']['base_url'] = os.getenv("LM_STUDIO_LOCAL_URL") 
-    # config['model']['base_url'] = os.getenv("LM_STUDIO_NETWORK_URL") 
+    # For model config
+    config['model'].update({
+        "category": "LocalServer", 
+        "model_name_or_path": "lfm2-8b-a1b", 
+        "api_key": os.getenv("LM_STUDIO_API_KEY"),
+        "base_url": os.getenv("LM_STUDIO_LOCAL_URL"), 
+        # "base_url": os.getenv("LM_STUDIO_NETWORK_URL"), 
+    })
     
-    config["extraction"]["text"] = text
-    config['extraction']["update_case"] = False # Controls whether to update the case repository with new extraction results.
-    config['extraction']["show_trajectory"] = False # Controls whether to display the intermediate steps of extraction.
+    # For extraction config
+    config['extraction'].update({
+        "text": text,
+        "update_case": False, # Controls whether to update the case repository with new extraction results.
+        "show_trajectory": False, # Controls whether to display the intermediate steps of extraction.
+    })
     
-    # config['construct']['database'] = "Neo4j"
-    # config['construct']['url'] = os.getenv("NEO4J_URL")
-    # config['construct']['username'] = os.getenv("NEO4J_USERNAME")
-    # config['construct']['password'] = os.getenv("NEO4J_PASSWORD")
+    # For knowledge graph construction, comment out if not desired.
+    config['construct'] = {}
+    config['construct'].update({
+        "database": "Neo4j",
+        "url": os.getenv("NEO4J_URL"),
+        "username": os.getenv("NEO4J_USERNAME"),
+        "password": os.getenv("NEO4J_PASSWORD"),
+    })
     
     # --- END SCHEMA CONFIG ---
 

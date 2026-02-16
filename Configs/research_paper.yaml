@@ -55,9 +55,3 @@ extraction:
   mode: customized # extraction mode, chosen from quick, detailed, customized. Default set to quick. See src/config.yaml for more details.
   update_case: false # whether to update the case repository. Default set to false.
   show_trajectory: false # whether to display the extracted intermediate steps
-
-# construct: # (Optional) If you want to construct a Knowledge Graph, you need to set the construct field, or you must delete this field.
-#   database: Neo4j # database type, now only support Neo4j.
-#   url:  # your database URL，Neo4j's default port is 7687.
-#   username:  # your database username.
-#   password:  # your database password.
