@@ -50,7 +50,7 @@ def main():
         
     # Load the trained document classification model from the models folder
     model_path = os.path.join(os.path.dirname(__file__), "models", "Document_Classifier.joblib")
-    model = load_document_classification_model(model_path)
+    model = load_tfidf_model(model_path)
         
     # Load the TF-IDF vectorizer from the models folder
     vectorizer_path = os.path.join(os.path.dirname(__file__), "models", "TFIDF_Vectorizer.joblib")
