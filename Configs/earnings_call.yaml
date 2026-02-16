@@ -1,0 +1,54 @@
+model:
+  # Recommend using ChatGPT or DeepSeek APIs for complex IE task.
+  category: # model category, chosen from ChatGPT, DeepSeek, LLaMA, Qwen, ChatGLM, MiniCPM, OneKE.
+  model_name_or_path: # model name, chosen from the model list of the selected category.
+  api_key: "" # your API key for the model with API service. No need for open-source models.
+  base_url: "" # # base URL for the API service. No need for open-source models.
+  device: auto # device to run the model, chosen from auto, cpu, cuda, cuda:0 etc. Default set to auto.
+
+extraction:
+  task: Triple # task type, chosen from Base, NER, RE, EE.
+  constraint: [
+  [
+    "revenue", "net revenue", "total revenue",
+    "net income", "profit", "earnings", "eps",
+    "adjusted eps", "operating income", "operating margin",
+    "gross margin", "free cash flow", "cash flow",
+    "guidance", "outlook", "forecast",
+    "fiscal year", "quarter", "q1", "q2", "q3", "q4",
+    "year over year", "quarter over quarter",
+    "segment", "business segment", "geographic segment",
+    "customer", "enterprise customer",
+    "pipeline", "backlog",
+    "capital expenditure", "capex",
+    "share repurchase", "buyback", "dividend",
+    "debt", "liquidity", "balance sheet",
+    "acquisition", "integration",
+    "pricing", "demand", "volume"
+  ],
+  [
+    "reported", "generated", "delivered", "achieved",
+    "increased", "decreased", "grew", "declined",
+    "expanded", "contracted", "improved",
+    "beat", "exceeded", "missed",
+    "expects", "anticipates", "projects", "guides",
+    "raised", "lowered", "updated",
+    "compared to", "relative to",
+    "driven by", "primarily due to",
+    "reflects", "resulted in",
+    "contributed to", "impacted",
+    "repurchased", "paid",
+    "closed", "completed"
+  ]
+]
+  use_file: false # whether to use a file for the input text. Default set to false.
+  file_path: # path to the input file. No need if use_file is set to false.
+  mode: customized # extraction mode, chosen from quick, detailed, customized. Default set to quick. See src/config.yaml for more details.
+  update_case: false # whether to update the case repository. Default set to false.
+  show_trajectory: false # whether to display the extracted intermediate steps
+
+# construct: # (Optional) If you want to construct a Knowledge Graph, you need to set the construct field, or you must delete this field.
+#   database: Neo4j # database type, now only support Neo4j.
+#   url:  # your database URL，Neo4j's default port is 7687.
+#   username:  # your database username.
+#   password:  # your database password.

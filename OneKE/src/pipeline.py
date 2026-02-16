@@ -87,7 +87,7 @@ class Pipeline:
             print("Customized 3-Agents: ", three_agents)
 
         sorted_process_method = self.__init_method(data, process_method)
-        print("Process Method: ", sorted_process_method)
+        # print("Process Method: ", sorted_process_method)
 
         print_schema = False #
         frontend_schema = "" #
@@ -103,7 +103,7 @@ class Pipeline:
                 raise AttributeError(f"Method '{method_name}' not found in {agent_name}.")
             data = method(data)
             if not print_schema and data.print_schema: #
-                print("Schema: \n", data.print_schema)
+                # print("Schema: \n", data.print_schema)
                 frontend_schema = data.print_schema
                 print_schema = True
         data = self.extraction_agent.summarize_answer(data)
