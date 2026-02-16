@@ -49,11 +49,11 @@ def run_oneke_from_text(file_path, text, document_type, section_name=None):
     # - Open Source: LLaMA, Qwen, MiniCPM, ChatGLM
     # - Closed Source: ChatGPT, DeepSeek, LocalServer
     
-    config['model']['category'] = "LocalServer" 
-    config['model']['model_name_or_path'] = "lfm2-8b-a1b"
-    config['model']['api_key'] = os.getenv("LM_STUDIO_API_KEY") 
+    config['model']['category'] = "Qwen" 
+    config['model']['model_name_or_path'] = "Qwen/Qwen2.5-0.5B-Instruct"
+    # config['model']['api_key'] = os.getenv("LM_STUDIO_API_KEY") 
     # config['model']['base_url'] = os.getenv("LM_STUDIO_LOCAL_URL") 
-    config['model']['base_url'] = os.getenv("LM_STUDIO_NETWORK_URL") 
+    # config['model']['base_url'] = os.getenv("LM_STUDIO_NETWORK_URL") 
     
     config["extraction"]["text"] = text
     config['extraction']["update_case"] = False # Controls whether to update the case repository with new extraction results.
@@ -64,7 +64,7 @@ def run_oneke_from_text(file_path, text, document_type, section_name=None):
     # config['construct']['username'] = os.getenv("NEO4J_USERNAME")
     # config['construct']['password'] = os.getenv("NEO4J_PASSWORD")
     
-    # --- END CONFIG SETUP ---
+    # --- END SCHEMA CONFIG ---
 
     # Write temp config
     with tempfile.NamedTemporaryFile(
