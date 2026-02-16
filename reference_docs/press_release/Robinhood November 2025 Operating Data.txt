@@ -1,65 +1,0 @@
-Robinhood Markets, Inc. Reports November 2025 Operating Data
-
-MENLO PARK, Calif., December 10, 2025 (GLOBE NEWSWIRE) - Robinhood Markets, Inc. ("Robinhood") (NASDAQ: HOOD) today reported select monthly operating data for November 2025.
-
-? Funded Customers at the end of November were 26.9 million (down approximately 130 thousand from the end of October 2025, up approximately 2.10 million year-over-year).
-? This includes the impact of required escheatment of approximately 280 thousand low- balance accounts. Prior to the escheatment, Funded Customers would have grown by approximately 150 thousand in November.
-
-? Total Platform Assets at the end of November were $325 billion (down 5% from the end of October 2025, up 67% year-over-year).
-
-? Net Deposits were $7.1 billion in November, or a 25% annualized growth rate relative to October 2025 Total Platform Assets.
-? Over the last twelve months, Net Deposits were $70.2 billion, or an annual growth rate of 36% relative to November 2024 Total Platform Assets.
-
-? Trading Volumes in November:
-? Equity Notional Trading Volumes were $201.5 billion (down 37% from October 2025, up 37% year-over-year).
-
-? Options Contracts Traded were 193.2 million (down 28% from October 2025, up 24% year-over-year).
-
-? Crypto Notional Trading Volumes were $28.6 billion (down 12% from October 2025, down 19% year-over-year), including Robinhood App Notional Trading Volumes of $12.0 billion (down 14% from October 2025, down 66% year-over-year) and Bitstamp Notional Trading Volumes of $16.6 billion (down 11% from October 2025).
-
-? Event Contracts Traded were 3.0 billion (up 20% from October 2025).
-
-? Margin balances at the end of November were $16.8 billion (up 2% from the end of October 2025, up 147% year-over-year).
-
-? Total Cash Sweep balances at the end of November were $32.5 billion (down 5% from the end of October 2025, up 23% year-over-year).
-? This includes the impact of roughly $700 million of Non-Gold Cash Sweep balances moving to customer free credit balances as we wound down the Robinhood Non-Gold Cash Sweep program in November 2025.
-
-? Total Securities Lending Revenue in November was $34 million (down 43% from October 2025, up 48% year-over-year).
-
-
-
-
-(M - in millions, B - in billions)November 2025October 2025 M/M ChangeNovember 2024  Y/Y ChangeFunded Customer Growth (M)Funded Customers26.927.1(1%)24.8+8%Asset Growth ($B)Total Platform Assets Net Deposits1$324.5
-$7.1$342.6
-$5.6(5%) NM$194.6
-$5.6+67% NMTradingTrading Days (Equities and Options)1923(17%)20(5%)Total Trading VolumesEquity ($B)$201.5$320.1(37%)$147.1+37%Options Contracts (M)193.2266.7(28%)155.5+24%Crypto ($B)2$28.6$32.5(12%)$35.2(19%)Robinhood App ($B)$12.0$13.9(14%)$35.2(66%)Bitstamp ($B)$16.6$18.6(11%)-NAEvent Contracts (B)3.02.5+20%0.5NM
-Daily Average Revenue Trades (DARTs) (M)Equity2.73.1(13%)2.5+8%Options1.31.4(7%)1.0+30%Crypto30.60.6-1.0(40%)Customer Margin and Cash Sweep ($B)Margin Book$16.8$16.5+2%$6.8+147%Total Cash Sweep$32.5$34.2(5%)$26.5+23%Gold Cash Sweep$31.4$32.4(3%)$25.7+22%Non-Gold Cash Sweep4$1.1$1.8(39%)$0.8+38%
-Total Securities Lending Revenue ($M)
-$34
-$60
-(43%)
-$23
-+48%
-1. Starting in June 2025, Net Deposits include results from Bitstamp. Net Deposits do not include results from TradePMR.
-2. Refer to Robinhood's full monthly metrics release for the definition of Notional Trading Volume.
-3. Crypto DARTs do not include Bitstamp Institutional activity.
-4. In November 2025, the Robinhood Non-Gold Cash Sweep program ended, moving approximately
-$700 million of Non-Gold Cash Sweep to customer free credit balances. RIA cash sweep balances remain in Non-Gold Cash Sweep.
-
-For definitions and additional information regarding these metrics, please refer to Robinhood's full monthly metrics release, which is available on investors.robinhood.com.
-
-The information in this release is unaudited and the information for the months in the most recent fiscal quarter is preliminary, based on Robinhood's estimates, and subject to completion of financial closing procedures. Final results for the most recent fiscal quarter, as reported in Robinhood's quarterly and annual filings with the U.S. Securities and Exchange Commission ("SEC"), might vary from the information in this release.
-
-About Robinhood
-
-Robinhood Markets, Inc. (NASDAQ: HOOD) transformed financial services by introducing commission- free stock trading and democratizing access to the markets for millions of investors. Today, Robinhood, through its subsidiaries, lets you trade stocks, options, futures (which includes event contracts), and crypto, invest for retirement, earn with Robinhood Gold, and access an expert-managed portfolio with Robinhood Strategies. Headquartered in Menlo Park, California, Robinhood puts customers in the driver's seat, delivering unprecedented value and products intentionally designed for a new generation of investors. Additional information about Robinhood can be found at www.robinhood.com.
-
-Robinhood uses the "Overview" tab of its Investor Relations website (accessible at investors.robinhood.com/overview) and its Newsroom (accessible at newsroom.aboutrobinhood.com), as means of disclosing information to the public in a broad, non-exclusionary manner for purposes of the SEC Regulation Fair Disclosure (Reg. FD). Investors should routinely monitor those web pages, in addition to Robinhood's press releases, SEC filings, and public conference calls and webcasts, as information posted on them could be deemed to be material information.
-
-"Robinhood" and the Robinhood feather logo are registered trademarks of Robinhood Markets, Inc. All other names are trademarks and/or registered trademarks of their respective owners.
-
-Contacts
-
-Investor Relations: ir@robinhood.com
-
-Press: press@robinhood.com

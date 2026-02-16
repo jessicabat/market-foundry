@@ -1,0 +1,26 @@
+model:
+  category: Qwen
+  model_name_or_path: Qwen/Qwen2.5-1.5B-Instruct
+  device: cuda:0 #auto
+
+extraction:
+  task: Triple
+  instruction: >
+    Extract general causal relationships and key entities from this financial document.
+    Since the document type is broad, focus on any explicit "A causes B" or "A leads to B" statements.
+
+    CRITICAL RULES:
+    1. Capture any cause-effect: (cause, causes, effect).
+    2. Capture key metrics: (metric, increased/decreased, amount).
+    3. Capture entities: (person, role, company).
+    4. Avoid vague triples; stick to explicit text evidence.
+
+  constraint: [
+    [
+      "Entity", "Event", "Metric", "Concept", "Action", "Outcome"
+    ],
+    [
+      "causes", "leads_to", "increases", "decreases", "related_to", "part_of", "managed_by", "reports_to"
+    ]
+  ]
+  mode: customized
