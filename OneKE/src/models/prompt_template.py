@@ -103,7 +103,7 @@ SUMMARIZE_INSTRUCTION = """
 **Result List**: {answer_list}
 
 **Output Schema**: {schema}
-Now summarize all the information from the Result List. Filter or merge the redundant information.
+Now summarize all the information from the Result List. Filter or merge the redundant information. The final answer MUST follow the ouput schema strictly. If there are attributes in the output schema that are not mentioned in the Result List, please set them to null.
 """
 summarize_instruction = PromptTemplate(
     input_variables=["instruction", "examples", "answer_list", "schema"],

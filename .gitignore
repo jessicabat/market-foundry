@@ -3,3 +3,8 @@ src/.ipynb_checkpoints/
 src/utils/.ipynb_checkpoints/
 src/utils/__pycache__/
 .env
+.DS_Store
+__pycache__/
+.ipynb_checkpoints/
+.env
+.venv

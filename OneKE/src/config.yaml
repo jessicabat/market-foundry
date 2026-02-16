@@ -1,5 +1,5 @@
 model:
-  embedding_model: all-MiniLM-L6-v2
+  embedding_model: all-MiniLM-L12-v2
 
 agent:
   default_schema: The final extraction result should be formatted as a JSON object.
@@ -19,3 +19,4 @@ agent:
     customized:
       schema_agent:  get_retrieved_schema
       extraction_agent: extract_information_direct
+      reflection_agent: reflect_with_case

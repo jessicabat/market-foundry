@@ -1,0 +1,73 @@
+model:
+  # Recommend using ChatGPT or DeepSeek APIs for complex IE task.
+  category: Qwen # model category, chosen from ChatGPT, DeepSeek, LLaMA, Qwen, ChatGLM, MiniCPM, OneKE.
+  model_name_or_path: Qwen/Qwen2.5-0.5B-Instruct # # model name, chosen from the model list of the selected category.
+  api_key: "" # your API key for the model with API service. No need for open-source models.
+  base_url: "" # # base URL for the API service. No need for open-source models.
+  device: auto # device to run the model, chosen from auto, cpu, cuda, cuda:0 etc. Default set to auto.
+
+extraction:
+  task: Triple # task type, chosen from Base, NER, RE, EE, Triple
+  instruction: >
+    Extract all factual triples directly supported by the text. 
+    A valid triple must describe an explicit relationship stated in the text, such as classifications, attributes, associations, actions, part–whole links, temporal or spatial relations, or cause–effect statements, using wording that appears directly in the text.
+
+    Do not generate triples that are not grounded in the text. 
+    Do not infer, imagine, or hallucinate causal links.
+    Do not include abstract concepts like "probability," "chain-of-thought," or model internal behavior.
+
+    Ensure the extracted triples are interpretable and make sense in natural language.
+    Convert all extracted knowledge to lowercase to prevent case sensitivity.
+    Use the exact wording (in lowercase) from the input text for head, relation, and tail whenver possible.
+    Always extract all triples that meet the criteria — do not stop after one.
+    Look to chain triples together to form a more complete knowledge graph.
+    Ensure head and tail are not identical and contain no empty values.
+    Reject any extracted triple where head, relation, or tail exceeds 15 words.
+    Only output triples in the JSON format required by the schema:
+    {
+      "head": "",
+      "head_type": "",
+      "relation": "",
+      "relation_type": "",
+      "tail": "",
+      "tail_type": ""
+    }
+    For example:
+    [
+      {
+        "head": "higher revenue",
+        "head_type": "financial_metric",
+        "relation": "drives",
+        "relation_type": "causal",
+        "tail": "profit growth",
+        "tail_type": "financial_outcome"
+      },
+      {
+        "head": "investment in marketing",
+        "head_type": "financial_action",
+        "relation": "leads to",
+        "relation_type": "causal",
+        "tail": "increased sales",
+        "tail_type": "financial_metric"
+      }
+    ]
+    
+  constraint: [
+    [
+      'Model', 'Metric', 'Dataset', 'Methodology', 'Research_Question', 'Author','Financial_Ratio', 'Accounting_Item', 'Prompt_Strategy', 'Firm_Characteristic', 'Statistical_Test', 'Benchmark_Model', 'Data_Split', 'Prediction_Horizon'
+    ],
+    [
+      'outperforms', 'achieves_score', 'trained_on', 'utilizes_method', 'analyzed_dataset', 'authored_by', 'calculated_using', 'proxies_for', 'negatively_associated_with', 'positively_associated_with', 'robust_to', 'composed_of', 'generated_by'
+    ]
+  ]
+  use_file: true # whether to use a file for the input text. Default set to false.
+  file_path: FinancialPapers/Financial Statement Analysis with Large Language Models.pdf #  # path to the input file. No need if use_file is set to false.
+  mode: customized # extraction mode, chosen from quick, detailed, customized. Default set to quick. See src/config.yaml for more details.
+  update_case: false # whether to update the case repository. Default set to false.
+  show_trajectory: false # whether to display the extracted intermediate steps
+
+# construct: # (Optional) If you want to construct a Knowledge Graph, you need to set the construct field, or you must delete this field.
+#   database: Neo4j # database type, now only support Neo4j.
+#   url:  # your database URL，Neo4j's default port is 7687.
+#   username:  # your database username.
+#   password:  # your database password.
