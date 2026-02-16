@@ -32,6 +32,12 @@ CLASS_TO_CONFIG = {
 }
 
 def run_oneke_from_text(file_path, text, document_type, section_name=None):
+    
+    output_base = os.path.join(REPO_ROOT, "new_outputs", get_basename(file_path))
+    os.makedirs(output_base, exist_ok=True)
+    case_dir = os.path.join(output_base, f"{document_type}_{section_name or 'full'}")
+
+    
     start_time = time.time()
     base_config_name = CLASS_TO_CONFIG.get(document_type)
     if base_config_name is None:
@@ -50,14 +56,16 @@ def run_oneke_from_text(file_path, text, document_type, section_name=None):
     # - Closed Source: ChatGPT, DeepSeek, LocalServer
     
     config['model']['category'] = "Qwen" 
-    config['model']['model_name_or_path'] = "Qwen/Qwen2.5-0.5B-Instruct"
+    config['model']['model_name_or_path'] = "Qwen/Qwen2.5-1.5B-Instruct"
     # config['model']['api_key'] = os.getenv("LM_STUDIO_API_KEY") 
     # config['model']['base_url'] = os.getenv("LM_STUDIO_LOCAL_URL") 
     # config['model']['base_url'] = os.getenv("LM_STUDIO_NETWORK_URL") 
     
     config["extraction"]["text"] = text
     config['extraction']["update_case"] = False # Controls whether to update the case repository with new extraction results.
-    config['extraction']["show_trajectory"] = False # Controls whether to display the intermediate steps of extraction.
+    config['extraction']["show_trajectory"] = True #False # Controls whether to display the intermediate steps of extraction.
+
+    config["extraction"]["case_dir"] = f"/tmp/oneke_{document_type}_{section_name}"
     
     # config['construct']['database'] = "Neo4j"
     # config['construct']['url'] = os.getenv("NEO4J_URL")

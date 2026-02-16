@@ -1,7 +1,7 @@
 """ Document Classification 
 Functions to process text and files for data extraction tasks. Supported file formats include .pdf, .txt, .docx, .html, and .json.
 """
-
+import re
 import os
 import joblib
 import pandas as pd
@@ -66,6 +66,13 @@ def extract_text(loaded_files):
         texts.append((loaded_file[0].metadata.get('source'), combined_text))
     return texts
 
+def normalize_for_knn(text: str) -> str:
+    # Collapse runs of 3+ newlines into 2, and 2+ spaces into 1
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    text = re.sub(r"[ \t]{2,}", " ", text)
+    return text.strip()
+
 # Load the trained document classification model
 def load_document_classification_model(model_path):
     if not os.path.exists(model_path):
@@ -89,9 +96,30 @@ def classify_document_types(model, vectorizer, texts):
 
 # Output document classifications
 def output_classifications(classifications):
-    df_classifications = pd.DataFrame(list(classifications.items()), columns=["File", "Document Type"])
+    # df_classifications = pd.DataFrame(list(classifications.items()), columns=["File", "Document Type"])
+    # df_classifications["File"] = df_classifications["File"].apply(get_basename)
+    # print("Document Classifications:\n", df_classifications, "\n")
+    
+    # Extract labels and confidences for DataFrame
+    files = []
+    doc_types = []
+    confidences = []
+    
+    for file, (label, score) in classifications.items():
+        files.append(file)
+        doc_types.append(label)
+        confidences.append(f"{score:.3f}")
+    
+    df_classifications = pd.DataFrame({
+        "File": files,
+        "Document Type": doc_types,
+        "Confidence": confidences
+    })
+    
     df_classifications["File"] = df_classifications["File"].apply(get_basename)
+    
     print("Document Classifications:\n", df_classifications, "\n")
+
     
 # """ Document Sectioning for src/run.py
 # Functions to run the document sectioning pipeline.
