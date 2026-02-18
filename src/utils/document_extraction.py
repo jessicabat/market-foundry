@@ -38,44 +38,27 @@ def run_oneke_from_text(file_path, text, document_type, section_name=None):
         return
 
     base_config_path = os.path.join(CONFIG_DIR, base_config_name)
+    extraction_config_path = os.path.join(REPO_ROOT, "src", "utils", "extraction_config.yaml")
 
     # Load base config
     with open(base_config_path, "r") as f:
         config = yaml.safe_load(f)
-        
-    # --- SCHEMA CONFIG HERE ---
     
-    # Supports:
-    # - Open Source: LLaMA, Qwen, MiniCPM, ChatGLM
-    # - Closed Source: ChatGPT, DeepSeek, LocalServer
+    # Load reference config for extraction
+    with open(extraction_config_path) as f:
+        content = os.path.expandvars(f.read())
+    reference_config = yaml.safe_load(content)
     
-    # For model config
-    config['model'].update({
-        "category": "LocalServer", 
-        "model_name_or_path": "lfm2-8b-a1b", 
-        "api_key": os.getenv("LM_STUDIO_API_KEY"),
-        "base_url": os.getenv("LM_STUDIO_LOCAL_URL"), 
-        # "base_url": os.getenv("LM_STUDIO_NETWORK_URL"), 
-    })
+    # Merge reference config into temp config
+    for key in reference_config:
+        if key in config and isinstance(config[key], dict):
+            config[key].update(reference_config[key])
+        else:
+            config[key] = reference_config[key]
+            
+    # Update text in temp config
+    config['extraction']['text'] = text
     
-    # For extraction config
-    config['extraction'].update({
-        "text": text,
-        "update_case": False, # Controls whether to update the case repository with new extraction results.
-        "show_trajectory": False, # Controls whether to display the intermediate steps of extraction.
-    })
-    
-    # For knowledge graph construction, comment out if not desired.
-    config['construct'] = {}
-    config['construct'].update({
-        "database": "Neo4j",
-        "url": os.getenv("NEO4J_URL"),
-        "username": os.getenv("NEO4J_USERNAME"),
-        "password": os.getenv("NEO4J_PASSWORD"),
-    })
-    
-    # --- END SCHEMA CONFIG ---
-
     # Write temp config
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".yaml", delete=False
