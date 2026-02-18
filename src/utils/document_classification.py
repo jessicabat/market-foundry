@@ -3,10 +3,17 @@ Functions to process text and files for data extraction tasks. Supported file fo
 """
 
 import os
+import sys
 import joblib
 import pandas as pd
 from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2txtLoader, BSHTMLLoader, JSONLoader
 import time
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+from OneKE.src.utils.process import process_single_quotes, remove_redundant_space, format_string
 
 SUPPORTED_EXTENSIONS = {".pdf", ".txt", ".docx", ".html", ".json"}
 
@@ -63,7 +70,8 @@ def extract_text(loaded_files):
     texts = []
     for loaded_file in loaded_files:
         combined_text = "\n".join(page.page_content for page in loaded_file)
-        texts.append((loaded_file[0].metadata.get('source'), combined_text))
+        text = remove_redundant_space(format_string(process_single_quotes(combined_text)))
+        texts.append((loaded_file[0].metadata.get('source'), text))
     return texts
 
 # Load the trained document classification model

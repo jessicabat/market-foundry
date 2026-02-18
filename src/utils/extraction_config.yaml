@@ -1,0 +1,20 @@
+# Supports:
+# - Open Source: LLaMA, Qwen, MiniCPM, ChatGLM
+# - Closed Source: ChatGPT, DeepSeek, LocalServer
+model:
+  category: "LocalServer"
+  model_name_or_path: "lfm2-8b-a1b"
+  api_key: ${LM_STUDIO_API_KEY}
+  # base_url: ${LM_STUDIO_LOCAL_URL}
+  base_url: ${LM_STUDIO_NETWORK_URL} 
+
+extraction:
+  update_case: false # Controls whether to update the case repository with new extraction results.
+  show_trajectory: false # Controls whether to display the intermediate steps of extraction when finished.
+
+# For knowledge graph construction, comment out if not desired.
+# construct:
+#   database: "Neo4j"
+#   url: ${NEO4J_URL}
+#   username: ${NEO4J_USERNAME}
+#   password: ${NEO4J_PASSWORD}
