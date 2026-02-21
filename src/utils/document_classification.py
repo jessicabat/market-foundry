@@ -91,10 +91,10 @@ def classify_document_types(model, vectorizer, texts):
     vectorized_texts = vectorizer.transform([text[1] for text in texts])
     classifications = {}
     for file, text in zip([text[0] for text in texts], vectorized_texts):
-        predicted_probabilities = model.predict_proba(text)
-        confidence = max(predicted_probabilities[0])
-        print(predicted_probabilities) # Print predicted probabilities for debugging
-        print(confidence) # Print confidence score for debugging
+        # predicted_probabilities = model.predict_proba(text)
+        # confidence = max(predicted_probabilities[0])
+        # print(predicted_probabilities) # Print predicted probabilities for debugging
+        # print(confidence) # Print confidence score for debugging
         classification = model.predict(text)
         classifications[file] = classification[0]
     return classifications

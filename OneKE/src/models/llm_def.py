@@ -37,56 +37,6 @@ class BaseEngine:
         self.temperature = temperature
         self.top_p = top_p
         self.max_tokens = max_tokens
-        
-class LFM(BaseEngine):
-    def __init__(self, model_name_or_path: str):
-        super().__init__(model_name_or_path)
-        self.name = "LFM"
-        self.model_id = model_name_or_path
-        self.tokenizer.padding_side = "left"
-        self.tokenizer.truncation_side = "right"
-        if self.device.type == "cuda":
-            dtype = torch.float16
-        else:
-            dtype = torch.float32 
-        self.generation_config = GenerationConfig(
-            do_sample=True,
-            temperature=self.temperature,
-            top_p=self.top_p,
-            max_new_tokens=1024,
-            eos_token_id=self.tokenizer.eos_token_id,
-            pad_token_id=self.tokenizer.eos_token_id,
-        )
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            self.model_id,
-            trust_remote_code=True
-        )     
-        self.model = AutoModelForCausalLM.from_pretrained(
-            self.model_id,
-            trust_remote_code=False,
-            dtype=dtype,
-            device_map="auto",
-        )
-
-    def get_chat_response(self, prompt: str):
-        full_prompt = (
-            SYSTEM_PROMPT
-            + "\n\n### input text\n"
-            + prompt 
-            +"\n\n### extracted triples in JSON format\n"
-        ) 
-        inputs = self.tokenizer(
-            full_prompt,
-            return_tensors="pt",
-            truncation=True,
-            max_length=8192
-        ).to(self.device)
-        outputs = self.model.generate(
-            **inputs,
-            generation_config=self.generation_config
-        )
-        generated = outputs[0][inputs["input_ids"].shape[1]:]
-        return self.tokenizer.decode(generated, skip_special_tokens=True).strip()
 
 class LLaMA(BaseEngine):
     def __init__(self, model_name_or_path: str):

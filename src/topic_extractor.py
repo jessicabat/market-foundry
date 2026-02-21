@@ -2,12 +2,15 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 import json
 
-MODEL = "meta-llama/Llama-3.2-1B-Instruct"
-tokenizer = AutoTokenizer.from_pretrained(MODEL)
+MODEL = "Qwen/Qwen2.5-1.5B-Instruct"
+tokenizer = AutoTokenizer.from_pretrained(
+    MODEL,
+)
 model = AutoModelForCausalLM.from_pretrained(
     MODEL,
-    dtype=torch.float16,
-    device_map="auto")
+    torch_dtype=torch.float16,
+    device_map="auto",
+    )
 
 
 def extract_topics(document):
@@ -30,7 +33,10 @@ def extract_topics(document):
 
                         FORMAT:
                         {{
-                        "Main Topic": ["Related Subtopic 1", "Related Subtopic 2"]
+                        "Main Topics": ["Topic 1", "Topic 2", ...],
+                        "Topic 1": ["Subtopic A", "Subtopic B", ...],
+                        "Topic 2": ["Subtopic C", "Subtopic D", ...],
+                        ...
                         }}
 
                         RULES:
@@ -49,7 +55,7 @@ def extract_topics(document):
                         """
         }
     ]
-
+        
     inputs = tokenizer.apply_chat_template(
         messages,
         add_generation_prompt=True,
@@ -60,8 +66,8 @@ def extract_topics(document):
 
     outputs = model.generate(
         **inputs,
-        max_new_tokens=600,
-        temperature=0.1
+        max_new_tokens=1024,
+        temperature=0.1,
     )
 
     response = tokenizer.decode(
@@ -72,8 +78,21 @@ def extract_topics(document):
     if not response:
         raise ValueError("Model returned empty response")
 
-    return json.loads(response)
+    # return json.loads(response)
+    print("\nObserved Topics:\n", response)
+    try:
+        response = response.strip()
 
+        # Remove markdown fences if present
+        if response.startswith("```"):
+            response = response.split("```")[1]
+            if response.startswith("json"):
+                response = response[4:]
+            response = response.strip()
+
+        return json.loads(response)
+    except json.JSONDecodeError:
+        raise ValueError("Model response is not valid JSON")
 
 if __name__ == "__main__":
     doc = """

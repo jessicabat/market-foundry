@@ -1,18 +1,19 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from topic_extractor import tokenizer, model
 import torch
 import json
 import yaml
 import os
 import copy
 
-MODEL = "meta-llama/Llama-3.2-1B-Instruct"
+# MODEL = "Qwen/Qwen2.5-1.5B-Instruct"
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL)
-model = AutoModelForCausalLM.from_pretrained(
-    MODEL,
-    dtype=torch.float32,
-    device_map="auto"
-)
+# tokenizer = AutoTokenizer.from_pretrained(MODEL)
+# model = AutoModelForCausalLM.from_pretrained(
+#     MODEL,
+#     torch_dtype=torch.float32,
+#     device_map="auto"
+# )
 
 
 BASE_YAML_TEMPLATE = {
@@ -75,89 +76,89 @@ def generate_yaml_configs(document_type, topic_map):
     {
         "role": "system",
         "content": """
-You are a structured JSON generator.
+        You are a structured JSON generator.
 
-CRITICAL RULES:
+        CRITICAL RULES:
 
-- Output ONLY valid JSON.
-- NEVER output explanations.
-- NEVER output markdown.
-- NEVER output text before or after JSON.
-- If unsure, output:
+        - Output ONLY valid JSON.
+        - NEVER output explanations.
+        - NEVER output markdown.
+        - NEVER output text before or after JSON.
+        - If unsure, output:
 
-{"yaml_files":[]}
-"""
-    },
-    {
-        "role": "user",
-        "content": f"""
-You are designing knowledge extraction constraints for a knowledge graph.
+        {"yaml_files":[]}
+        """
+            },
+            {
+                "role": "user",
+                "content": f"""
+        You are designing knowledge extraction constraints for a knowledge graph.
 
-INPUTS:
+        INPUTS:
 
-Document Type:
-{document_type}
+        Document Type:
+        {document_type}
 
-Topic Map:
-{json.dumps(topic_map, indent=2)}
+        Topic Map:
+        {json.dumps(topic_map, indent=2)}
 
-TASK:
+        TASK:
 
-Generate YAML extraction plans grounded in the topic map.
+        Generate YAML extraction plans grounded in the topic map.
 
-OUTPUT FORMAT:
+        OUTPUT FORMAT:
 
-{{
-  "yaml_files": [
-    {{
-      "file_name": "string.yaml",
-      "instruction_focus": "short semantic focus",
-      "entities": ["entity1","entity2"],
-      "relations": ["relation1","relation2"]
-    }}
-  ]
-}}
+        {{
+        "yaml_files": [
+            {{
+            "file_name": "string.yaml",
+            "instruction_focus": "short semantic focus",
+            "entities": ["entity1","entity2"],
+            "relations": ["relation1","relation2"]
+            }}
+        ]
+        }}
 
-RULES (CRITICAL):
+        RULES (CRITICAL):
 
-- Generate EXACTLY 3 YAML files.
-- Each YAML must focus on ONE main topic from the topic map.
-- file_name MUST be unique:
-  {document_type}_focus_1.yaml
-  {document_type}_focus_2.yaml
-  {document_type}_focus_3.yaml
+        - Generate EXACTLY 3 YAML files.
+        - Each YAML must focus on ONE main topic from the topic map.
+        - file_name MUST be unique:
+        {document_type}_focus_1.yaml
+        {document_type}_focus_2.yaml
+        {document_type}_focus_3.yaml
 
-ENTITY GENERATION PROCESS (FOLLOW STRICTLY):
+        ENTITY GENERATION PROCESS (FOLLOW STRICTLY):
 
-Step 1:
-Identify the CORE concept of the topic.
+        Step 1:
+        Identify the CORE concept of the topic.
 
-Step 2:
-List related BUSINESS OBJECTS discussed under this concept.
-Examples of object types:
-- financial metrics
-- business operations
-- costs
-- forecasts
-- stakeholders
-- investments
-- risks
+        Step 2:
+        List related BUSINESS OBJECTS discussed under this concept.
+        Examples of object types:
+        - financial metrics
+        - business operations
+        - costs
+        - forecasts
+        - stakeholders
+        - investments
+        - risks
 
-Step 3:
-Convert those objects into canonical noun phrases.
+        Step 3:
+        Convert those objects into canonical noun phrases.
 
-Step 4:
-Return 12–18 DISTINCT entities.
+        Step 4:
+        Return 12–18 DISTINCT entities.
 
-IMPORTANT:
-- Entities must be DIFFERENT concepts, not paraphrases.
-- Do NOT repeat the topic words directly.
-- Expand outward from the topic into related domain concepts.
+        IMPORTANT:
+        - Entities must be DIFFERENT concepts, not paraphrases.
+        - Do NOT repeat the topic words directly.
+        - Expand outward from the topic into related domain concepts.
 
-Return ONLY valid JSON.
-"""
-    }
-]
+        Return ONLY valid JSON.
+        """
+        }
+    ]
 
 
     inputs = tokenizer.apply_chat_template(
