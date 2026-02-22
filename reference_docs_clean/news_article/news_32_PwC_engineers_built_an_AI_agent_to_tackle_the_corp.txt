@@ -1,0 +1,63 @@
+PwC engineers built an AI agent to tackle the corporate world's least sexy task: spreadsheets
+
+PwC, like many consulting firms, is investing heavily in engineering talent.
+
+PwC, like many consulting firms, is investing heavily in engineering talent. Artur Widak/NurPhoto via Getty Images
+
+PwC, like many consulting firms, is investing heavily in engineering talent. Artur Widak/NurPhoto via Getty Images
+
+lighning bolt icon An icon in the shape of a lightning bolt.
+
+lighning bolt icon An icon in the shape of a lightning bolt. Impact Link
+
+The real way to judge a company's AI expertise isn't in the flashy headlines, but by looking at the "unsexy" work rolling out behind the scenes, Matt Wood, PwC's global and US commercial technology and innovation officer, told Business Insider.
+
+If Wood's theory holds that real AI prowess shows up in unglamorous advances PwC's latest launch is certainly notable. After all, what could be less sexy than spreadsheets?
+
+The Big Four firm announced this week that it has developed a "frontier AI agent" capable of reasoning over vast, enterprise-grade spreadsheets something that conventional AI systems struggle with because of their complexity, size, and interdependencies.
+
+The agent can understand and navigate spreadsheets, mimicking "how experienced practitioners work: scanning, searching, jumping across tabs, integrating charts and receipts, and reasoning," PwC said in a press release.
+
+Why spreadsheets matter
+
+Wood, who joined PwC in 2024 from a role as vice president of AI at Amazon Web Services, said that when he started, he'd noticed the wraparound, ultra-wide monitors filled with spreadsheets: "That's all anybody was working on," he said.
+
+But these were not "your school soccer team budget spreadsheet," said Wood. The spreadsheets that power large enterprises are enormously complex, often containing millions of cells, charts, graphs, images, receipts, and dozens of interlinked workbooks. "They are more like financial engines than they are spreadsheets," he told Business Insider.
+
+These files often underpin business-critical decisions, yet PwC "found that even today's modern AI was very poorly suited to managing these big enterprise spreadsheets," Wood said.
+
+"They just kind of shrug and give up for want of a better word."
+
+Matt Wood, PwC's global and US commercial technology and innovation officer. PwC
+
+Creating an AI capable of understanding and reasoning across large, complicated spreadsheet applications is what PwC's engineers set out to solve. Their solution was a "genuine advance in the field," Wood said.
+
+The agent has unlocked use cases across assurance, advisory, and tax, and boosts time saving on some tasks "from literally days to hours," said Wood.
+
+He gave the example of audit walkthroughs, where teams previously spent weeks manually gathering and validating evidence across numerous complex spreadsheets that existing AI tools couldn't handle.
+
+Now, users simply upload the files, and the frontier agent automatically maps their structure, extracts relevant data, and performs validation and consistency checks tasks that would otherwise require combing through millions of rows by hand.
+
+The result is faster meetings, less back-and-forth with clients, and cleaner, structured data ready for deeper AI-driven analysis, he said.
+
+Consulting powered by engineers
+
+PwC's AI spreadsheet agent was built in-house by engineers a function the firm has been rapidly expanding as it shifts beyond the traditional roles associated with the Big Four.
+
+In January, PwC launched a dedicated tech engineering career track to attract more technical talent, saying it wants to become "a destination for top engineering talent."
+
+Previously, the firm offered only consulting and accounting career paths. Wood told Business Insider that adding the engineering track is "a signpost" of its future plans.
+
+At the same time, PwC is retraining non-technical employees. The US branch of the firm recently announced a companywide workplace learning strategy focused on knowledge sharing and on developing a mix of human and AI skills needed for the future.
+
+Wood described the work engineers do at PwC as having two modes: "transforming today" and "building for tomorrow."
+
+The first focuses on improving current workflows reducing back-and-forth with clients, increasing trust, and delivering work more efficiently. The second reimagines professional services from scratch: "If you were to start from a blank piece of paper, what would professional services look like in an AI agent world?" said Wood.
+
+PwC engineers also work directly on client engagements, building AI systems tailored to specific projects. For example, they help organizations reorganize and redesign their finance functions from the ground up using agents, Wood said.
+
+Many of the consulting industry's top players are pursuing similar investments in technical talent as AI reshapes the work they do.
+
+Accenture, already one of consulting's most technically sophisticated players, has added nearly 40,000 AI and data professionals in the last two years. They now account for roughly 10% of its global headcount.
+
+EY, another Big Four firm, has added 61,000 technologists since 2023, according to its latest annual report.
