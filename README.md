@@ -1,5 +1,6 @@
 # Market Foundry: From Documents to Intelligence – Built Your Way  
 **Authors:** Jessica Batbayar, Matthew Wong, Marija Vukic  
+**[Project Website](https://jessicabat.github.io/market-foundry/)**
 
 ## Contributions  
 All authors collaborated continuously through pair programming. Together, we designed the workflow, implemented the extraction pipeline, configured models, debugged code, set up Neo4j, ran experiments, and authored all documentation. Every component of the project was developed collaboratively, with equal contributions from each author in terms of design, execution, and analysis.
