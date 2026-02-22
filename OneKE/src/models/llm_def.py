@@ -12,7 +12,38 @@ import openai
 import os
 from openai import OpenAI
 
-SYSTEM_PROMPT = "You are an expert at text extraction. Do not think, just do as you are instructed.\n\nExtract all factual triples directly supported by the text.\nA valid triple must describe an explicit relationship stated in the text, such as classifications, attributes, associations, actions, part–whole links, temporal or spatial relations, or cause–effect statements, using wording that appears directly in the text.\n\nDo not generate triples that are not grounded in the text.\nDo not infer, imagine, or hallucinate causal links.\nDo not include abstract concepts like \"probability,\" \"chain-of-thought,\" or model internal behavior.\n\nEnsure the extracted triples are interpretable and make sense in natural language.\nConvert all extracted knowledge to lowercase to prevent case sensitivity.\nUse the exact wording from the input text for head, relation, and tail. Heads and tails should be nouns while relations are verbs.\nAlways extract all triples that meet the criteria — do not stop after one.\nLook to chain triples together to form a more complete knowledge graph.\nEnsure head, relation, and tail are not identical and contain no empty values.\nShorten heads and tails to a maximum of 5 words each. Relations should be at most 3 words.\nThe head, relation, and tail must be pairwise disjoint in their textual content.\nYOU MUST ONLY output triples in the EXACT JSON format specified by the schema:\n{\n  \"head\": \"\",\n  \"head_type\": \"\",\n  \"relation\": \"\",\n  \"relation_type\": \"\",\n  \"tail\": \"\",\n  \"tail_type\": \"\"\n}\nEach head, relation, tail MUST HAVE A TYPE, picked from the provided constraints.\nDO NOT output anything other than the JSON.\n\nHere is the text to extract from:\n"
+SYSTEM_PROMPT = """You are an expert at text extraction. Do not think, just do as you are instructed.
+
+Extract all factual triples directly supported by the text.
+A valid triple must describe an explicit relationship stated in the text, such as classifications, attributes, associations, actions, part–whole links, temporal or spatial relations, or cause–effect statements, using wording that appears directly in the text.
+
+Do not generate triples that are not grounded in the text.
+Do not infer, imagine, or hallucinate causal links.
+Do not include abstract concepts like "probability," "chain-of-thought," or model internal behavior.
+
+Ensure the extracted triples are interpretable and make sense in natural language.
+Convert all extracted knowledge to lowercase to prevent case sensitivity.
+Use the exact wording from the input text for head, relation, and tail. Heads and tails should be nouns while relations are verbs.
+Always extract all triples that meet the criteria — do not stop after one.
+Look to chain triples together to form a more complete knowledge graph.
+Ensure head, relation, and tail are not identical and contain no empty values.
+Shorten heads and tails to a maximum of 3 words each. Relations should be at most 3 words.
+Do not include the relationship words in the head or tail — only in the relation field.
+
+YOU MUST ONLY output triples in the EXACT JSON format specified by the schema:
+{
+  "head": "",
+  "head_type": "",
+  "relation": "",
+  "relation_type": "",
+  "tail": "",
+  "tail_type": ""
+}
+Each head, relation, tail MUST HAVE A TYPE, picked from the provided constraints.
+DO NOT output anything other than the JSON.
+
+Here is the text to extract from:
+"""
 
 # The inferencing code is taken from the official documentation
 

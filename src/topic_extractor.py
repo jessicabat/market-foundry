@@ -1,19 +1,93 @@
+import os
+import gc
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from openai import OpenAI
 import torch
 import json
+from dotenv import load_dotenv
 
-MODEL = "Qwen/Qwen2.5-1.5B-Instruct"
-tokenizer = AutoTokenizer.from_pretrained(
-    MODEL,
-)
-model = AutoModelForCausalLM.from_pretrained(
-    MODEL,
-    torch_dtype=torch.float16,
-    device_map="auto",
+load_dotenv()
+
+def load_model_hf():
+    MODEL = "Qwen/Qwen2.5-1.5B-Instruct"
+    tokenizer = AutoTokenizer.from_pretrained(
+        MODEL,
     )
+    model = AutoModelForCausalLM.from_pretrained(
+        MODEL,
+        torch_dtype=torch.float16,
+        device_map="auto",
+    )
+    return tokenizer, model
+    
+def load_model_openai():
+    MODEL = "qwen/qwen3-4b-2507"
+    client = OpenAI(
+        api_key=os.getenv("LM_STUDIO_API_KEY"),
+        base_url=os.getenv("LM_STUDIO_NETWORK_URL")
+    )
+    return MODEL, client
+
+def extract_topics_openai(document):
+    MODEL, client = load_model_openai()
+    response = client.chat.completions.create(
+        model=MODEL,
+        messages=[
+            {
+                "role": "system",
+                "content": "You output ONLY valid JSON. No explanation. No markdown."
+            },
+            {
+                "role": "user",
+                "content": f"""
+                Analyze the document and identify ALL major topics discussed.
+
+                For each major topic, identify related subtopics or supporting ideas.
+
+                OUTPUT REQUIREMENTS:
+
+                Return ONLY valid JSON.
+                Return ONLY a flat dictionary.
+
+                FORMAT:
+                {{
+                "Main Topics": ["Topic 1", "Topic 2"],
+                "Topic 1": ["Subtopic A", "Subtopic B"],
+                "Topic 2": ["Subtopic C"]
+                }}
+
+                RULES:
+                - Topics should represent major themes
+                - Subtopics should represent supporting ideas
+                - Do NOT create wrapper keys
+                - Do NOT create nested dictionaries
+
+                Document:
+                {document}
+                """
+            }
+        ],
+        temperature=0.1,
+        max_tokens=1024,
+    )
+
+    content = response.choices[0].message.content.strip()
+
+    if not content:
+        raise ValueError("Model returned empty response")
+
+    # Remove markdown fences if present
+    if content.startswith("```"):
+        content = content.split("```")[1]
+        if content.startswith("json"):
+            content = content[4:]
+        content = content.strip()
+
+    return json.loads(content)
 
 
 def extract_topics(document):
+    tokenizer, model = load_model_hf()
     messages = [
         {
             "role": "system",
@@ -77,6 +151,10 @@ def extract_topics(document):
 
     if not response:
         raise ValueError("Model returned empty response")
+    
+    del model
+    del tokenizer
+    gc.collect()
 
     # return json.loads(response)
     print("\nObserved Topics:\n", response)

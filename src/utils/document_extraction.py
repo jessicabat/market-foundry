@@ -31,13 +31,16 @@ CLASS_TO_CONFIG = {
     "Press Release": "press_release.yaml",
 }
 
-def run_oneke_from_text(file_path, text, document_type, section_name=None):
+def run_oneke_from_text(file_path, text, document_type, section_name=None, base_config_dir=None):
     start_time = time.time()
     base_config_name = CLASS_TO_CONFIG.get(document_type)
     if base_config_name is None:
         return
 
-    base_config_path = os.path.join(CONFIG_DIR, base_config_name)
+    if base_config_dir:
+        base_config_path = file_path
+    else:
+        base_config_path = os.path.join(CONFIG_DIR, base_config_name)
     extraction_config_path = os.path.join(REPO_ROOT, "src", "utils", "extraction_config.yaml")
 
     # Load base config

@@ -84,9 +84,14 @@ def main():
                 input_file_path=file
             )
             
-        # Run OneKE pipeline for knowledge extraction on the sectioned documents
-        # for file in os.listdir(temp_dir):
-        #     run_oneke_from_text(file_path=os.path.join(temp_dir, file), text=text_lookup[file], document_type=classifications[file])
+            # Run OneKE pipeline for knowledge extraction on the sectioned documents
+            for temp_file in os.listdir(temp_dir):
+                run_oneke_from_text(
+                    file_path=os.path.join(temp_dir, temp_file),
+                    text=text_lookup[file],
+                    document_type=classifications[file],
+                    base_config_dir=temp_dir,
+                )
         
         # If you later run another pipeline stage that needs the YAMLs,
         # run it HERE inside the with-block.

@@ -1,10 +1,15 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from topic_extractor import tokenizer, model
+from topic_extractor import load_model_hf, load_model_openai
+from openai import OpenAI
 import torch
+import gc
 import json
 import yaml
 import os
 import copy
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # MODEL = "Qwen/Qwen2.5-1.5B-Instruct"
 
@@ -15,6 +20,11 @@ import copy
 #     device_map="auto"
 # )
 
+# MODEL = "lfm2-8b-a1b"
+# client = OpenAI(
+#     api_key=os.getenv("LM_STUDIO_API_KEY"),
+#     base_url=os.getenv("LM_STUDIO_NETWORK_URL")
+# )
 
 BASE_YAML_TEMPLATE = {
     "model": {
@@ -69,8 +79,8 @@ def safe_json_parse(text):
     print("⚠️ Could not parse JSON — returning empty fallback")
     return {"yaml_files": []}
 
-
-def generate_yaml_configs(document_type, topic_map):
+def generate_yaml_configs_openai(document_type, topic_map):
+    MODEL, client = load_model_openai()
 
     messages = [
     {
@@ -121,12 +131,10 @@ def generate_yaml_configs(document_type, topic_map):
 
         RULES (CRITICAL):
 
-        - Generate EXACTLY 3 YAML files.
-        - Each YAML must focus on ONE main topic from the topic map.
+        - Generate EXACTLY 1 YAML file.
+        - The YAML must focus on ALL main topics from the topic map.
         - file_name MUST be unique:
-        {document_type}_focus_1.yaml
-        {document_type}_focus_2.yaml
-        {document_type}_focus_3.yaml
+        {document_type}.yaml
 
         ENTITY GENERATION PROCESS (FOLLOW STRICTLY):
 
@@ -148,18 +156,160 @@ def generate_yaml_configs(document_type, topic_map):
         Convert those objects into canonical noun phrases.
 
         Step 4:
-        Return 12–18 DISTINCT entities.
+        Return ONLY 12–18 DISTINCT entities.
 
         IMPORTANT:
         - Entities must be DIFFERENT concepts, not paraphrases.
         - Do NOT repeat the topic words directly.
         - Expand outward from the topic into related domain concepts.
+        - Relations will be generated in the next step, so do NOT include relationship words in the entities.
+        
+        RELATION GENERATION PROCESS (FOLLOW STRICTLY):
+        Step 1:
+        For each entity, identify meaningful relationships to other entities.
+        Focus on relationships that are DISCUSSED IN THE DOCUMENT.
+        Examples of relationship types:
+        - quantitative relationships (e.g. "increases", "correlates with")
+        - qualitative relationships (e.g. "is a challenge for", "is a priority for")
+        - temporal relationships (e.g. "leads to", "results in")
+        - comparative relationships (e.g. "outperforms", "is more significant than")
+        
+        Step 2:
+        Convert those relationships into concise verb phrases with a MAXIMUM of 3 words.
+        
+        Step 3:
+        Return ONLY 12–18 DISTINCT relationships.
+        
+        IMPORTANT:
+        - Relationships must be meaningful connections between the entities.
+        - Do NOT return generic relationships that are not grounded in the document discussion.
+        - Focus on relationships that provide insight into the dynamics between the entities.
 
         Return ONLY valid JSON.
         """
         }
     ]
 
+    response = client.chat.completions.create(
+        model=MODEL,
+        messages=messages,
+        temperature=0.1,
+        max_tokens=1024,
+    )
+    content = response.choices[0].message.content.strip()
+    print("\nRAW MODEL RESPONSE:\n", content)
+    return safe_json_parse(content)
+
+def generate_yaml_configs(document_type, topic_map):
+    tokenizer, model = load_model_hf()
+
+    messages = [
+    {
+        "role": "system",
+        "content": """
+        You are a structured JSON generator.
+
+        CRITICAL RULES:
+
+        - Output ONLY valid JSON.
+        - NEVER output explanations.
+        - NEVER output markdown.
+        - NEVER output text before or after JSON.
+        - If unsure, output:
+
+        {"yaml_files":[]}
+        """
+            },
+            {
+                "role": "user",
+                "content": f"""
+        You are designing knowledge extraction constraints for a knowledge graph.
+
+        INPUTS:
+
+        Document Type:
+        {document_type}
+
+        Topic Map:
+        {json.dumps(topic_map, indent=2)}
+
+        TASK:
+
+        Generate YAML extraction plans grounded in the topic map.
+
+        OUTPUT FORMAT:
+
+        {{
+        "yaml_files": [
+            {{
+            "file_name": "string.yaml",
+            "instruction_focus": "short semantic focus",
+            "entities": ["entity1","entity2"],
+            "relations": ["relation1","relation2"]
+            }}
+        ]
+        }}
+
+        RULES (CRITICAL):
+
+        - Generate EXACTLY 1 YAML file.
+        - The YAML must focus on ALL main topics from the topic map.
+        - file_name MUST be unique:
+        {document_type}.yaml
+
+        ENTITY GENERATION PROCESS (FOLLOW STRICTLY):
+
+        Step 1:
+        Identify the CORE concept of the topic.
+
+        Step 2:
+        List related BUSINESS OBJECTS discussed under this concept.
+        Examples of object types:
+        - financial metrics
+        - business operations
+        - costs
+        - forecasts
+        - stakeholders
+        - investments
+        - risks
+
+        Step 3:
+        Convert those objects into canonical noun phrases.
+
+        Step 4:
+        Return ONLY 12–18 DISTINCT entities.
+
+        IMPORTANT:
+        - Entities must be DIFFERENT concepts, not paraphrases.
+        - Do NOT repeat the topic words directly.
+        - Expand outward from the topic into related domain concepts.
+        - Relations will be generated in the next step, so do NOT include relationship words in the entities.
+        
+        RELATION GENERATION PROCESS (FOLLOW STRICTLY):
+        Step 1:
+        For each entity, identify meaningful relationships to other entities.
+        Focus on relationships that are DISCUSSED IN THE DOCUMENT.
+        Examples of relationship types:
+        - quantitative relationships (e.g. "increases", "correlates with")
+        - qualitative relationships (e.g. "is a challenge for", "is a priority for")
+        - temporal relationships (e.g. "leads to", "results in")
+        - comparative relationships (e.g. "outperforms", "is more significant than")
+        
+        Step 2:
+        Convert those relationships into concise verb phrases.
+        
+        Step 3:
+        Return ONLY 12–18 DISTINCT relationships.
+        
+        IMPORTANT:
+        - Relationships must be meaningful connections between the entities.
+        - Do NOT return generic relationships that are not grounded in the document discussion.
+        - Focus on relationships that provide insight into the dynamics between the entities.
+
+        Return ONLY valid JSON.
+        """
+        }
+    ]
 
     inputs = tokenizer.apply_chat_template(
         messages,
@@ -171,7 +321,7 @@ def generate_yaml_configs(document_type, topic_map):
 
     outputs = model.generate(
         **inputs,
-        max_new_tokens=1200,
+        max_new_tokens=1024,
         temperature=0.2
     )
 
@@ -179,6 +329,10 @@ def generate_yaml_configs(document_type, topic_map):
         outputs[0][inputs["input_ids"].shape[-1]:],
         skip_special_tokens=True
     ).strip()
+    
+    del model
+    del tokenizer
+    gc.collect()
 
     print("\nRAW MODEL RESPONSE:\n", response)
 
