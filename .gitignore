@@ -8,3 +8,7 @@ __pycache__/
 .ipynb_checkpoints/
 .env
 .venv
+Papers/eval
+Papers/test
+Papers/test2
+Papers/test3
