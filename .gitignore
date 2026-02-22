@@ -12,3 +12,7 @@ Papers/eval
 Papers/test
 Papers/test2
 Papers/test3
+reference_docs_clean/
+.ipynb_checkpoints
+new_outputs/
+*.pyc
