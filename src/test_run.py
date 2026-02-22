@@ -65,29 +65,29 @@ def main():
     # vectorizer_path = os.path.join(os.path.dirname(__file__), "models", "TFIDF_Vectorizer.joblib")
     # vectorizer = load_tfidf_vectorizer(vectorizer_path)
         
-    # ref_dir = os.path.join(os.path.dirname(__file__), "..", "reference_docs_clean")
-    # knn = KNNClassifier(ref_dir)
+    ref_dir = os.path.join(os.path.dirname(__file__), "..", "reference_docs_clean")
+    knn = KNNClassifier(ref_dir)
    
         
-    # # # Classify documents
-    # # classifications = classify_document_types(model, vectorizer, texts)
+    # # Classify documents
+    # classifications = classify_document_types(model, vectorizer, texts)
         
-    # # # Output the classifications
+    # # Output the classifications
 
-    # classifications = {}
-    # for file, raw_text in texts:
-    #     label, score = knn.classify(raw_text)
-    #     classifications[file] = (label, score)
-    #     print(f"{os.path.basename(file)} -> {label} (confidence {score:.2f})")
+    classifications = {}
+    for file, raw_text in texts:
+        label, score = knn.classify(raw_text)
+        classifications[file] = (label, score)
+        print(f"{os.path.basename(file)} -> {label} (confidence {score:.2f})")
     
-    # output_classifications(classifications)
+    output_classifications(classifications)
     
-    # # Section documents based on their classifications
-    # # sectioned_documents = section_documents(texts)
-    # sectioned_documents = section_documents(texts, classifications)
+    # Section documents based on their classifications
+    # sectioned_documents = section_documents(texts)
+    sectioned_documents = section_documents(texts, classifications)
     
-    # # Run OneKE pipeline for knowledge extraction on the sectioned documents
-    # run_oneke_pipeline(sectioned_documents, text_lookup, classifications)
+    # Run OneKE pipeline for knowledge extraction on the sectioned documents
+    run_oneke_pipeline(sectioned_documents, text_lookup, classifications)
     
 if __name__ == "__main__":
     main()
