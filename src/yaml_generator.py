@@ -123,8 +123,8 @@ def generate_yaml_configs_openai(document_type, topic_map):
             {{
             "file_name": "string.yaml",
             "instruction_focus": "short semantic focus",
-            "entities": ["entity1","entity2"],
-            "relations": ["relation1","relation2"]
+            "entity_types": ["entity1","entity2"],
+            "relation_types": ["relation1","relation2"]
             }}
         ]
         }}
@@ -132,58 +132,46 @@ def generate_yaml_configs_openai(document_type, topic_map):
         RULES (CRITICAL):
 
         - Generate EXACTLY 1 YAML file.
-        - The YAML must focus on ALL main topics from the topic map.
-        - file_name MUST be unique:
+        - The YAML must cover ALL main topics from the topic map.
+
+        ONTOLOGY DISCIPLINE RULES:
+
+        - Entity types MUST represent stable real-world classes.
+        - Entity types must be literal ontological categories (e.g., "Company", "Product", "Technology", "Stock", "Index", "Financial Metric", "Event").
+        - Do NOT create abstract interpretive categories (e.g., "Corporate Strategy", "Market Reaction", "Stock Performance", "Technical Capability", "Investment Entity").
+        - Do NOT convert roles or behaviors into entity types.
+        - Do NOT encode outcomes, sentiments, reactions, or states as entity types.
+        - Entity types must be reusable across many documents in the same domain.
+
+        RELATION DISCIPLINE RULES:
+
+        - Relation types must describe observable relationships stated in text.
+        - Do NOT generate interpretive or inferred causal relations unless explicitly stated in text.
+        - Do NOT create meta-level reporting relations (e.g., "claims", "states", "asserts") unless speech attribution is a core topic.
+        - Prefer concrete semantic relations (e.g., "acquires", "partners_with", "drops_by", "uses", "competes_with").
+        - Merge semantically similar relations into one reusable category.
+
+        SCOPE CONTROL RULES:
+
+        - Avoid fabricating economic interpretation (e.g., "market sentiment shift", "pricing power erosion") unless explicitly described.
+        - Avoid encoding analysis, inference, or narrative framing.
+        - Focus strictly on extractable factual structure.
+        
+        DOMAIN ADAPTATION RULE:
+
+        - Entity and relation types must reflect the primary domain of the document.
+        - Do not reuse finance-oriented types unless the document is about finance.
+        - Infer the domain from the topic map before generating types.
+
+        TYPE COUNT RULES:
+
+        - Create 10–15 entity types maximum.
+        - Create 10–15 relation types maximum.
+        - Types must be reusable across multiple triples.
+        - Avoid narrow variants of the same concept.
+
+        file_name MUST be:
         {document_type}.yaml
-
-        ENTITY GENERATION PROCESS (FOLLOW STRICTLY):
-
-        Step 1:
-        Identify the CORE concept of the topic.
-
-        Step 2:
-        List related BUSINESS OBJECTS discussed under this concept.
-        Examples of object types:
-        - financial metrics
-        - business operations
-        - costs
-        - forecasts
-        - stakeholders
-        - investments
-        - risks
-
-        Step 3:
-        Convert those objects into canonical noun phrases.
-
-        Step 4:
-        Return ONLY 12–18 DISTINCT entities.
-
-        IMPORTANT:
-        - Entities must be DIFFERENT concepts, not paraphrases.
-        - Do NOT repeat the topic words directly.
-        - Expand outward from the topic into related domain concepts.
-        - Relations will be generated in the next step, so do NOT include relationship words in the entities.
-        
-        RELATION GENERATION PROCESS (FOLLOW STRICTLY):
-        Step 1:
-        For each entity, identify meaningful relationships to other entities.
-        Focus on relationships that are DISCUSSED IN THE DOCUMENT.
-        Examples of relationship types:
-        - quantitative relationships (e.g. "increases", "correlates with")
-        - qualitative relationships (e.g. "is a challenge for", "is a priority for")
-        - temporal relationships (e.g. "leads to", "results in")
-        - comparative relationships (e.g. "outperforms", "is more significant than")
-        
-        Step 2:
-        Convert those relationships into concise verb phrases with a MAXIMUM of 3 words.
-        
-        Step 3:
-        Return ONLY 12–18 DISTINCT relationships.
-        
-        IMPORTANT:
-        - Relationships must be meaningful connections between the entities.
-        - Do NOT return generic relationships that are not grounded in the document discussion.
-        - Focus on relationships that provide insight into the dynamics between the entities.
 
         Return ONLY valid JSON.
         """
@@ -197,11 +185,10 @@ def generate_yaml_configs_openai(document_type, topic_map):
         max_tokens=1024,
     )
     content = response.choices[0].message.content.strip()
-    print("\nRAW MODEL RESPONSE:\n", content)
+    # print("\nRAW MODEL RESPONSE:\n", content)
     return safe_json_parse(content)
 
 def generate_yaml_configs(document_type, topic_map):
-    tokenizer, model = load_model_hf()
 
     messages = [
     {
@@ -252,10 +239,12 @@ def generate_yaml_configs(document_type, topic_map):
 
         RULES (CRITICAL):
 
-        - Generate EXACTLY 1 YAML file.
-        - The YAML must focus on ALL main topics from the topic map.
+        - Generate EXACTLY 3 YAML files.
+        - Each YAML must focus on ONE main topic from the topic map.
         - file_name MUST be unique:
-        {document_type}.yaml
+        {document_type}_focus_1.yaml
+        {document_type}_focus_2.yaml
+        {document_type}_focus_3.yaml
 
         ENTITY GENERATION PROCESS (FOLLOW STRICTLY):
 
@@ -274,42 +263,21 @@ def generate_yaml_configs(document_type, topic_map):
         - risks
 
         Step 3:
-        Convert those objects into canonical noun phrases.
+        Convert those objects into canonical nouns.
 
         Step 4:
-        Return ONLY 12–18 DISTINCT entities.
+        Return 12–18 DISTINCT entities.
 
         IMPORTANT:
         - Entities must be DIFFERENT concepts, not paraphrases.
         - Do NOT repeat the topic words directly.
         - Expand outward from the topic into related domain concepts.
-        - Relations will be generated in the next step, so do NOT include relationship words in the entities.
-        
-        RELATION GENERATION PROCESS (FOLLOW STRICTLY):
-        Step 1:
-        For each entity, identify meaningful relationships to other entities.
-        Focus on relationships that are DISCUSSED IN THE DOCUMENT.
-        Examples of relationship types:
-        - quantitative relationships (e.g. "increases", "correlates with")
-        - qualitative relationships (e.g. "is a challenge for", "is a priority for")
-        - temporal relationships (e.g. "leads to", "results in")
-        - comparative relationships (e.g. "outperforms", "is more significant than")
-        
-        Step 2:
-        Convert those relationships into concise verb phrases.
-        
-        Step 3:
-        Return ONLY 12–18 DISTINCT relationships.
-        
-        IMPORTANT:
-        - Relationships must be meaningful connections between the entities.
-        - Do NOT return generic relationships that are not grounded in the document discussion.
-        - Focus on relationships that provide insight into the dynamics between the entities.
 
         Return ONLY valid JSON.
         """
         }
     ]
+
 
     inputs = tokenizer.apply_chat_template(
         messages,
@@ -321,7 +289,7 @@ def generate_yaml_configs(document_type, topic_map):
 
     outputs = model.generate(
         **inputs,
-        max_new_tokens=1024,
+        max_new_tokens=1200,
         temperature=0.2
     )
 
@@ -329,12 +297,8 @@ def generate_yaml_configs(document_type, topic_map):
         outputs[0][inputs["input_ids"].shape[-1]:],
         skip_special_tokens=True
     ).strip()
-    
-    del model
-    del tokenizer
-    gc.collect()
 
-    print("\nRAW MODEL RESPONSE:\n", response)
+    # print("\nRAW MODEL RESPONSE:\n", response)
 
     return safe_json_parse(response)
 
@@ -349,8 +313,8 @@ def write_yaml_files(config_json, output_dir="generated_yamls", input_file_path=
 
         yaml_obj = copy.deepcopy(BASE_YAML_TEMPLATE)
 
-        entities = config.get("entities", [])
-        relations = config.get("relations", [])
+        entities = config.get("entity_types", [])
+        relations = config.get("relation_types", [])
 
         yaml_obj["extraction"]["constraint"] = [entities, relations]
         yaml_obj["extraction"]["file_path"] = input_file_path
@@ -380,7 +344,7 @@ def write_yaml_files(config_json, output_dir="generated_yamls", input_file_path=
             # INLINE constraint formatting
             f.write("  constraint: [\n")
             f.write("  " + json.dumps(entities) + ",\n")
-            f.write("  " + json.dumps(relations) + "\n")
+            f.write("  " + json.dumps(relations) + ",\n")
             f.write("  ]\n")
 
             f.write("  use_file: false\n")

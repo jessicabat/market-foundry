@@ -18,5 +18,5 @@ agent:
       reflection_agent: reflect_with_case
     customized:
       schema_agent:  get_retrieved_schema
-      extraction_agent: extract_information_direct
+      extraction_agent: extract_information_with_case
       reflection_agent: reflect_with_case

@@ -21,6 +21,14 @@ SUPPORTED_EXTENSIONS = {".pdf", ".txt", ".docx", ".html", ".json"}
 def get_basename(file_path):
     return os.path.basename(file_path)
 
+# Clean texts
+def clean_texts(texts):
+    cleaned_texts = []
+    for file, text in texts:
+        cleaned_text = remove_redundant_space(format_string(process_single_quotes(text)))
+        cleaned_texts.append((file, cleaned_text))
+    return cleaned_texts
+
 # Load file based on its extension
 def load_file(file_path):
     try:
@@ -70,8 +78,7 @@ def extract_text(loaded_files):
     texts = []
     for loaded_file in loaded_files:
         combined_text = "\n".join(page.page_content for page in loaded_file)
-        text = remove_redundant_space(format_string(process_single_quotes(combined_text)))
-        texts.append((loaded_file[0].metadata.get('source'), text))
+        texts.append((loaded_file[0].metadata.get('source'), combined_text))
     return texts
 
 # Load the trained document classification model

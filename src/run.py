@@ -23,12 +23,12 @@ import os
 import argparse
 import tempfile
 from annotated_types import doc
+from matplotlib import text
 from utils import *
 from models import *
 from utils.document_classification import *
 from utils.document_sectioning import *
 from utils.document_extraction import *
-import topic_extractor, yaml_generator
 
 def main():
     # Create command-line argument parser
@@ -62,44 +62,22 @@ def main():
     texts = extract_text(loaded_files)
     text_lookup = {file: text for file, text in texts}
         
+    # Cleaen each text and add to cleaned_texts list
+    cleaned_texts = clean_texts(texts)
+        
     # Classify documents
-    classifications = classify_document_types(model, vectorizer, texts)
+    classifications = classify_document_types(model, vectorizer, cleaned_texts)
         
     # Output the classifications
     output_classifications(classifications)
     
     # Extract topics from the documents using the topic_extractor module
-    with tempfile.TemporaryDirectory() as temp_dir:
-
-        for file, text in texts:
-            topics = topic_extractor.extract_topics(text)
-            topic_configs = yaml_generator.generate_yaml_configs(
-                classifications[file],
-                topics
-            )
-
-            yaml_generator.write_yaml_files(
-                topic_configs,
-                output_dir=temp_dir,
-                input_file_path=file
-            )
-            
-            # Run OneKE pipeline for knowledge extraction on the sectioned documents
-            for temp_file in os.listdir(temp_dir):
-                run_oneke_from_text(
-                    file_path=os.path.join(temp_dir, temp_file),
-                    text=text_lookup[file],
-                    document_type=classifications[file],
-                    base_config_dir=temp_dir,
-                )
-        
-        # If you later run another pipeline stage that needs the YAMLs,
-        # run it HERE inside the with-block.
+    extract_topics_and_run_oneke(cleaned_texts, classifications, text_lookup)
     
-    # Section documents based on their classifications
+    # # Section documents based on their classifications
     # sectioned_documents = section_documents(texts)
     
-    # Run OneKE pipeline for knowledge extraction on the sectioned documents
+    # # Run OneKE pipeline for knowledge extraction on the sectioned documents
     # run_oneke_pipeline(sectioned_documents, text_lookup, classifications)
     
 if __name__ == "__main__":

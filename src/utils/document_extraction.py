@@ -12,6 +12,7 @@ from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2t
 import time
 from utils import *
 from utils.document_classification import get_basename
+import topic_extractor, yaml_generator
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -30,6 +31,41 @@ CLASS_TO_CONFIG = {
     "SEC Filing": "sec_filing.yaml",
     "Press Release": "press_release.yaml",
 }
+
+# Extract topics from the documents using the topic_extractor module
+def extract_topics_and_run_oneke(texts, classifications, text_lookup):
+    for file, text in texts:
+        try:
+            with tempfile.TemporaryDirectory() as temp_dir:
+
+                topics = topic_extractor.extract_topics_openai(text)
+                
+                topic_configs = yaml_generator.generate_yaml_configs_openai(
+                    classifications[file],
+                    topics
+                )
+                
+                yaml_generator.write_yaml_files(
+                    topic_configs,
+                    output_dir=temp_dir,
+                    input_file_path=file
+                )
+
+                for temp_file in os.listdir(temp_dir):
+                    run_oneke_from_text(
+                        file_path=os.path.join(temp_dir, temp_file),
+                        text=text_lookup[file],
+                        document_type=classifications[file],
+                        base_config_dir=temp_dir,
+                    )
+            
+                # If you later run another pipeline stage that needs the YAMLs,
+                # run it HERE inside the with-block.
+        except Exception as e:
+                print(f"Error writing YAML files for {file}: {e}")
+                print(f"Running OneKE using default config for {classifications[file]} due to YAML generation failure.\n")
+                run_oneke_from_text(file, text_lookup[file], classifications[file])
+                continue
 
 def run_oneke_from_text(file_path, text, document_type, section_name=None, base_config_dir=None):
     start_time = time.time()

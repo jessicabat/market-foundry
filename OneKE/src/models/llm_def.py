@@ -12,38 +12,87 @@ import openai
 import os
 from openai import OpenAI
 
-SYSTEM_PROMPT = """You are an expert at text extraction. Do not think, just do as you are instructed.
+SYSTEM_PROMPT = """You are an expert financial information extraction system.
 
-Extract all factual triples directly supported by the text.
-A valid triple must describe an explicit relationship stated in the text, such as classifications, attributes, associations, actions, part–whole links, temporal or spatial relations, or cause–effect statements, using wording that appears directly in the text.
+    Extract all factual triples directly and explicitly supported by the text.
 
-Do not generate triples that are not grounded in the text.
-Do not infer, imagine, or hallucinate causal links.
-Do not include abstract concepts like "probability," "chain-of-thought," or model internal behavior.
+    A valid triple must represent a concrete, observable relationship stated in the document.
+    The relationship must be explicitly expressed, not implied.
 
-Ensure the extracted triples are interpretable and make sense in natural language.
-Convert all extracted knowledge to lowercase to prevent case sensitivity.
-Use the exact wording from the input text for head, relation, and tail. Heads and tails should be nouns while relations are verbs.
-Always extract all triples that meet the criteria — do not stop after one.
-Look to chain triples together to form a more complete knowledge graph.
-Ensure head, relation, and tail are not identical and contain no empty values.
-Shorten heads and tails to a maximum of 3 words each. Relations should be at most 3 words.
-Do not include the relationship words in the head or tail — only in the relation field.
+    VALID RELATION CATEGORIES INCLUDE:
+    - financial results (reports, increases, decreases, exceeds, falls to)
+    - ownership or holdings (owns, holds, acquires, sells)
+    - guidance and forecasts (expects, projects, forecasts) — only if explicitly stated
+    - product or business activity (launches, operates, manufactures, provides)
+    - partnerships or agreements (partners_with, signs_agreement_with)
+    - regulatory or filing events (files, discloses, settles, complies_with)
+    - comparisons (outperforms, underperforms, exceeds)
+    - quantitative attributes (has_revenue, has_net_income, has_margin, valued_at)
 
-YOU MUST ONLY output triples in the EXACT JSON format specified by the schema:
-{
-  "head": "",
-  "head_type": "",
-  "relation": "",
-  "relation_type": "",
-  "tail": "",
-  "tail_type": ""
-}
-Each head, relation, tail MUST HAVE A TYPE, picked from the provided constraints.
-DO NOT output anything other than the JSON.
+    STRICT GROUNDING RULES:
 
-Here is the text to extract from:
-"""
+    - Do NOT infer causation unless explicitly stated.
+    - Do NOT infer competitive implications unless explicitly stated.
+    - Do NOT interpret sentiment or market reaction beyond explicit price movement.
+    - Do NOT summarize analytical conclusions as entities.
+    - Do NOT reify abstract concepts (e.g., “performance gap”, “market sentiment”, “strategic positioning”).
+    - Avoid promotional or forward-looking narrative unless tied to a concrete measurable action.
+
+    SPEECH AND REPORTING RULES:
+
+    - Exclude generic reporting verbs (e.g., "said", "stated", "announced") unless:
+    - the communication itself is the key fact (e.g., earnings announcement, SEC filing, guidance issuance).
+    - For earnings calls or filings, extract the financial fact — not the speech act.
+
+    QUANTITATIVE DISCIPLINE:
+
+    - Preserve numeric values exactly as written.
+    - Extract percentages, dollar amounts, dates, time periods, and quantities as explicit entities.
+    - Prefer atomic quantitative triples (e.g., revenue → was → $3.2 billion).
+    - Do NOT embed long narrative phrases in tails.
+
+    ENTITY REQUIREMENTS:
+
+    HEADS and TAILS must:
+    - Be concrete real-world entities.
+    - Be nouns or noun phrases.
+    - Represent companies, financial metrics, securities, products, filings, time periods, events, regulatory bodies, datasets, methods, or measurable outcomes.
+    - Not represent abstract interpretations, behaviors, or conditions.
+
+    RELATION REQUIREMENTS:
+
+    - Must be atomic verbs or short verb phrases.
+    - Must reflect explicit textual wording.
+    - Must not encode interpretation or analysis.
+
+    TYPE DISCIPLINE:
+
+    - head_type and tail_type must be stable reusable categories such as:
+    Company, Stock, Financial Metric, Revenue, Net Income, Asset, Liability,
+    Portfolio, Index, Product, Service, Filing, Regulatory Body, Agreement,
+    Time Period, Event, Dataset, Model, Method, Metric.
+
+    - Do NOT invent abstract types (e.g., "Market Behavior", "Strategic Intent", "Performance Gap").
+    - Do NOT encode states or interpretations as types.
+
+    OUTPUT FORMAT (STRICT):
+
+    {
+    "triple_list": [
+        {
+        "head": "",
+        "head_type": "",
+        "relation": "",
+        "relation_type": "",
+        "tail": "",
+        "tail_type": ""
+        }
+    ]
+    }
+
+    Output ONLY valid JSON.
+    Do NOT output explanations.
+    """
 
 # The inferencing code is taken from the official documentation
 
@@ -295,8 +344,8 @@ class LocalServer(BaseEngine):
         self.name = model_name_or_path.split('/')[-1]
         self.model = model_name_or_path
         self.base_url = base_url
-        self.temperature = 0
-        self.top_p = 1.0
+        self.temperature = 0.2
+        self.top_p = 0.9
         self.max_tokens = 1024
         self.api_key = api_key if api_key != "" else "EMPTY_API_KEY"
         self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)

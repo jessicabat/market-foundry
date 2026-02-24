@@ -4,6 +4,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from openai import OpenAI
 import torch
 import json
+import yaml
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,7 +22,14 @@ def load_model_hf():
     return tokenizer, model
     
 def load_model_openai():
-    MODEL = "qwen/qwen3-4b-2507"
+    with open(os.path.join(os.path.dirname(__file__), "utils", "extraction_config.yaml")) as f:
+        config = yaml.safe_load(f)
+    model_info = config.get("model", {})
+    
+    MODEL = model_info.get("model_name_or_path", "")
+    
+    # MODEL = "gemma-3n-e2b-it"
+    
     client = OpenAI(
         api_key=os.getenv("LM_STUDIO_API_KEY"),
         base_url=os.getenv("LM_STUDIO_NETWORK_URL")
@@ -35,39 +43,51 @@ def extract_topics_openai(document):
         messages=[
             {
                 "role": "system",
-                "content": "You output ONLY valid JSON. No explanation. No markdown."
+                "content": """
+                You are a strict JSON generator.
+
+                You must output ONLY valid JSON.
+                If any non-JSON text is generated, the program will crash.
+
+                Do not summarize.
+                Do not explain.
+                Do not format.
+                Do not use markdown.
+                Do not use headings.
+                Do not use bullet points.
+
+                Output must start with { and end with }.
+
+                TASK:
+                Analyze the document and identify ALL major topics discussed.
+
+                For each major topic, identify related subtopics.
+
+                OUTPUT FORMAT (flat dictionary only):
+
+                {
+                "Main Topics": ["Topic 1", "Topic 2"],
+                "Topic 1": ["Subtopic A", "Subtopic B"],
+                "Topic 2": ["Subtopic C"]
+                }
+
+                RULES:
+                - Topics must represent major themes
+                - Subtopics must represent supporting ideas
+                - No nested dictionaries
+                - No wrapper keys
+                - Use natural topic names
+                """
             },
             {
                 "role": "user",
                 "content": f"""
-                Analyze the document and identify ALL major topics discussed.
-
-                For each major topic, identify related subtopics or supporting ideas.
-
-                OUTPUT REQUIREMENTS:
-
-                Return ONLY valid JSON.
-                Return ONLY a flat dictionary.
-
-                FORMAT:
-                {{
-                "Main Topics": ["Topic 1", "Topic 2"],
-                "Topic 1": ["Subtopic A", "Subtopic B"],
-                "Topic 2": ["Subtopic C"]
-                }}
-
-                RULES:
-                - Topics should represent major themes
-                - Subtopics should represent supporting ideas
-                - Do NOT create wrapper keys
-                - Do NOT create nested dictionaries
-
                 Document:
                 {document}
                 """
             }
         ],
-        temperature=0.1,
+        temperature=0,
         max_tokens=1024,
     )
 
@@ -82,6 +102,8 @@ def extract_topics_openai(document):
         if content.startswith("json"):
             content = content[4:]
         content = content.strip()
+        
+    print("\nObserved Topics:\n", content)
 
     return json.loads(content)
 
@@ -136,6 +158,7 @@ def extract_topics(document):
         tokenize=True,
         return_dict=True,
         return_tensors="pt",
+        max_length=8192,
     ).to(model.device)
 
     outputs = model.generate(

@@ -5172,75 +5172,68 @@
     "good": [
       {
         "index": {
-          "embed_index": "**Text**:\nMeta Platforms acquired Instagram in 2012 for $1 billion.",
+          "embed_index": "**Text**:\nMicrosoft acquired GitHub in 2018 for $7.5 billion.",
           "str_index": "\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['acquired', 'acquired in', 'acquisition value']\"\n"
         },
-        "content": "**Text**:\nMeta Platforms acquired Instagram in 2012 for $1 billion.\n\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['acquired', 'acquired in', 'acquisition value']\"\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"Meta Platforms\", \"head_type\": \"organization\", \"relation\": \"acquired\", \"relation_type\": \"corporate action\", \"tail\": \"Instagram\", \"tail_type\": \"organization\"}, {\"head\": \"Meta Platforms\", \"head_type\": \"organization\", \"relation\": \"acquired in\", \"relation_type\": \"time\", \"tail\": \"2012\", \"tail_type\": \"date\"}, {\"head\": \"Meta Platforms\", \"head_type\": \"organization\", \"relation\": \"acquisition value\", \"relation_type\": \"financial metric\", \"tail\": \"$1 billion\", \"tail_type\": \"monetary value\"}]}\n\n**Reflection**:\nThe extraction correctly identifies the acquiring organization, target organization, acquisition year, and transaction value. All relations conform to the allowed list, and each head, relation, and tail is annotated with an appropriate type."
+        "content": "**Text**:\nMicrosoft acquired GitHub in 2018 for $7.5 billion.\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"Microsoft\", \"head_type\": \"organization\", \"relation\": \"acquired\", \"relation_type\": \"corporate action\", \"tail\": \"GitHub\", \"tail_type\": \"organization\"}, {\"head\": \"Microsoft\", \"head_type\": \"organization\", \"relation\": \"acquired in\", \"relation_type\": \"time\", \"tail\": \"2018\", \"tail_type\": \"date\"}, {\"head\": \"Microsoft\", \"head_type\": \"organization\", \"relation\": \"acquisition value\", \"relation_type\": \"financial metric\", \"tail\": \"$7.5 billion\", \"tail_type\": \"monetary value\"}]}\n\n**Reflection**:\nThe event is decomposed into atomic triples. Each triple represents one fact. No multi-concept tails are used."
       },
       {
         "index": {
-          "embed_index": "**Text**:\nApple reported net income of $19.9 billion in Q1 2024.",
-          "str_index": "\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['reported net income', 'reporting period']\"\n"
+          "embed_index": "**Text**:\nThe performance gap between Model A and Model B is due to Nvidia's strong returns.",
+          "str_index": ""
         },
-        "content": "**Text**:\nApple reported net income of $19.9 billion in Q1 2024.\n\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['reported net income', 'reporting period']\"\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"Apple\", \"head_type\": \"organization\", \"relation\": \"reported net income\", \"relation_type\": \"financial metric\", \"tail\": \"$19.9 billion\", \"tail_type\": \"monetary value\"}, {\"head\": \"Apple\", \"head_type\": \"organization\", \"relation\": \"reporting period\", \"relation_type\": \"time\", \"tail\": \"Q1 2024\", \"tail_type\": \"date\"}]}\n\n**Reflection**:\nThe company, financial metric, and reporting period are accurately captured. The relations are valid under the constraint list, and all elements include explicit type annotations."
+        "content": "**Text**:\nThe performance gap between Model A and Model B is due to Nvidia's strong returns.\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"performance gap between Model A and Model B\", \"head_type\": \"performance comparison\", \"relation\": \"is due to\", \"relation_type\": \"causal relation\", \"tail\": \"Nvidia's strong returns\", \"tail_type\": \"financial performance\"}]}\n\n**Reflection**:\nThe full descriptive phrase is preserved. The extraction avoids reducing the head to vague abstractions like \"gap\"."
       },
       {
         "index": {
-          "embed_index": "**Text**:\nThe Louvre Museum is located in Paris and was established in 1793.",
-          "str_index": "\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['located in', 'established in']\"\n"
+          "embed_index": "**Text**:\nTesla batteries outperform competitors.",
+          "str_index": ""
         },
-        "content": "**Text**:\nThe Louvre Museum is located in Paris and was established in 1793.\n\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['located in', 'established in']\"\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"Louvre Museum\", \"head_type\": \"organization\", \"relation\": \"located in\", \"relation_type\": \"location\", \"tail\": \"Paris\", \"tail_type\": \"city\"}, {\"head\": \"Louvre Museum\", \"head_type\": \"organization\", \"relation\": \"established in\", \"relation_type\": \"time\", \"tail\": \"1793\", \"tail_type\": \"date\"}]}\n\n**Reflection**:\nBoth location and founding year are extracted using valid relation types. Entity typing distinguishes the organization and city, and all required type fields are present."
+        "content": "**Text**:\nTesla batteries outperform competitors.\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"Tesla batteries\", \"head_type\": \"product\", \"relation\": \"outperform\", \"relation_type\": \"performance comparison\", \"tail\": \"competitors\", \"tail_type\": \"product group\"}]}\n\n**Reflection**:\nThe triple directly represents the factual comparison. No reporting verbs or claim wrappers are introduced."
       },
       {
         "index": {
-          "embed_index": "**Text**:\nGoldman Sachs downgraded Tesla to 'Sell' in October 2023.",
-          "str_index": "\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['downgraded', 'downgraded in']\"\n"
+          "embed_index": "**Text**:\nRemoving Nvidia caused performance convergence between Model A and Model B.",
+          "str_index": ""
         },
-        "content": "**Text**:\nGoldman Sachs downgraded Tesla to 'Sell' in October 2023.\n\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['downgraded', 'downgraded in']\"\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"Goldman Sachs\", \"head_type\": \"organization\", \"relation\": \"downgraded\", \"relation_type\": \"analyst action\", \"tail\": \"Tesla\", \"tail_type\": \"organization\"}, {\"head\": \"Goldman Sachs\", \"head_type\": \"organization\", \"relation\": \"downgraded in\", \"relation_type\": \"time\", \"tail\": \"October 2023\", \"tail_type\": \"date\"}]}\n\n**Reflection**:\nThe analyst action and time context are correctly extracted using permitted relations. The head and tail entities are properly typed as organizations, and relation types reflect the action category."
-      },
-      {
-        "index": {
-          "embed_index": "**Text**:\nThe United Nations was founded in 1945 and is headquartered in New York City.",
-          "str_index": "\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['founded in', 'headquartered in']\"\n"
-        },
-        "content": "**Text**:\nThe United Nations was founded in 1945 and is headquartered in New York City.\n\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['founded in', 'headquartered in']\"\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"United Nations\", \"head_type\": \"organization\", \"relation\": \"founded in\", \"relation_type\": \"time\", \"tail\": \"1945\", \"tail_type\": \"date\"}, {\"head\": \"United Nations\", \"head_type\": \"organization\", \"relation\": \"headquartered in\", \"relation_type\": \"location\", \"tail\": \"New York City\", \"tail_type\": \"city\"}]}\n\n**Reflection**:\nThe founding year and headquarters location are accurately mapped to allowed relations. All structural and typing constraints are satisfied."
+        "content": "**Text**:\nRemoving Nvidia caused performance convergence between Model A and Model B.\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"removal of Nvidia\", \"head_type\": \"intervention\", \"relation\": \"caused\", \"relation_type\": \"causal relation\", \"tail\": \"performance convergence between Model A and Model B\", \"tail_type\": \"performance outcome\"}]}\n\n**Reflection**:\nThe intervention and outcome are clearly modeled. The entities are not bundled incorrectly or fragmented into unrelated tails."
       }
     ],
     "bad": [
       {
         "index": {
-          "embed_index": "**Text**:\nOracle acquired Sun Microsystems in 2010.",
-          "str_index": "\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['acquired', 'acquired in']\"\n"
+          "embed_index": "**Text**:\nThe performance gap between Model A and Model B narrowed.",
+          "str_index": ""
         },
-        "content": "**Text**:\nOracle acquired Sun Microsystems in 2010.\n\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['acquired', 'acquired in']\"\n\n**Incorrect Answer**:\n{\"triple_list\": [{\"head\": \"Sun Microsystems\", \"relation\": \"acquired\", \"tail\": \"Oracle\"}]}\n\n**Reflection**:\nThe incorrect answer reverses the direction of acquisition and omits the acquisition year. It also fails to provide type annotations for head, relation, and tail, violating structural requirements.\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"Oracle\", \"head_type\": \"organization\", \"relation\": \"acquired\", \"relation_type\": \"corporate action\", \"tail\": \"Sun Microsystems\", \"tail_type\": \"organization\"}, {\"head\": \"Oracle\", \"head_type\": \"organization\", \"relation\": \"acquired in\", \"relation_type\": \"time\", \"tail\": \"2010\", \"tail_type\": \"date\"}]}"
+        "content": "**Text**:\nThe performance gap between Model A and Model B narrowed.\n\n**Incorrect Answer**:\n{\"triple_list\": [{\"head\": \"gap\", \"head_type\": \"performance metric\", \"relation\": \"narrowed\", \"relation_type\": \"change\", \"tail\": \"Model A and Model B\", \"tail_type\": \"models\"}]}\n\n**Reflection**:\nThe head is overly abstract and omits essential context. The full descriptive phrase must be preserved."
       },
       {
         "index": {
-          "embed_index": "**Text**:\nBerkshire Hathaway reported operating earnings of $10.04 billion in 2023.",
-          "str_index": "\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['reported operating earnings', 'reporting year']\"\n"
+          "embed_index": "**Text**:\nAmazon increased revenue by 10% in 2023.",
+          "str_index": ""
         },
-        "content": "**Text**:\nBerkshire Hathaway reported operating earnings of $10.04 billion in 2023.\n\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['reported operating earnings', 'reporting year']\"\n\n**Incorrect Answer**:\n{\"triple_list\": [{\"head\": \"2023\", \"relation\": \"reported operating earnings\", \"tail\": \"$10.04 billion\"}]}\n\n**Reflection**:\nThe incorrect answer assigns the reporting year as the head entity and omits the company. It also lacks required type annotations and misrepresents the semantic structure.\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"Berkshire Hathaway\", \"head_type\": \"organization\", \"relation\": \"reported operating earnings\", \"relation_type\": \"financial metric\", \"tail\": \"$10.04 billion\", \"tail_type\": \"monetary value\"}, {\"head\": \"Berkshire Hathaway\", \"head_type\": \"organization\", \"relation\": \"reporting year\", \"relation_type\": \"time\", \"tail\": \"2023\", \"tail_type\": \"date\"}]}"
+        "content": "**Text**:\nAmazon increased revenue by 10% in 2023.\n\n**Incorrect Answer**:\n{\"triple_list\": [{\"head\": \"Amazon\", \"head_type\": \"Corporate Revenue Growth Entity\", \"relation\": \"experienced financial upward adjustment\", \"relation_type\": \"economic fluctuation descriptor\", \"tail\": \"10%\", \"tail_type\": \"Revenue Adjustment Magnitude\"}]}\n\n**Reflection**:\nThe types and relation are over-engineered and not grounded in the text. Entity and relation labels must remain simple and interpretable."
       },
       {
         "index": {
-          "embed_index": "**Text**:\nNASA launched the James Webb Space Telescope in 2021.",
-          "str_index": "\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['launched', 'launched in']\"\n"
+          "embed_index": "**Text**:\nCompany X claims its software is faster.",
+          "str_index": ""
         },
-        "content": "**Text**:\nNASA launched the James Webb Space Telescope in 2021.\n\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['launched', 'launched in']\"\n\n**Incorrect Answer**:\n{\"triple_list\": [{\"head\": \"James Webb Space Telescope\", \"relation\": \"launched\", \"tail\": \"NASA\"}]}\n\n**Reflection**:\nThe incorrect answer reverses the agent and object roles and omits the launch year. It also lacks required typing fields, making the structure incomplete.\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"NASA\", \"head_type\": \"organization\", \"relation\": \"launched\", \"relation_type\": \"event action\", \"tail\": \"James Webb Space Telescope\", \"tail_type\": \"artifact\"}, {\"head\": \"NASA\", \"head_type\": \"organization\", \"relation\": \"launched in\", \"relation_type\": \"time\", \"tail\": \"2021\", \"tail_type\": \"date\"}]}"
+        "content": "**Text**:\nCompany X claims its software is faster.\n\n**Incorrect Answer**:\n{\"triple_list\": [{\"head\": \"Company X\", \"relation\": \"claims\", \"tail\": \"its software is faster\"}]}\n\n**Reflection**:\nThe extraction models the reporting verb instead of the factual comparison. Reporting verbs should not replace the underlying factual relationship."
       },
       {
         "index": {
-          "embed_index": "**Text**:\nCoca-Cola increased its dividend to $0.46 per share in 2023.",
-          "str_index": "\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['increased dividend to', 'increased in']\"\n"
+          "embed_index": "**Text**:\nApple reported revenue of $100 billion in 2023.",
+          "str_index": ""
         },
-        "content": "**Text**:\nCoca-Cola increased its dividend to $0.46 per share in 2023.\n\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['increased dividend to', 'increased in']\"\n\n**Incorrect Answer**:\n{\"triple_list\": [{\"head\": \"Coca-Cola\", \"relation\": \"dividend\", \"tail\": \"$0.46\"}]}\n\n**Reflection**:\nThe incorrect answer uses a relation not included in the constraint list and omits the time component. It also fails to include required type annotations.\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"Coca-Cola\", \"head_type\": \"organization\", \"relation\": \"increased dividend to\", \"relation_type\": \"financial action\", \"tail\": \"$0.46 per share\", \"tail_type\": \"monetary value\"}, {\"head\": \"Coca-Cola\", \"head_type\": \"organization\", \"relation\": \"increased in\", \"relation_type\": \"time\", \"tail\": \"2023\", \"tail_type\": \"date\"}]}"
+        "content": "**Text**:\nApple reported revenue of $100 billion in 2023.\n\n**Incorrect Answer**:\n{\"triple_list\": []}\n\n**Reflection**:\nReturning an empty triple list is invalid when extractable facts clearly exist."
       },
       {
         "index": {
-          "embed_index": "**Text**:\nThe World Health Organization declared COVID-19 a pandemic in 2020.",
-          "str_index": "\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['declared', 'declared in']\"\n"
+          "embed_index": "**Text**:\nRemoving Nvidia caused convergence between Model A, Model B, and the S&P 500.",
+          "str_index": ""
         },
-        "content": "**Text**:\nThe World Health Organization declared COVID-19 a pandemic in 2020.\n\n**Triple Extraction Constraint**: The relation types must be chosen from the following list.\n\"['declared', 'declared in']\"\n\n**Incorrect Answer**:\n{\"triple_list\": [{\"head\": \"COVID-19\", \"relation\": \"declared\", \"tail\": \"pandemic\"}]}\n\n**Reflection**:\nThe incorrect answer omits the declaring organization and time information. It also lacks structural type fields and does not fully satisfy the constraint.\n\n**Correct Answer**:\n{\"triple_list\": [{\"head\": \"World Health Organization\", \"head_type\": \"organization\", \"relation\": \"declared\", \"relation_type\": \"official action\", \"tail\": \"COVID-19\", \"tail_type\": \"disease\"}, {\"head\": \"World Health Organization\", \"head_type\": \"organization\", \"relation\": \"declared in\", \"relation_type\": \"time\", \"tail\": \"2020\", \"tail_type\": \"date\"}]}"
+        "content": "**Text**:\nRemoving Nvidia caused convergence between Model A, Model B, and the S&P 500.\n\n**Incorrect Answer**:\n{\"triple_list\": [{\"head\": \"Removing Nvidia\", \"relation\": \"caused\", \"tail\": \"convergence between Model A, Model B, and the S&P 500\"}]}\n\n**Reflection**:\nThe tail bundles multiple entities into a single descriptive phrase without preserving structure. Complex relationships should remain explicit and interpretable."
       }
     ]
   }
