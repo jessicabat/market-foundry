@@ -62,7 +62,7 @@ deduced_schema_code_instruction = PromptTemplate(
 # ==================================================================== #
 
 EXTRACT_INSTRUCTION = """
-**Instruction**: You are an agent skilled in information extarction. {instruction}
+**Instruction**: You are an agent skilled in information extraction. {instruction}
 {examples}
 **Text**: {text}
 {additional_info}
@@ -120,7 +120,7 @@ REFLECT_INSTRUCTION = """**Instruction**: You are an agent skilled in reflection
 
 **Reflection Reference**: {examples}
 
-Now please review each element in the extraction result. Identify and improve any potential issues in the result based on the reflection. NOTE: If the original result is correct, no modifications are needed!
+Now please review each element in the extraction result. Identify and improve any potential issues in the result based on the reflection. NOTE: If the original result is correct, no modifications are needed! If there are any structural issues in the original result, fix them according to the output schema.
 
 **Task**: {instruction}
 

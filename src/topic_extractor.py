@@ -50,8 +50,8 @@ def extract_topics_openai(document):
                 If any non-JSON text is generated, the program will crash.
                 
                 You MUST ensure that:
-                - Every [ has a matching ]
-                - Every { has a matching }
+                - EVERY [ has a matching ]
+                - EVERY { has a matching }
                 - The JSON must be syntactically valid and parseable.
                 If it is not valid JSON, regenerate it completely.
 

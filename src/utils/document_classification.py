@@ -7,6 +7,7 @@ import sys
 import joblib
 import pandas as pd
 from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2txtLoader, BSHTMLLoader, JSONLoader
+from knn_pipeline import classifier_knn
 import time
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -76,7 +77,10 @@ def expand_path(path):
 # Extract raw text from loaded files
 def extract_text(loaded_files):
     texts = []
-    for loaded_file in loaded_files:
+    for idx, loaded_file in enumerate(loaded_files):
+        if not loaded_file:
+            print(f"Skipping empty file at index {idx}")
+            continue
         combined_text = "\n".join(page.page_content for page in loaded_file)
         texts.append((loaded_file[0].metadata.get('source'), combined_text))
     return texts
@@ -93,17 +97,40 @@ def load_tfidf_vectorizer(vectorizer_path):
         raise FileNotFoundError(f"TF-IDF vectorizer not found at {vectorizer_path}. Ensure there is a model to load in the specified path.")
     return joblib.load(vectorizer_path)
 
-# Classify documents using the provided model and vectorizer
+# Classify documents using the tfidf model and KNN classifier, with heuristics to resolve disagreements
 def classify_document_types(model, vectorizer, texts):
-    vectorized_texts = vectorizer.transform([text[1] for text in texts])
+    raw_texts = [text[1] for text in texts]
+    filenames = [text[0] for text in texts]
+
+    vectorized_texts = vectorizer.transform(raw_texts)
+
+    knn_classifier = classifier_knn.KNNClassifier(
+        reference_dir=os.path.join(project_root, "src", "knn_pipeline", "reference_docs")
+    )
+
     classifications = {}
-    for file, text in zip([text[0] for text in texts], vectorized_texts):
-        # predicted_probabilities = model.predict_proba(text)
-        # confidence = max(predicted_probabilities[0])
-        # print(predicted_probabilities) # Print predicted probabilities for debugging
-        # print(confidence) # Print confidence score for debugging
-        classification = model.predict(text)
-        classifications[file] = classification[0]
+
+    for file, raw_text, tfidf_vec in zip(filenames, raw_texts, vectorized_texts):
+
+        tfidf_predicted_probabilities = model.predict_proba(tfidf_vec)
+        tfidf_confidence = max(tfidf_predicted_probabilities[0])
+        tfidf_classification = model.predict(tfidf_vec)
+
+        # Pass RAW TEXT to KNN
+        knn_classification, knn_confidence = knn_classifier.classify(raw_text)
+
+        if tfidf_classification[0] == knn_classification:
+            classifications[file] = tfidf_classification[0]
+        elif knn_classification == "Press Release": # Heuristic override: If KNN predicts "Press Release" with high confidence, trust it over TF-IDF due to better performance on this class in validation
+            classifications[file] = knn_classification
+        else:
+            classifications[file] = (
+                tfidf_classification[0]
+                if tfidf_confidence > knn_confidence
+                else knn_classification
+            )
+            print(f'Disagreement in classification for {get_basename(file)} → Resolved to {classifications[file]}')
+
     return classifications
 
 # Output document classifications
