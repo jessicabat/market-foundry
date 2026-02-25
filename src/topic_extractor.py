@@ -45,9 +45,15 @@ def extract_topics_openai(document):
                 "role": "system",
                 "content": """
                 You are a strict JSON generator.
-
+                
                 You must output ONLY valid JSON.
                 If any non-JSON text is generated, the program will crash.
+                
+                You MUST ensure that:
+                - Every [ has a matching ]
+                - Every { has a matching }
+                - The JSON must be syntactically valid and parseable.
+                If it is not valid JSON, regenerate it completely.
 
                 Do not summarize.
                 Do not explain.
@@ -55,8 +61,6 @@ def extract_topics_openai(document):
                 Do not use markdown.
                 Do not use headings.
                 Do not use bullet points.
-
-                Output must start with { and end with }.
 
                 TASK:
                 Analyze the document and identify ALL major topics discussed.
@@ -87,14 +91,17 @@ def extract_topics_openai(document):
                 """
             }
         ],
-        temperature=0,
-        max_tokens=1024,
+        temperature=0.2,
+        max_tokens=2048,
     )
 
     content = response.choices[0].message.content.strip()
 
     if not content:
         raise ValueError("Model returned empty response")
+    
+    # Debugging in case of JSON parsing issues
+    # print("\nObserved Topics:\n", repr(content))
 
     # Remove markdown fences if present
     if content.startswith("```"):
@@ -102,8 +109,6 @@ def extract_topics_openai(document):
         if content.startswith("json"):
             content = content[4:]
         content = content.strip()
-        
-    print("\nObserved Topics:\n", content)
 
     return json.loads(content)
 

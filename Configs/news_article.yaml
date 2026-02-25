@@ -9,34 +9,41 @@ model:
 extraction:
   task: Triple # task type, chosen from Base, NER, RE, EE, Triple. Default set to Triple.
   constraint: [
-  [
-    "company", "corporation", "firm", "startup", "subsidiary",
-    "ceo", "cfo", "executive", "board", "investor", "shareholder",
-    "analyst", "fund", "bank", "regulator",
-    "revenue", "profit", "net income", "earnings",
-    "operating income", "gross margin", "cash flow",
-    "assets", "liabilities", "debt", "equity",
-    "market capitalization", "valuation",
-    "stock", "shares", "share price",
-    "dividend", "buyback",
-    "merger", "acquisition", "ipo", "offering",
-    "forecast", "guidance", "outlook",
-    "quarter", "fiscal year"
-  ],
-  [
-    "reported", "posted", "announced", "said",
-    "increased", "decreased", "rose", "fell",
-    "grew", "declined", "surged", "plunged",
-    "beat", "missed", "exceeded",
-    "expects", "forecast", "projects",
-    "acquired", "merged with",
-    "issued", "sold", "raised",
-    "traded at", "closed at",
-    "was up", "was down",
-    "compared to", "year over year", "quarter over quarter",
-    "as of", "on", "during"
+    [
+      "Company",
+      "Executive",
+      "Government Agency",
+      "Regulator",
+      "Investor",
+      "Financial Institution",
+      "Product",
+      "Service",
+      "Financial Metric",
+      "Stock",
+      "Acquisition",
+      "Partnership",
+      "Event",
+      "Geographic Region",
+      "Industry"
+    ],
+    [
+      "reports",
+      "announces",
+      "states",
+      "increases",
+      "decreases",
+      "acquires",
+      "merges_with",
+      "partners_with",
+      "invests_in",
+      "regulates",
+      "operates_in",
+      "launches",
+      "files",
+      "trades_at",
+      "impacts"
+    ]
   ]
-]
   use_file: false # whether to use a file for the input text. Default set to false.
   file_path: # path to the input file. No need if use_file is set to false.
   mode: customized # extraction mode, chosen from quick, detailed, customized. Default set to quick. See src/config.yaml for more details.

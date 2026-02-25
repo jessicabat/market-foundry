@@ -9,50 +9,41 @@ model:
 extraction:
   task: Triple # task type, chosen from Base, NER, RE, EE.
   constraint: [
-  [
-    "company", "corporation", "subsidiary", "board of directors",
-    "chief executive officer", "chief financial officer",
-    "executive", "shareholder", "investor",
-
-    "press release", "announcement", "earnings call",
-    "quarter", "fiscal year", "guidance", "outlook",
-
-    "revenue", "net income", "operating income",
-    "earnings per share", "eps",
-    "gross margin", "operating margin",
-    "cash flow", "free cash flow",
-    "assets", "liabilities", "equity",
-
-    "dividend", "share repurchase", "buyback",
-    "acquisition", "merger", "partnership",
-    "product launch", "service launch",
-
-    "market capitalization", "valuation",
-    "stock price", "share price",
-    "growth rate", "percentage",
-    "cost reduction", "restructuring",
-
-    "segment", "business unit",
-    "geographic region", "market",
-    "date", "location"
-  ],
-  [
-    "announces", "reports", "declares",
-    "guides", "expects", "forecasts",
-    "increases", "decreases", "improves",
-    "achieves", "generates", "delivers",
-    "acquires", "merges with", "partners with",
-    "launches", "introduces",
-    "appoints", "resigns",
-    "approves", "authorizes",
-    "results in", "leads to",
-    "reflects", "represents",
-    "compared to", "relative to",
-    "drives", "supports",
-    "is effective on", "is announced on",
-    "operates in", "expands into"
+    [
+      "Company",
+      "Executive",
+      "Board",
+      "Investor",
+      "Government Agency",
+      "Regulator",
+      "Product",
+      "Service",
+      "Financial Metric",
+      "Financial Instrument",
+      "Partnership",
+      "Acquisition",
+      "Event",
+      "Geographic Region",
+      "Industry"
+    ],
+    [
+      "announces",
+      "reports",
+      "launches",
+      "introduces",
+      "appoints",
+      "resigns",
+      "acquires",
+      "merges_with",
+      "partners_with",
+      "invests_in",
+      "approves",
+      "authorizes",
+      "operates_in",
+      "expands_into",
+      "impacts"
+    ]
   ]
-]
   use_file: false # whether to use a file for the input text. Default set to false.
   file_path: # path to the input file. No need if use_file is set to false.
   mode: customized # extraction mode, chosen from quick, detailed, customized. Default set to quick. See src/config.yaml for more details.

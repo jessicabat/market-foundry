@@ -107,6 +107,11 @@ class Pipeline:
                 frontend_schema = data.print_schema
                 print_schema = True
         data = self.extraction_agent.summarize_answer(data)
+        
+        # if mode == "customized" and "reflection_agent" not in sorted_process_method:
+        #     if len(data.result_list) > 1:
+        #         print("ITS WORKING")
+        #         data = self.reflection_agent.reflect_with_case(data)
 
         # show result
         if show_trajectory:

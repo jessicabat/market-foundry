@@ -1,3 +1,5 @@
+from sympy import content
+
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from topic_extractor import load_model_hf, load_model_openai
 from openai import OpenAI
@@ -50,9 +52,11 @@ def safe_json_parse(text):
 
     # Try direct parse first
     try:
-        return json.loads(text)
+        print("\nObserved Topics:\n", text)
+        json_response = json.loads(text)
+        return json_response
     except:
-        pass
+        print("Failed to parse Extracted Topics as JSON")
 
     # Attempt to extract FIRST valid JSON object
     brace_stack = 0
@@ -74,7 +78,9 @@ def safe_json_parse(text):
                 try:
                     return json.loads(candidate)
                 except:
-                    break
+                    start_idx = None
+                    brace_stack = 0
+                    continue
 
     print("⚠️ Could not parse JSON — returning empty fallback")
     return {"yaml_files": []}
