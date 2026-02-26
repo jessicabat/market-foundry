@@ -2,9 +2,9 @@
 src/.ipynb_checkpoints/
 src/utils/.ipynb_checkpoints/
 src/utils/__pycache__/
-.env
 .DS_Store
 __pycache__/
-.ipynb_checkpoints/
 .env
 .venv
+.ipynb_checkpoints
+src/knn_pipeline/reference_docs
