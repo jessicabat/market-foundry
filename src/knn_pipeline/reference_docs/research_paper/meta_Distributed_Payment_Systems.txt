@@ -1,0 +1,1200 @@
+SoK: Auditability and Accountability in
+Distributed Payment Systems
+Panagiotis Chatzigiannis1, Foteini Baldimtsi1, and Konstantinos Chalkias2
+1 George Mason University
+{pchatzig,foteini}@gmu.edu
+2 Novi Financial / Facebook Research
+kostascrypto@fb.com
+Abstract. Enforcement of policy regulations and availability of audit-
+ing mechanisms are crucial building blocks for the adoption of distributed
+payment systems. In this work we review a number of existing proposals
+for distributed payment systems that oer some form of auditability for
+regulators. We identify two major distinct lines of work: payment systems
+that are not privacy-preserving such as Bitcoin, where regulation func-
+tionalities are typically tailored for organizations controlling many ac-
+counts, and privacy-preserving payment systems where regulation func-
+tionalities are typically targeted to user level. We provide a systematiza-
+tion methodology over several axes of characteristics and performance,
+while highlighting insights and research gaps that we have identied,
+such as lack of dispute-resolution solutions between the regulator and
+the entity under audit, and the incompatibility of ledger pruning or o-
+chain protocols with regulatory requirements. Based on our ndings, we
+propose a number of exciting future research directions.
+Keywords: Distributed payments Regulation Auditing Privacy 
+Cryptocurrencies Blockchain
+1 Introduction
+Distributed payment systems have emerged as an alternative to the central-
+ized banking system. Starting with Bitcoin [51], a number of schemes have been
+proposed with the common characteristic of relying on a globally distributed,
+append-only public ledger (which is sometimes in the form of a blockchain), to
+record monetary transactions in a publicly veriable and immutable way. These
+systems utilize various cryptographic primitives to secure transactions, as well
+as a consensus protocol to guarantee agreement on the ledgers state by all par-
+ticipants. User participation can be controlled or unrestricted, categorizing such
+systems in permissioned and permissionless respectively. While such systems
+are increasingly growing in popularity, they are often associated with fraudulent
+transactions [27] or with loss of user funds due to lack of regulation [50].
+Panagiotis Chatzigiannis did part of this work during an internship at Novi Fi-
+nancial/Facebook Research. Foteini Baldimtsi and Panagiotis Chatzigiannis were
+supported by NSF #1717067, NSA #204761 and a Facebook research Award.
+The distributed nature of the ledger, typically accessible by the open public
+or by a wide base of participants (even in permissioned systems), enables exter-
+nal observers to access transaction information, for example sender/receiver ad-
+dresses or transaction amounts. These addresses are essentially random looking
+strings and provide their owners a sense of anonymity, especially in permission-
+less payment systems where anyone can easily create multiple addresses. How-
+ever, it has been shown it is possible to associate these pseudo-anonymous ad-
+dresses with real identities, for instance using clustering techniques [49]). These
+concerns led to a number of privacy enhancing proposals. Some were stand-alone
+cryptocurrencies oering strong privacy guarantees such as Zcash [17] or Mon-
+ero [57], while others were add-on functionalities to existing systems, such as
+CoinJoin [48] or TumbleBit [43]. But these systems in turn raised concerns for
+the regulatory and law-enforcement authorities, since the abuse of such strong
+privacy guarantees provides users the potential to circumvent regulatory controls
+(e.g. tax evasion or unauthorized money transmission) or even engage in fraud-
+ulent/illegal activities (e.g. money laundering, extortion or drug tracking [6]).
+Needed Features and Regulatory Goals. Ensuring compliance with regulations is
+crucial for any widely-accepted payment system, even in a system that is de-
+signed to preserve user privacy. The goal is to ensure that the system and/or
+its participants comply with nancial regulations and laws (e.g. cannot con-
+duct illicit activities such as money laundering without being accountable to
+the authorities). In this setting, state authorities or audit rms (e.g. Deloitte or
+KPMG [4,13]) will need to be convinced that the auditee follows the rules by
+meeting certain regulatory requirements. For example, all participants in a pay-
+ment system should be compliant with Anti-Money Laundering and Counter-
+Terrorism Financing (AML/KYC) per Financial Action Task Force (FATF)
+Travel Rule [5], while an auditor should be able to verify compliance with
+regulations such as the European General Data Protection Regulation [12] or
+industry-specic requirements such as the Health Insurance Portability and Ac-
+countability Act (HIPAA).
+Regulation in Distributed Payment Systems. As mentioned above, pseudoanony-
+mous distributed payment systems such as Bitcoin do not hide transaction in-
+formation. However, the posted information is not enough to provide regulatory
+control and additional regulation functionalities are still needed. For instance, in
+the cryptocurrency world there exist numerous types of centralized organizations
+which hold users coins (e.g. online wallets, exchanges, interest accounts etc.) or
+even stablecoins that are backed by at currency [9]. These third-party inter-
+mediaries are typically opaque to their internal operations, and several infamous
+examples exist where users lost their funds without holding these intermedi-
+aries accountable [50] or organizations investing users funds instead of focusing
+on solvency [10]. In fact, the Conference of State Bank Supervisors proposed a
+model regulatory framework including cryptographic solvency proofs as a means
+of demonstrating solvency [3]. In that end, some works [23,28] focused on mak-
+ing these services more transparent to earn users trust, and provide auditability
+2
+functionalities to authorities (i.e., proving that they are solvent) without disclos-
+ing additional information or exposing their users privacy1. However preserving
+privacy does not come for free, as this makes proof manipulation or collusion
+possible to falsely convince an auditor on the organizations claims.
+In the privacy-preserving setting, enforcing regulation is even more chal-
+lenging, as the notions of privacy and regulation seem contradictory. In such
+distributed payment systems, regulation implies auditability and accountability
+at user level (e.g. disclosing the users assets or past transactions) or transaction
+level (e.g. disclosing the participants or value associated with some transaction),
+while the public ledger entries hide such information from parties not associated
+with it. A handful of academic works attempted to provide some basic account-
+ability or auditability functionalities, either on top of existing privacy-preserving
+payment systems [28,37], or as new stand-alone ones [52,59]. However, at the
+time of writing, no such work has attempted to provide a complete solution that
+would satisfy all needs from its users and regulators, and there is still a research
+gap for addressing regulatory concerns (e.g. enforce regulation in permissionless
+systems [29]).
+Our Contributions. We review and unify the landscape of distributed pay-
+ment systems that oer some form of auditability or accountability. Such forms
+can range from simple audit protocols where an auditor learns some hidden in-
+formation posted on the public ledger (e.g. hidden value of a transaction), up to
+system policies that are automatically executed based on a system participants
+behavior, while remaining consistent with the system basic security properties.
+We provide a non-exhaustive list of such functionalities in Section 2.2. We then
+categorize related work into two distinct groups: schemes that do not have un-
+derlying privacy characteristics, and schemes that preserve some privacy. These
+groups in turn create two major categories of regulatory functionalities: at an or-
+ganization level and at a user/transaction level. Our systematization framework
+considers the following three axes: (1) the security guarantees of each scheme
+for organization-level auditing (as such audits can be easily abused or leak infor-
+mation), and their audit functionalities for user/transaction-level auditing (as
+we identify a plethora of such functionalities in privacy-preserving systems), (2)
+the eciency asymptotics and (3) the overall properties and attributes. Through
+our systemic categorization, we identify a number of insights and research gaps
+which pave the path for future research directions.
+Systematization scope. We focus on distributed payment systems (using a com-
+mon public ledger) oering some form of auditability or accountability as regu-
+lation functionalities with any level of privacy guarantees.
+We include related works that either propose the above functionalities as
+stand-alone systems [52,59] or as extensions/add-ons to existing systems [28,37].
+We include both permissioned and permissionless systems and with dierent
+bookkeeping formats (e.g. UTXO or account-based). Our work remains or-
+1 In some scenarios, non-private auditing might suce. However, such a protocol would
+be trivial from a security standpoint, and to our knowledge no related proposal exists.
+3
+thogonal to the underlying data structures used by the common ledger and to
+the underlying consensus protocol.
+The rest of this paper is organized as follows. In Section 2 we provide the
+denitions and security properties used for our systematization. In Section 3 we
+discuss our categorization for the works we consider. In Sections 4 we present
+regulation in works that do not have any underlying privacy preserving mech-
+anisms and highlight insights and research gaps, while in Section 5 we follow a
+similar pattern for privacy preserving systems. We conclude in Section 6 with a
+summary of proposed research directions in this eld.
+2 Background
+We informally present the necessary concepts and denitions required through-
+out this paper and provide a more detailed cryptographic background in Ap-
+pendix A.
+2.1 (Private) Distributed Payment Systems
+Assuming the existence of a consensus layer, we dene a basic distributed pay-
+ment system (DPS) to consist of the following algorithms: Setup(), CreateAcc(),
+CreateTx() and VerifyTx() with a public ledger L as common input and output.
+A DPS can be permissioned where all participants are known (typically con-
+trolled by a single entity or organization), or permissionless where participation
+is open to anyone, resulting in more decentralization (in the above generic deni-
+tion we do not distinguish between a permissioned and a permissionless system).
+Note that although participation in the system is typically consistent with the
+consensus protocol (i.e. transacting in a permissioned payment system implies
+a permissioned consensus, similarly for permissionless), this is not always the
+case. For example, it is possible to run a permissionless payment system with
+a permissioned consensus layer, such as a permissionless Fabcoin on top of
+Hyperledger Fabric [14].
+A distributed payment system must satisfy the following core properties,
+which are typically safeguarded by veriers participating in the consensus algo-
+rithm (e.g. often called miners):
+ Theft prevention: Spending values from a sender account S requires knowl-
+edge of private information associated with that account (typically a secret
+key skS).
+ Balance: A transaction which transfers a valuevfrom a sender Sto a receiver
+R, should always increase a receivers total assets by v and adjust Ss total
+assets by v.
+ Non-negative assets: A transaction that spends v from senders total assets,
+should not result in negative assets for S which would allow S to overspend.
+Private DPSs come with the following privacy-preserving properties:
+4
+ Condentiality: Only the sender S and the receiver Rof a transaction tx can
+learn the value associated with tx.
+ Anonymity: An external observer of tx cannot derive the public keys or
+identiers of S and R associated with that transaction 2.
+We note that some systems might oer only one of the above privacy charac-
+teristics, but not both. However, if the system provides both condentiality and
+anonymity, we say that it isfully private. We also call a systempseudoanonymous
+if it does not provide any of the above.
+2.2 Enforcing Regulation in Distributed Payment Systems
+We now organize the dierent types of regulation that we encounter in the related
+literature. These are protocols or policies that disclose information to the auditor,
+where as an auditor we consider some type of a regulation authority or an audit
+rm.
+Disclosed information can include (but not limited to) [26,52,59]:
+ Transaction sender and/or receiver
+ Transaction value
+ Tax compliance
+ Total value of assets
+Note that as we discuss below, some functions are mostly applicable to private
+DPS (e.g. transaction value) while others are applicable to pseudoanonymous
+systems as well (e.g. total value of assets).
+Transaction and User-level Regulation.As a starting point, an auditor or a
+regulation authority would focus on inquiries that involve single transactions or
+the transaction history of certain system participants 3. At rst glance it might
+seem that a privacy-preserving system (which hides transaction values and/or
+transacting parties) cannot comply with such regulatory requirements. However,
+via the use of cryptographic techniques we can allow for auditability and/or
+accountability properties. We informally dene such properties as follows:
+ Auditability: There exists a protocol where an external auditorA having access
+to the common public ledger can provably learn the requested information to
+be audited (e.g. the participating parties in a transaction). This protocol can
+be either interactive with the audited parties (requiring their consent) or non-
+interactive (where A learns the information at will).
+ Accountability: There exists a system functionality which enforces automatic
+execution of policies (as dened in its parameters) when a certain predicate is
+satised. For instance, these policies might automatically reject transactions
+from a specic user or transactions that do not comply with a spending limit
+and potentially also automatically disclose private information to a designated
+authority.
+2 This property is sometimes referred to as transaction graph obfuscation.
+3 In typical DAPs, a human user might control multiple payment addresses. By
+user/participant regulation below we refer to address-level regulation, unless we ex-
+plicitly explain otherwise in certain permissioned schemes.
+5
+Auditability vs Accountability. In general, accountability does not require active
+participation of an auditor, and accountability policies are typically enforced
+during the verication phase of a transaction (which usually happens at the
+consensus layer). For instance, the system might perform certain actions based
+on the value of the transaction or the cumulative value of recent ones, such as
+involuntary leakage of information from that transaction or prevent acceptance
+of subsequent transactions. The system might also enforce other system-wide
+policies (e.g. tax payment to a pre-determined address). Therefore, accountabil-
+ity can be thought of as a stronger version of auditability, as dened in a general
+context in [34,38,42,46]. Another distinctive characteristic is that accountability
+is proactive in nature, while auditability is reactive.
+Auditability and Accountability vs. System security. We note that in some works,
+the notions of auditability and accountability are implicitly used as a dishon-
+esty detection mechanism (e.g. breaking the ledgers immutability property),
+aimed to incentivize a party to follow the rules and holding it accountable
+when it attempts to violate the systems security [11,22,39]. For instance, in
+Bitfurys whitepaper on Blockchain auditability [11] both of these notions are
+used interchangeably, and are associated with a system service that detects such
+malicious activities even in case of collusion with ledger maintainers. However,
+we dont include such a role for an auditor within our scope, and we assume any
+such activity would be promptly detected and/or prevented by the consensus
+layer. In fact, in a regulatory context a party might violate laws or regulations
+(e.g. launder money, transfer more than$10k in a day etc.) without ever violating
+the system protocols or breaking its security properties.
+Organization-level Regulation. In the case of an organization controlling a
+number of payment system accounts on behalf of its customers (i.e., a bank or
+custodial service), a regulatory concern is if the organization is solvent. Such a
+proof of solvency can be considered as a form of auditability, which convinces
+an auditor that the organization indeed controls sucient funds reected on the
+public ledger, without however disclosing more information other than this fact
+is true (e.g. number of its clients, total assets etc.). A solvency proof typically
+consists of two parts: a Proof of Assets (PoA) and a Proof of Liabilities (PoL),
+which when combined prove that an organizations assets exceed its liabilities,
+thus proving solvency. We discuss both of these proofs below. Note in some
+cases it might be sucient to prove partial solvency (as it is typically done
+in the real-world) but from a technical standpoint, its trivial to convert a full
+solvency to a partial solvency proof. However, an organization would typically
+prefer to only prove its solvency without disclosing additional information (e.g.
+specic asset amounts or account public keys). Also, while regulation at user or
+transaction level is trivial, in pseudoanonymous systems there are many factors
+to consider at organization-level, regardless of the systems privacy properties.
+Proof of Assets (PoA). As in auditability protocols, a Proof of Assets needs
+to convince a verier that an organization controls at least a certain amount of
+funds. Note than this proof does not necessarily need to disclose the exact amount
+to the auditor, and a lower bound will be sucient. In some cases however, an
+6
+upper bound could be provided as well (e.g. in a tax scenario, an organization
+might want to prove its total assets value lies within a tax bracket).
+For a pseudoanonymous payment system, a naive PoA is to provide signa-
+tures to the auditor for some (or all) of the accounts it controls, by also including
+some challenge value or nonce-timestamp in the signature to ensure freshness.
+Proving Assets in privacy-preserving systems however might require more com-
+plex protocols that involve cryptographic primitives such as ZK proofs.
+Proof of Liabilities (PoL). Here the organization needs to periodically publish
+information on its liabilities (e.g. user balances in banks or exchanges [8]). This
+information can be either provided directly from the organization, or stored in
+a public bulletin board. However, with this information publicly available, it
+is desirable to leak as little side-information as possible (e.g. without exposing
+the exact value of the organizations liabilities or other information related to its
+clients). The published information is veried by clients in a probabilistic fashion
+(i.e., not all of the clients need to actively check for the validity of the published
+information). We note that publishing this information can be seen equivalent
+to an auditor reply step (where any client can assume the auditor role), so it
+is possible to reduce the PoL functionality to an auditability protocol.
+2.3 Security Properties and Threats of Regulatory Functions
+Based on the above discussion of required regulatory functions for DPS we in-
+formally dene the related security properties.
+ Regulation Correctness. An honest auditee following the regulation protocols
+should always be able to convince an auditor and transact under the correct
+system policies.
+ Regulation Soundness. An auditor should always reject false claims for a mali-
+cious auditee, while the system should always apply the corresponding policies
+to the system participants that should be aected by those policies.
+ Minimal Information Disclosure. When implementing a regulation functional-
+ity, the auditee should only disclose the needed information, without suering
+any collateral damage in terms of privacy. For instance, when a user is asked
+if ever transacted with a specic party, it should not reveal the associated val-
+ues; an exchange proving solvency should not leak its number of clients.
+Beyond security, some additional desired properties are the following:
+ Oine Auditors. A system compatible with oine auditors, who do not need
+to always maintain and track its entire public state.
+ Out-of-band Communication and Storage. Regulatory functions are preferably
+performed using system-maintained information, minimizing the use of out of
+band protocols.
+ Dispute Resolution. There exists a mechanism to resolve disputes between an
+auditor and auditee, in case a malicious auditor falsely accuses the auditee
+of non-compliance. Such mechanism might even include holding an auditor
+accountable for its own actions.
+7
+Functions Auditor security Auditee security
+Gener-
+alizePoA PoL PoA
+Collusion
+Hidden
+Liab.
+Value
+hiding
+Popul.
+hiding
+Account
+Leakage
+Multi
+Proof
+Leakage
+Provisions [28] Y
+ZeroLedge [31] N/A N/A Y
+DaPoL [23] N/A N/A Y
+Maxwell [7] Y
+Blockstream [56] N/A N/A N/A N
+Wang [58] N/A N/A N/A N/A Y
+Table 1.Organization-level Regulation of pseudoanonymous schemes. By we denote
+support of a functionality or addressing a security or privacy issue, by the existence
+of security or privacy issues and by N/A non applicability.
+3 Systematization Methodology
+We rst categorize all works and systems we consider into two major taxonomies.
+The rst considers pseudoanonymous DPSs (where audits are typically per-
+formed at an organization level), and are discussed in detail in Section 4. The
+second includes schemes that have privacy-preserving attributes (where they typ-
+ically perform auditing at a transaction or user level), and are discussed in detail
+in Section 5 (from our previous discussion, user or transaction-level auditing in
+pseudoanonymous systems is trivial from a cryptographic standpoint).
+Our core systematization is performed over the following three axes (we con-
+sider systems with respect to their privacy guarantees separately within each
+axis):
+Audit properties axis: We rst consider pseudoanonymous systems. In such
+schemes the basic audit functionalities are Proof of Assets (PoA) and Proof of
+Liabilities (PoL) which happen in an organization level. In Table 1 we consider
+schemes that provide PoA and/or PoL functionalities. Additionally, we also look
+at security and privacy properties, as existing works in the literature have dier-
+ent security guarantees, both for the auditor and the auditee. From the auditors
+point of view, security implies Regulation Soundness, i.e. rejecting false PoA due
+to collusion among organizations (denoted as PoA Collusion in Table 1) or false
+PoL due to Hidden Liabilities not included in the proof. From the auditees
+point of view, security implies Minimal Information Disclosure, i.e. hiding the
+actual values of its total assets and liabilities (Value hiding), not leaking its
+total client population (Population hiding) or other details on its accounts
+(Account Leakage), and preventing a malicious auditor from inferring any ad-
+ditional information from subsequent proof executions (Multi Proof Leakage).
+In Table 1 we present a classication of systems according to the above proper-
+ties, and discuss them in detail in Section 4. We also classify a scheme based on
+whether it can be generalized to work for any distributed ledger-based payment
+system or if it is designed for a specic one.
+For regulating privacy-preserving systems (at a transaction or user level),
+we desire a scheme to oer a wide variety of auditability and accountability
+8
+Transaction-level Tx/User level User level
+Scheme LimTraceValue Sender-
+Receiver Tax Non-
+participationSumBlacklistStats Anonym.
+revocation
+Zcash ext [37] # # # # # # 
+ZKLedger [52] # N/A # # # N/A
+PRCash [59] N/A N/A N/A N/A N/A N/A N/A N/A 
+PGC [26] # N/A N/A N/A # N/A
+MiniLedger [25] N/A # # N/A
+ACCDET [15] N/AN/A N/A # N/A N/A N/A N/A
+ATRA [19] N/AN/A N/A N/A N/A N/A N/A N/A
+MProve [32] N/AN/A N/A N/A N/A N/A N/A N/A N/A
+Damg ard et al. [29]N/AN/A N/A N/A N/A N/A N/A N/A N/A 
+Barki-Gouget [16]N/AN/A N/A N/A N/A N/A N/A N/A N/A 
+Table 2.Regulation Functionalities in Private Schemes. By we denote supporting
+functionality, by # that although not explicitly dened, the scheme can be trivially
+extended to support that audit type and by N/A no support.
+functionalities. In Table 2, we rst distinguish between regulatory functions in a
+transaction level, which includes if value is under or over a threshold (limit), link
+dierent transactions (tracing), revealing the transactions value, sender and/or
+receiver) and withhold tax by paying the respective amount to a pre-determined
+account. We also distinguish them in a user level, which includes auditing a
+users total assets (equivalent to PoA in pseudoanonymous systems), applying
+policies only to users in a blacklist, deriving statistical information from users
+past transactions (e.g. learning the average transacted value in a time period)
+or revoking a users anonymity based on some criteria. In some cases it might
+also be desirable to prove non-participation for some user in some transaction,
+which is a combined audit both in a transaction and in a user level.
+Eciency axis: Our second axis is based on the eciency asymptotics for
+both pseudoanonymous and private systems, namely their space requirements,
+transaction creation costs and audit proving and verication costs. We do not
+consider concrete metrics because of the variety (or absence) of implementations.
+Regarding space eciency, we consider the proof size for organization-level au-
+diting and the overall ledger storage costs for privacy-preserving schemes with
+user or transaction level auditing (denoted as proof storage and ledger stor-
+age respectively in Table 3). Then we capture the transaction creation costs
+(which are not applicable for schemes under the rst category as the transac-
+tions have already been created). Finally for capturing the auditees proving and
+the auditors verication costs, we consider the most basic audit functionality
+each scheme oers. We note that not all schemes have the same basic audit
+functionality, thus Table 3 should not be seen as a comparison table. Also, audit
+proofs are not applicable for schemes oering only accountability, as the neces-
+sary information is included in the transaction itself, while transaction creation
+costs do not apply for auditing at an organization level (as they are always
+independent of PoA or PoL protocols).
+General properties axis: This axis is based on several dierent properties and
+attributes of all existing proposals. We compare them in terms of audit scope,
+9
+Scheme Proof size Tx Create Audit Prove Audit Verify
+PoA PoL PoA PoL PoA PoL
+Provisions [28] O(k) O(n) N/A O(k) O(n) O(k) O(n)
+ZeroLedge [31] N/A O(n) N/A N/A O(n) N/A O(n)
+DAPOL [23] N/A O(1) N/A N/A O(lgN) N/A O(lgN)
+Maxwell [7] O(n) O(1) N/A O(n) O(lgn) O(n) O(lgn)
+Blockstream [56] O(n) N/A N/A O(n) N/A O(n) N/A
+Wang [58] O(n) N/A N/A O(n) N/A O(n) N/A
+Scheme Ledger Storage Tx Create Audit Prove Audit Verify
+Zcash ext [37] O(m) O(lgm(lglgm)) Embedded in tx O(1)
+ZKLedger [52] O(mn) O(n) O(1) O(1)
+PRCash [59] O(k) O(k) Embedded in tx O(1)
+PGC [26] O(m) O(1) O(mu) O(mu)
+MiniLedger [25] O(n) O(n) O(1) O(1)
+ACCDET [15] O(m) O(k) Embedded in tx O(m)
+ATRA [19] O(m) O(1) Embedded in tx O(m)
+MProve [32] O(k) proof size N/A O(k) O(k)
+Table 3.Eciency asymptotics. n: # of owned/system accounts (for pseudoanony-
+mous and privacy preserving schemes respectively). N: maximum number of supported
+accounts. m: number of recorded transactions.k: size of anonymity set.mu: Txs of user.
+For Audit Proofs we consider the most basic audit in each scheme (i.e proof of a value).
+If audit proof is non-interactive, cost is embedded in tx creation costs).
+i.e. user level (U) if auditing information of a particular user, transaction level
+(T) if auditing a transactions full details and organization (O) if auditing an
+organizations assets, liabilities or solvency, underlying system architectures (e.g.
+UTXO or account-based) consensus and participation models (permissioned vs
+permissionless). We particularly highlight the need of various trusted centralized
+authorities (either for identication or for auditing purposes), which is typically
+not desired. In auditing we also categorize the schemes in terms of interaction
+between auditor and auditee, as well as the audit granularity. Then we also re-
+ne schemes based on their level of privacy, and we list any other assumptions
+not tting in the previous categories. The comparison is shown in Table 4. We
+note that requiring interaction for transaction/user level audits implies auditee
+consent, while all organization-level audits always require consent from the or-
+ganization. Another observation is that non-interactive user/transaction audits
+typically require the existence of an auditing authority, as the non-interactive
+data should only be accessible to such authorities (else this would compromise
+privacy).
+4 Regulation Functions in Pseudoanonymous Systems
+We now discuss the rst major category of payment auditable systems; those
+with a pseudoanonymous underlying system where the focus is typically on or-
+10
+Auditing
+Scheme Audit
+ScopeModelConsensusPartic-
+ipation
+Identity
+authority
+Inter-
+action
+Auditing
+authority
+Fine-
+coarsePrivacyAssumptions
+Provisions [28] O Both N/A N Y N Coarse G #
+ZeroLedge [31] O Both N/A N N N Coarse G #
+DAPOL [23] O Both N/A N N N Coarse G #
+Maxwell* [7] O Both N/A N Y N Coarse #
+Blockstream* [56]O UTXO /globe/globeN N N Fine #
+Wang [58] U/O Both N/A N Y N Fine # Secure channel be-
+tween prover-auditor
+Zcash ext [37] T/UUTXO /globe/globeY N Y Both Trusted setup,
+Spending authority
+ZKLedger [52]T/U/OAcc 2 Y Y N Both Out of band comm
+PRCash [59] T/U Acc 2 Y N Y Coarse
+(limit) G #Trusted validators,
+Out of band comm,
+sender-receiver inter-
+action
+PGC [26] T Acc 2 Y Y N Fine H #
+MiniLedger [25]T/U/OAcc 2 Y Y (N) N (Y) Both 
+ACCDET [15] U UTXO 2 2 Y N Y Fine 
+ATRA [19] U N/A 2 2 Y N Y Fine 
+MProve [32] O UTXO /globe/globeN N N Fine G #
+Damg ard et al. [29]U N/A 2 Y N Y N/A Anonymity revoker
+Barki-Gouget [16]U N/A 2 Y N Y N/A Anonymity revoker
+Table 4.General categorization of auditable schemes. Scope: T Transaction level, U
+User level, O Organization level. Model: Acc: account-based, UTXO: Unspent Trans-
+action Output based. By we denote full privacy, by G #set anonymity, by H #conden-
+tiality and by #pseudoanonymity (privacy is against auditor and against all observers
+for pseudoanonymous and privacy-preserving schemes respectively). By /globewe denote
+permissionless, by 2permissioned and by orthogonality to consensus layer. By we
+denote non-academic works.
+ganization level regulation. As discussed in Section 2.2 the common goal here is
+for an organization to prove that is solvent.
+Insight 1 Pseudoanonymous systems inherently expose their users privacy (due
+to the public nature of the distributed ledger), making user or transaction-level
+auditing trivial.
+Perhaps the rst attempt to prove an organizations digital assets was Bit-
+stamps Proof of Reserves [2], a procedure on top of Bitcoin (also applicable to
+any pseudoanonymous system), involving a single entity asking the organization
+to provide a signature using its private keys on a message selected by that entity.
+The obvious drawback of this approach however is lack of auditee privacy, i.e. it
+does not satisfy Minimal Information Disclosure.
+Insight 2 As a naive PoA method, one might prove ownership of accounts as-
+sociated with those assets by signing a message using the respective private keys.
+This method however does not accomplish Minimal Information Disclosure, as it
+also discloses the organizations exact assets as well as the respective accounts.
+Towards providing a way to prove solvency in a more distributed fashion,
+Maxwells PoL [7] consists of a summation Merkle tree with each leaf contains
+a clients balance in plaintext, summing with the siblings up to the root as in a
+11
+plain Merkle tree. Then, the organizations clients can check their inclusion in
+the organizations liabilities through Merkle proofs, which implies this method
+of PoL has a probabilistic nature. However Minimal Information Disclosure was
+still unresolved, as Maxwells PoL publicly exposes the total liabilites and the
+number of the users, and leaks information of sibling nodes by multiple execution
+of proofs. In addition, an attack was identied (and subsequently xed) in this
+scheme which could potentially enable a participant to claim less liabilities [44].
+Gap 1 Given the probabilistic nature of PoL, an organization can collect in-
+formation on client queries in the network or application layer and manipulate
+subsequent proofs by not including user balances with low-probability retrievals.
+Can such behavior be prevented without having to publicly disclose liabilities data,
+thus disclosing the population of an organizations accounts?
+Private Information Retrieval techniques have been proposed [23] to eciently
+mitigate Gap 1, however such techniques have not yet been deployed.
+As in [2], Maxwells PoA protocol simply requires signing some message using
+the private keys associated with the controlled assets. As discussed in Section
+2.2, Maxwells PoA and PoL combined constitute a proof of the organizations
+solvency. We also mention an early implementation for Proof of Solvency using
+similar cryptographic techniques [1].
+Provisions [28] was among the rst academic works to present a complete
+proof of solvency solution, and augmented both PoA and PoL protocols with
+privacy-preserving characteristics. For the PoA part, the organization chooses
+adds a number account public keys to those it already controls (Provisions as-
+sumes these keys are not hashed), essentially forming an anonymity set, then
+creates a Pedersen commitment for each (with a commitment to zero for those
+it does not own) and publishes a homomorphic addition of those commitments.
+Then using standard Zero Knowledge (ZK) protocols, it proves that it either
+knows the secret key for the respective commitment public key or it is a com-
+mitment to zero. This ensures that the verier does not really learn which ac-
+counts the organization owns. Note that using standard, ecient ZK proofs is
+not compatible with hashed public keys (since in systems like Bitcoin it would
+be required to spend at least once from a wallet address to reveal the account
+public key). Customized ZK proofs would have to be created for such statements
+to overcome this limitation, and works like [24] could serve as a starting point.
+For the PoL part, the organization constructs and publishes a Pedersen com-
+mitment representing each one of its clients balances, which can be homomor-
+phically added to form a commitment of the organizations total liabilities. At
+any point, each client can check it is included in the liabilities commitment by
+asking for an inclusion proof, while ensuring overall that no commitments have
+been added with negative amounts though appropriate range proofs. However,
+as shown in Table 1, subsequent execution can still potentially leak some in-
+formation to external parties (e.g. number of user accounts of organization at
+a specic time). Given the two above published commitments, the organization
+proves that their dierence is positive (which constitutes the overall proof of sol-
+12
+vency). As [28] was published in 2015, there is room for eciency improvements
+by i.e. utilizing recent range proof constructions (Bulletproofs [21]).
+Insight 3 Hashed public keys in systems like Bitcoin are not fully compatible
+with more complex PoA techniques as in [28] using standard Zero-Knowledge
+proofs. Customized ZK circuits for SNARKs need to be designed in such cases.
+Gap 2 During PoA, organizations can collude with each other to manipulate
+these proofs by including their assets to each others proofs, violating Regulation
+Soundness. Does a mitigation strategy exist to prevent this?
+While performing PoA in a synchronous manner could trivially prevent or-
+ganization collusions, this approach is impractical.
+Gap 3 Can we design a PoA protocol on top of a pseudoanonymous system that
+is fully private for the auditee with sublinear costs?
+We observe that all current PoA protocols form some anonymity set to hide
+the actual audited organizations accounts. Implementing a zk-SNARK in a sys-
+tem might enable full privacy and sublinear proof size and verication costs, but
+at the cost of introducing additional assumptions like trusted setup.
+ZeroLedge [31] focuses on the PoL aspect, aiming to address the weaknesses of
+Maxwells protocol, most notably its hidden liabilities attack. In this approach,
+the organization creates commitments to identier-value pairs for each of its
+accounts along with zero-knowledge proofs of their validity as well as to the total
+liabilities amount. Through the zero-knowledge properties, it prevents collusion
+attacks and preserves verier anonymity, however it still leaks some information
+about the total number of accounts. Similar to Provisions, this scheme could
+benet from newer, more ecient range proof techniques such as Bulletproofs
+[21]. Even so, as shown in Table 3 its asymptotic costs remain linear in the total
+number of accounts, which might make it very costly in large deployments.
+The recent PoL proposed standard (DAPOL) [23] is inspired by previous
+works [7,28]. It addresses the majority of their privacy-related issues and cur-
+rently has the best PoL Minimum Information Disclosure possible, without leak-
+ing information about other addresses balances, total liabilities or total number
+of addresses (which even the at version of Provisions was leaking). To achieve
+this, as the Merkle Tree approach always leaks such information, it augments it
+with more sophisticated primitives and constructions, such as Zero Knowledge
+Proofs, VRFs, and sparse Merkle Trees, and has a layered PoL that supports
+a very large number of addresses. In addition, it presents itself in use cases out-
+side nancial applications and solvency proofs, such as disapproval votes, virus
+outbreak reports or referral programs.
+Insight 4 To achieve Regulation Soundness and Minimal Information Disclo-
+sure, more advanced cryptographic primitives and complex constructions have to
+be employed, such as Zero Knowledge proofs, VRFs and sparse Merkle trees.
+13
+Wang et al. [58] provides a simple protocol for a potential buyer proving assets
+to a vendor before conducting a transaction, using that transactions external
+data as a challenge. Although this protocol could be extended for providing
+PoA at an organization level as well, the use-case of such a protocol seems
+to be limited to a buyer-vendor scenario as it is associated with a specic
+transaction. More importantly, it does not have strong Minimal Information
+Disclosure as other PoA/PoL protocols like Provisions or DAPOL[23,28].
+Finally we briey mention a few additional works related to organization-
+level regulation. Hu et al. [44] highlighted a mix and match attack on the
+Maxwell protocol, while proposing its mitigation technique. Blockstream proof
+of reserves [56] propose an alternative to the naive PoA approach by creating
+and signing invalid transactions using all owned UTXOs, which however degrades
+the organizations privacy. Moore and Christin [50] provide a risk analysis for
+cryptocurrency exchanges, highlighting the need of Solvency Proofs. Finally,
+Decker et al. [30] proposed a variant of the Maxwell Protocol based on a trusted
+platform module (TPM) to securely execute the necessary computations while
+ensuring honest computation. This approach can also facilitate the computation
+between PoA and PoL for proving solvency.
+An open problem in Proofs of Liabilities approach commonly used in these
+works is Dispute Resolution, i.e. a client claiming that his balance within the
+organization is not included in the proof. This is problematic in both ways, i.e.
+a malicious organization simply rejecting an honest clients claim, or a malicious
+client falsely accusing an honest organization of misbehavior.
+Gap 4 Can disputes be resolved by a third-party judge at an organization-level
+regulation, when a client claims that their balance with the organization has not
+been included in a PoL?
+Mutual contract-signing solutions (i.e. both client and the organization sign-
+ing a users transaction and signature) might be helpful to solve this gap, however
+such an approach also needs to be practically deployable.
+5 Regulation Functions in Privacy-preserving Systems
+In this section, we provide an overview of distributed payment systems that have
+privacy-preserving characteristics and some form of auditability and/or account-
+ability functionalities focused on a transaction or user-level. In our discussion,
+we further divide such systems into two categories: the ones that require desig-
+nated auditors and the ones where no explicit auditors are assumed, as shown
+in the Auditing authority column in Table 4.
+5.1 Centralized - Designated Authority
+A common approach when designing audit and accountability functionalities
+for privacy-preserving DPSs is to add a system-designated, centralized author-
+ity (or group of authorities). Such authority could either enforce accountability
+14
+rules or take the role of an external auditor as dened in Section 2.2. This ap-
+proach was adopted in one of the rst works [37] to address regulatory concerns
+in privacy preserving cryptocurrencies in the permissionless model by extending
+Zerocash [17]. It assumes the existence of various types of authorities where each
+one is designated to enforce dierent policies, oering a wide range of auditability
+functionalities as seen in Table 2. The main idea is to embed auxiliary informa-
+tion to coins, such as counters or coin types, and dene policies as algorithms
+that are executed each time a coin is spent. Then, a designated authority can
+be used to verify a policy at the time of transaction generation, for example it
+could check that a transaction value does not exceed a certain limit and sign the
+transaction to certify it. This is a type of accountability, since it can proactively
+check transactions before being posted in the ledger. We note that this tech-
+nique can be easily adapted for pretty much any type of policy but as discussed
+below comes with eciency and privacy costs. [37] also presents techniques for
+coin tracing assuming that coins include tracing information encrypted under an
+authoritys public key. Then, an authority could at will trace those coins (and
+all subsequent coins resulting from transactions of the original coins) without
+any interaction with the users. Interestingly, [37] also provides techniques for
+accountable authorities, the actions of which would be transparent to users. For
+instance, users could check if a tracing authority has traced their coins.
+The techniques of [37] are quite eective, easily allowing the implementation
+of a wide range of policies. However, there exist both eciency and privacy lim-
+itations. Requiring transactions to be validated by an authority before posted,
+requires extra communication and computation costs which can be a burden in
+practice especially on top of an already computationally intensive system such
+as Zerocash. Most importantly though, the main issue with the given approach
+is that it gives too much power to the designated authorities. Not only such au-
+thorities can learn transaction information that would otherwise remain private,
+but they could also arbitrarily refuse to validate certain transactions.
+Insight 5 Embedding encrypted auxiliary information in transactions that can
+be decrypted by designated authorities at any point, is a trivial solution for ac-
+countability and auditing but has negative impact to user privacy.
+Insight 6 Accountability policies rely on the transaction veriers (i.e. the con-
+sensus layer) to enforce them. Any reactive auditability functionality can be con-
+verted to an equivalent proactive accountability policy through auxiliary data and
+interaction with an authority in the transaction creation phase.
+Although [37] only included a vague description of how to add audit function-
+alities in Zerocash (without providing a concrete construction or evaluation), it
+oered some of the rst insights and problems for designing auditable/accountable
+privacy-preserving payment systems. PRCash [59] was developed as a stand-
+alone fully-private payment system with built-in accountability for spending
+limits. Specically, it only allows transactions up to a specied amount, while
+leaving the option for users to de-anonymize themselves against a centralized au-
+thority if wishing to transfer larger amounts. PRCash works in a permissioned
+15
+setting, with an anonymous credential issued by a centralized identity author-
+ity to prevent circumventing limits by creating sybil identities. Consequently,
+this same authority is responsible for both identity management and regulatory
+functions in the system (although these roles could be decoupled in separate
+identity and auditing authorities). PRCash is inspired by the private cryp-
+tocurrency Mimblewimble [35,54], however its construction follows a more com-
+plex design. Namely it uses two commitments and a public key pair (as opposed
+to one commitment and no public key cryptography in Mimblewimble) in order
+to connect participants to identity credentials. The additional commitment is
+used to generate re-randomizeable authority certicates (that permit partic-
+ipating in the system) and a secret key is used to derive a unique transaction
+ID. For transacting within the limit, the sender would include an appropriate
+range proof in the transaction. To exceed the limit, instead of the range proof,
+the sender would need to encrypt his public key under the authoritys public key
+(thus deanonymizing himself to the authority). PRCash as shown in Table 2 is
+limited to this specic accountability functionality by design, while it relies on
+a centralized authority for its accountability aspects. In addition, although an
+external observer of the ledger cannot link transacting parties or learn transac-
+tion values, the system is not fully private against transaction Validators in the
+consensus layer, as each transaction leaks information (pseudo-identiers) to the
+Validators which could be used to generate links between transactions.
+Insight 7 In a permissionless setting, identity authorities associating real iden-
+tities with public keys are required to preserve regulation connected to value limits,
+or else such regulation can be trivially circumvented through sybil identities.
+In the permissioned setting, an anonymous, auditable payment scheme was
+presented in [15] (we will refer to it by ACCDET). The goal of ACCDET is
+to hide the content of transactions without preventing authorized parties from
+auditing them. The paper considers a centralized identity authority for associ-
+ating real-world identities with system credentials, similar to PRCash [59], as
+well as a designated trusted auditor for each system participant who can learn
+any hidden transaction the participant is involved in at will. This is ensured
+by including encrypted transaction information under the designated auditors
+public key, along with a standard ZK proof of correct encryption under the cor-
+rect key. Value tokens are hidden using Pedersen commitments, while they are
+checked for validity and blind-signed by a certier when spending them. The pa-
+per includes an evaluation based on Hyperledger Fabric [14] as a consensus layer
+and provides an analysis of the computational costs for each required operation.
+Besides the fact that the trusted auditor is again very powerful, we also note
+that the auditing verication cost is linear to the number of transactions ever
+happened in the system, as shown in Table 3. This is because ACCDET does
+not assume user consent during audit, thus an auditor would have to decrypt the
+whole ledger in order to trace any user. A more generic approach that does not
+restrict itself to payment systems [19] (we will refer to it by ATRA), considers
+the issuance of anonymous credentials in permissioned blockchain systems which
+16
+could be transformed into a payment scheme. It also implements auditability by
+assuming the existence of a centralized auditor and encrypting all private trans-
+action information under the auditors keys. ATRA, similar to ACCDET, has
+inecient auditing, as the auditor has to decrypt all ciphertexts in the ledger.
+Insight 8 Auditing a fully-private DPS without any aid from the auditee, is gen-
+erally inecient, as the auditor would need to audit the whole ledger to retrieve
+the desired audits.
+Gap 5 Can we design a private DPS with centralized authorities that reveal a
+user identity only when a user misbehaves according to well-dened policies (as
+done in traditional Chaum e-cash protocols [20])?
+Note that PRCash [59] seems to accomplish this, as it de-anonymizes a user
+against an authority if the user exceeds a transaction limit. Still PRCash is
+tailored to support this specic policy, and designing a system that can make
+users accountable without their consent for arbitrary policies is challenging.
+Damg ard et al. [29] provide design principles for private and accountable
+distributed payment systems, rather than building a standalone one. Their main
+focus is to support auditing as anonymity revocation of participants in the iden-
+tity layer, rather than auditing the aspects of a payment system (e.g. trans-
+actions or assets) in the transaction layer. To accomplish this, they propose
+two kinds of authorities: An Identity provider who provides a digital identity
+with attributes to account holder and stores registration information, and an
+anonymity revoker who can revoke anonymity at will on accounts created by the
+account holder using the registration information. While threshold encryption
+is proposed to avoid giving too much power to a single anonymity revoker, this
+approach might be still problematic in the same manner as in Zerocash exten-
+sion [37]. In a similar manner, Barki-Gouget [16] also focus in a physical entitys
+anonymity revocation by a centralized authority, while presenting their work as
+a standalone accountable-anonymous system. As both of above works focus on
+the identity layer and they only provide an abstract way of building a complete
+distributed payment system, we omit concrete eciency asymptotics in Table 3.
+5.2 General Auditor
+A designated auditor (or set of auditors) makes an implementation simpler, but
+is a strong assumption for any payment system. Some schemes were proposed
+making auditing possible by any auditing authority typically with the auditees
+consent. This approach is generally preferred to address Insight 5 concerns, while
+still being compatible with regulatory practices as we discuss below.
+zkLedger [52] is a permissioned, privacy-preserving payment system with
+built-in auditability functions that does not require a designated auditor. Its
+shared transaction ledger takes a unique approach, and instead of the typical
+blockchain format, it employs a two-dimensional table recording all participat-
+ing parties (columns) and all posted transactions (rows). Transactions are formed
+17
+via a combination of commitments and ZK proofs and, whenever a transaction
+happens, a new row is generated in the table including information forall system
+participants, even for those who do not participate in that transaction by com-
+mitting to a zero value (in order to ensure transaction and participant privacy).
+zkLedgers basic auditing functionality is an interactive ZK protocol between
+an account holder and an auditor, where the account holder reveals the value
+hidden in a commitment in a veriable manner, without disclosing any other
+information (such as its private key) or needing to open the commitment. Based
+on this basic audit functionality, several other audits can be implemented at
+a transaction or participant level (e.g. transaction limits or statistical informa-
+tion). Statistical audits can be easily derived from the basic value audit using
+auxiliary bit ags, while limit audits can be implemented using appropriate range
+proofs. Value audits can also be used to derive participation audits (as well as
+non-participation proofs) utilizing zkLedgers architecture. zkLedger could be
+trivially extended to accommodate tax compliance either proactively as an ac-
+countability functionality (by verifying a ZK proof that the relation between the
+total recipient values and the tax authority recipient is equal to a xed ratio, per
+Insight 6) or reactively as an auditability functionality (by verifying the same
+ZK proof as before during the auditing process). Also zkLedgers audits can be
+seen as organization-level audits (i.e. PoA) due to its participants mainly con-
+sidered being Banks. Transaction types and tracing could also be easily added
+as system add-ons through an additional commitment and an appropriate ZK
+proof of consistency between sent and received values, but this would further
+increase storage needs and computational costs. However, its structure circum-
+vents the limitation of Insight 8 which enables ecient auditing with as low as
+O(1) asymptotic costs (assuming an online auditor tracking ledger state).
+However it is obvious from Table 3 that zkLedger suers from very limited
+scalability, as requiring each transaction to include a commitment (as well as
+the needed auxiliary information) for all participants, combined with an ever-
+increasing ledger of such transactions, results in large computational and storage
+costs, which makes it viable for up to about a hundred participants. It also
+requires participants to communicate out-of-band and be online at all times,
+which further limit its practical applications. Nevertheless, it was the rst system
+to depart from the naive approach described in Insight 5 while oering a wide
+range of auditing functionalities, which inspired subsequent academic works.
+Insight 9 An interactive auditing protocol implies the auditees consent and co-
+operation with an auditing authority. This requirement is not necessarily a draw-
+back for such schemes, as refusal to cooperate with authorities can be considered
+as equivalent to a failed audit. In addition, audit by consent typically enables
+more ecient auditing.
+Insight 10 Many audit functions such as transaction limit or tax compliance
+can be reduced to a basic transaction value audit.
+PGC [26] is a condential payment system with an auditing functionality on
+transaction values. It uses similar cryptographic techniques to zkLedger. Specif-
+18
+ically, it uses an El Gamal encryption variant equivalent to a Pedersen Commit-
+ment and the auxiliary information used in zkLedger, and relies on ZK proofs
+composed of -protocols. PGC by using encryption instead of commitments does
+not need to rely on out-of-band communication assumptions (which are needed
+to open the commitments), which could potentially enable it to work in a per-
+missionless setting as well (although not explicitly discussed in the paper). It
+proposes three dierent audit functions, namely transaction limit (using appro-
+priate range proofs), value disclosure and tax payments (which can be derived
+from value disclosure as discussed in Insight 10). Recall that these reactive au-
+ditability functions could be converted into equivalent proactive accountability
+functions enforced by the consensus layer (Insight 6). Since PGC is not anony-
+mous, transaction participant auditing is not applicable. Also transaction types
+or tracing functionalities can be added in PGC by including the necessary aux-
+iliary information in the transaction structure as in Zcash extension [37]. Al-
+though PGC does not suer from the scalability issues of zkLedger, it requires
+each transaction to include a unique serial number to prevent replay attacks (as
+Zcash [17]), which asymptotically results in linearly-increasing blockchain stor-
+age to the number of transactions. PGC can be considered as a special case of
+Insight 8 - by trading o anonymity, it achieves highly ecient auditing only
+dependent to the number of past user transactions, as shown in Table 3.
+Similarly to zkLedger, MiniLedger [25] is a permissioned, fully anonymous
+system. While it has a similar structure with zkLedger, it identied its vulnera-
+bilities and shortcomings and implements a system without needing out-of-band
+communication between participants, using a similar encryption scheme with
+PGC. However the crucial dierence is that its ledger size does not grow linearly
+with the number of recorded transactions, and is only proportional to the num-
+ber of participants, while preserving ecient auditing (as shown in Table 3). This
+is accomplished though a transaction pruning process, which however preserves
+auditability for pruned transactions. In addition, it oers additional regulation
+functionalities (shown in Table 2) and an option to make non-interactive audits
+without consent at the cost of having a centralized audit authority (Table 4).
+Gap 6 Is auditing of transactions that do not appear in the ledger (or happen
+o the chain) possible?
+While its desirable to compress a public ledger to improve its scalability,
+a system that enforces regulation policies is typically incompatible with ledger
+compression techniques (such as pruning), since auditing in DPSs needs to refer
+to some published data on the ledger. MiniLedger [25] is a rst step towards this
+in a permissioned setting, however with linear transaction costs in terms of num-
+ber of participants. At the same time, no system exists that achieves Regulation
+Correctness and Regulation Soundness for locked funds. While it is unclear how
+to provide regulatory control for distributed ledger systems implementing pay-
+ment channels or cross-chain atomic swaps a rst approach might be to consider
+a centralized authority.
+19
+Gap 7 How can a dispute between an auditor and an auditee be resolved? 4
+We note most of DPSs ignore the problem of dispute resolution in case an auditor
+misbehaves (e.g. accuses an auditee of failing an audit). While the auditee could
+publish all their secret information to rebut the accusation, this would fully
+compromise their privacy.
+MProve [32] is a PoA protocol tailored for Monero [57]. As the Provisions
+protocol wont work for Monero because of ring signature obfuscation, MProve
+provides a proof that the key images of the one-time addresses controlled by the
+exchange (which they sum to its total assets) have not previously appeared on
+the public ledger. This approach provides a proof of non-collusion as well, as
+the one-time nature of the key images would trivially expose collusion. However
+it exposes the senders identity when those key images are spent, which might
+eventually enable public tracing of transactions (especially in cases where such
+a PoA protocol is used frequently).
+Gap 8 Can PoA/PoL be implemented on privacy-preserving payment systems
+without degrading the participants privacy?
+6 Conclusion
+We observe increasing eorts towards implementing regulatory control in dis-
+tributed payment systems. However, existing lines of research approach the
+problem from dierent angles, with dierent goals, assumptions and use-cases.
+Our systematization identies a number of exciting open problems on providing
+mechanisms for regulation of DPSs which we summarize below.
+Despite auditing in pseudoanonymous systems intuitively being straightfor-
+ward, no solution exists that prevents collusions among organizations when prov-
+ing assets, while allowing them to exclude liabilities with low-probability of ac-
+cess (Gaps 1 and 2). In addition, proving assets eciently, in a fully-anonymous
+manner and without introducing additional assumptions remains an open prob-
+lem (Gap 3). In privacy-preserving systems, we note that mapping regulation
+requirements and laws to automated computations is not trivial, and designing
+fully-private DPSs supporting many dierent regulations currently seems out of
+reach. Proof of solvency on privacy-preserving systems is challenging (Gap 8),
+while there is no fully-private DPS that is scalable, computationally ecient
+and without strong assumptions such as designated auditing authorities that
+can violate user privacy. We observe all schemes attempting to enforce regu-
+latory functions are designed for on-chain protocols, and are not compatible
+with information that either lives o the ledger and/or locks funds, or with in-
+formation that has been pruned entirely from the common ledger (Gap 6). A
+possible approach is relying on powerful full nodes who keep a copy of the full
+ledger history (regardless of whether it has been pruned or not), and have the
+4 Gap 7 is the equivalent of Gap 4 for privacy-preserving systems.
+20
+auditors use them as query points. While by checking that their history is con-
+sistent with the pruned ledger would prevent malicious behavior by those nodes,
+this approach is still a centralized point of failure for auditing purposes. Finally,
+dispute resolution without compromising privacy against a third-party judge
+is an open problem in both pseudoanonymous and privacy-preserving systems
+(Gaps 4, 7).
+Acknowledgements
+We thank Kaoutar Elkhiyaoui (IBM Research) for the clarications on [15] and
+Dmitry Korneev (Facebook) for his input on needed regulation and compliance.
+References
+1. Bitgo announces veried by bitgo proof of asset service, https:
+//www.businesswire.com/news/home/20150630005466/en/BitGo-Announces-%
+E2%80%9CVerified-BitGo%E2%80%9D-Proof-Asset-Service#.VZKYwO1Viko
+2. Bitstamp proof of reserves, https://www.bitstamp.net/s/documents/Bitstamp_
+proof_of_reserves_statement.pdf
+3. CSBS state regulatory requirements for virtual currency activities, https:
+//www.csbs.org/sites/default/files/2017-11/CSBS%20Draft%20Model%
+20Regulatory%20Framework%20for%20Virtual%20Currency%20Proposal%20--%
+20Dec.%2016%202014.pdf
+4. Deloitte COINIA and the future of audit, https://www2.deloitte.com/us/en/
+pages/audit/articles/impact-of-blockchain-in-accounting.html
+5. FATF travel rule: What you need to know, https://complyadvantage.com/
+knowledgebase/fatf-travel-rule/
+6. IRS is trying to deanonymize privacy coins like monero and zcash,
+https://www.forbes.com/sites/shehanchandrasekera/2020/07/06/
+irs-is-trying-to-deanonymize-privacy-coins-like-monero-and-zcash/
+#4607506c4174
+7. Maxwell summation trees, https://bitcointalk.org/index.php?topic=595180.
+0
+8. Proof of solvency: Technical overview, https://medium.com/iconominet/
+proof-of-solvency-technical-overview-d1d0e8a8a0b8
+9. Tether: Fiat currencies on the bitcoin blockchain, https://tether.to/
+wp-content/uploads/2016/06/TetherWhitePaper.pdf
+10. Tethers bank says it invests customer funds in bitcoin, https://www.coindesk.
+com/tethers-bank-says-it-invests-customer-funds-in-bitcoin
+11. On blockchain auditability (2016), https://bitfury.com/content/downloads/
+bitfury_white_paper_on_blockchain_auditability.pdf
+12. Regulation (eu) 2016/679 of the european parliament and of the council of 27 april
+2016 on the protection of natural persons with regard to the processing of personal
+data and on the free movement of such data, and repealing directive 95/46/ec
+(general data protection regulation). Ocial Journal of the European Union L119
+pp. 188 (2016)
+21
+13. Deloittes 2020 global blockchain survey (2020), https://www2.deloitte.com/
+content/dam/insights/us/articles/6608_2020-global-blockchain-survey/
+DI_CIR%202020%20global%20blockchain%20survey.pdf
+14. Androulaki, E., Barger, A., Bortnikov, V., Cachin, C., Christidis, K., Caro, A.D.,
+Enyeart, D., Ferris, C., Laventman, G., Manevich, Y., Muralidharan, S., Murthy,
+C., Nguyen, B., Sethi, M., Singh, G., Smith, K., Sorniotti, A., Stathakopoulou,
+C., Vukolic, M., Cocco, S.W., Yellick, J.: Hyperledger fabric: a distributed oper-
+ating system for permissioned blockchains. In: Proceedings of the Thirteenth Eu-
+roSys Conference, EuroSys 2018, Porto, Portugal, April 23-26, 2018. pp. 30:130:15
+(2018)
+15. Androulaki, E., Camenisch, J., Caro, A.D., Dubovitskaya, M., Elkhiyaoui, K.,
+Tackmann, B.: Privacy-preserving auditable token payments in a permissioned
+blockchain system. In: AFT 20: 2nd ACM Conference on Advances in Fi-
+nancial Technologies, New York, NY, USA, October 21-23, 2020. pp. 255
+267. ACM (2020). https://doi.org/10.1145/3419614.3423259, https://doi.org/
+10.1145/3419614.3423259
+16. Barki, A., Gouget, A.: Achieving privacy and accountability in traceable digital
+currency. Cryptology ePrint Archive, Report 2020/1565 (2020), https://eprint.
+iacr.org/2020/1565
+17. Ben-Sasson, E., Chiesa, A., Garman, C., Green, M., Miers, I., Tromer, E., Virza,
+M.: Zerocash: Decentralized anonymous payments from bitcoin. In: 2014 IEEE
+Symposium on Security and Privacy. pp. 459474. IEEE Computer Society Press
+(May 2014). https://doi.org/10.1109/SP.2014.36
+18. Bitansky, N., Chiesa, A., Ishai, Y., Ostrovsky, R., Paneth, O.: Succinct
+non-interactive arguments via linear interactive proofs. In: Sahai, A. (ed.)
+TCC 2013. LNCS, vol. 7785, pp. 315333. Springer, Heidelberg (Mar 2013).
+https://doi.org/10.1007/978-3-642-36594-2 18
+19. Bogatov, D., De Caro, A., Elkhiyaoui, K., Tackmann, B.: Anonymous transactions
+with revocation and auditing in hyperledger fabric. Cryptology ePrint Archive,
+Report 2019/1097 (2019), https://eprint.iacr.org/2019/1097
+20. Brands, S.: Untraceable o-line cash in wallets with observers (extended abstract).
+In: Stinson, D.R. (ed.) CRYPTO93. LNCS, vol. 773, pp. 302318. Springer, Hei-
+delberg (Aug 1994). https://doi.org/10.1007/3-540-48329-2 26
+21. B unz, B., Bootle, J., Boneh, D., Poelstra, A., Wuille, P., Maxwell, G.: Bulletproofs:
+Short proofs for condential transactions and more. In: 2018 IEEE Symposium on
+Security and Privacy. pp. 315334. IEEE Computer Society Press (May 2018).
+https://doi.org/10.1109/SP.2018.00020
+22. Cecchetti, E., Zhang, F., Ji, Y., Kosba, A.E., Juels, A., Shi, E.: Solidus: Conden-
+tial distributed ledger transactions via PVORM. In: Thuraisingham, B.M., Evans,
+D., Malkin, T., Xu, D. (eds.) ACM CCS 2017. pp. 701717. ACM Press (Oct / Nov
+2017). https://doi.org/10.1145/3133956.3134010
+23. Chalkias, K., Lewi, K., Mohassel, P., Nikolaenko, V.: Distributed auditing proofs of
+liabilities. Cryptology ePrint Archive, Report 2020/468 (2020), https://eprint.
+iacr.org/2020/468
+24. Chase, M., Ganesh, C., Mohassel, P.: Ecient zero-knowledge proof of algebraic
+and non-algebraic statements with applications to privacy preserving credentials.
+In: Robshaw, M., Katz, J. (eds.) CRYPTO 2016, Part III. LNCS, vol. 9816, pp. 499
+530. Springer, Heidelberg (Aug 2016). https://doi.org/10.1007/978-3-662-53015-
+3 18
+25. Chatzigiannis, P., Baldimtsi, F.: Miniledger: Compact-sized anonymous and au-
+ditable distributed payments. ESORICS 2021 (2021)
+22
+26. Chen, Y., Ma, X., Tang, C., Au, M.H.: PGC: Decentralized condential payment
+system with auditability. In: Chen, L., Li, N., Liang, K., Schneider, S.A. (eds.)
+ESORICS 2020, Part I. LNCS, vol. 12308, pp. 591610. Springer, Heidelberg (Sep
+2020). https://doi.org/10.1007/978-3-030-58951-6 29
+27. Conti, M., E, S.K., Lal, C., Ruj, S.: A survey on security and pri-
+vacy issues of bitcoin. IEEE Commun. Surv. Tutorials 20(4), 3416
+3452 (2018). https://doi.org/10.1109/COMST.2018.2842460, https://doi.org/
+10.1109/COMST.2018.2842460
+28. Dagher, G.G., B unz, B., Bonneau, J., Clark, J., Boneh, D.: Provisions:
+Privacy-preserving proofs of solvency for bitcoin exchanges. In: Ray, I., Li,
+N., Kruegel, C. (eds.) ACM CCS 2015. pp. 720731. ACM Press (Oct 2015).
+https://doi.org/10.1145/2810103.2813674
+29. Damg ard, I., Ganesh, C., Khoshakhlagh, H., Orlandi, C., Siniscalchi, L.: Balancing
+privacy and accountability in blockchain identity management. Cryptology ePrint
+Archive, Report 2020/1511 (2020), https://eprint.iacr.org/2020/1511
+30. Decker, C., Guthrie, J., Seidel, J., Wattenhofer, R.: Making bitcoin exchanges
+transparent. In: Pernul, G., Ryan, P.Y.A., Weippl, E.R. (eds.) ESORICS 2015,
+Part II. LNCS, vol. 9327, pp. 561576. Springer, Heidelberg (Sep 2015).
+https://doi.org/10.1007/978-3-319-24177-7 28
+31. Doerner, J., Shelat, A., Evans, D.: Zeroledge: Proving solvency with privacy
+32. Dutta, A., Vijayakumaran, S.: Mprove: A proof of reserves protocol for mon-
+ero exchanges. In: 2019 IEEE European Symposium on Security and Privacy
+Workshops, EuroS&P Workshops 2019, Stockholm, Sweden, June 17-19, 2019.
+pp. 330339. IEEE (2019). https://doi.org/10.1109/EuroSPW.2019.00043, https:
+//doi.org/10.1109/EuroSPW.2019.00043
+33. Fiat, A., Shamir, A.: How to prove yourself: Practical solutions to identication and
+signature problems. In: Odlyzko, A.M. (ed.) CRYPTO86. LNCS, vol. 263, pp. 186
+194. Springer, Heidelberg (Aug 1987). https://doi.org/10.1007/3-540-47721-7 12
+34. Frankle, J., Park, S., Shaar, D., Goldwasser, S., Weitzner, D.J.: Practical account-
+ability of secret processes. In: Enck, W., Felt, A.P. (eds.) USENIX Security 2018.
+pp. 657674. USENIX Association (Aug 2018)
+35. Fuchsbauer, G., Orr` u, M., Seurin, Y.: Aggregate cash systems: A crypto-
+graphic investigation of Mimblewimble. In: Ishai, Y., Rijmen, V. (eds.) EURO-
+CRYPT 2019, Part I. LNCS, vol. 11476, pp. 657689. Springer, Heidelberg (May
+2019). https://doi.org/10.1007/978-3-030-17653-2 22
+36. Garay, J.A., Kiayias, A.: SoK: A consensus taxonomy in the blockchain era. In:
+Jarecki, S. (ed.) CT-RSA 2020. LNCS, vol. 12006, pp. 284318. Springer, Heidel-
+berg (Feb 2020). https://doi.org/10.1007/978-3-030-40186-3 13
+37. Garman, C., Green, M., Miers, I.: Accountable privacy for decentralized anonymous
+payments. In: Grossklags, J., Preneel, B. (eds.) FC 2016. LNCS, vol. 9603, pp. 81
+98. Springer, Heidelberg (Feb 2016)
+38. Goldwasser, S., Park, S.: Public accountability vs. secret laws: Can they co-
+exist?: A cryptographic proposal. In: Thuraisingham, B.M., Lee, A.J. (eds.)
+Proceedings of the 2017 on Workshop on Privacy in the Electronic So-
+ciety, Dallas, TX, USA, October 30 - November 3, 2017. pp. 99110.
+ACM (2017). https://doi.org/10.1145/3139550.3139565, https://doi.org/10.
+1145/3139550.3139565
+39. Graf, M., K usters, R., Rausch, D.: Accountability in a permissioned
+blockchain: Formal analysis of hyperledger fabric pp. 236255 (2020).
+https://doi.org/10.1109/EuroSP48549.2020.00023, https://doi.org/10.1109/
+EuroSP48549.2020.00023
+23
+40. Groth, J.: Non-interactive zero-knowledge arguments for voting. In: Ioannidis, J.,
+Keromytis, A., Yung, M. (eds.) ACNS 05. LNCS, vol. 3531, pp. 467482. Springer,
+Heidelberg (Jun 2005). https://doi.org/10.1007/11496137 32
+41. Groth, J.: On the size of pairing-based non-interactive arguments. In: Fischlin,
+M., Coron, J.S. (eds.) EUROCRYPT 2016, Part II. LNCS, vol. 9666, pp. 305326.
+Springer, Heidelberg (May 2016). https://doi.org/10.1007/978-3-662-49896-5 11
+42. Guts, N., Fournet, C., Nardelli, F.Z.: Reliable evidence: Auditability by typing.
+In: Backes, M., Ning, P. (eds.) ESORICS 2009. LNCS, vol. 5789, pp. 168183.
+Springer, Heidelberg (Sep 2009). https://doi.org/10.1007/978-3-642-04444-1 11
+43. Heilman, E., Alshenibr, L., Baldimtsi, F., Scafuro, A., Goldberg, S.: TumbleBit:
+An untrusted bitcoin-compatible anonymous payment hub. In: NDSS 2017. The
+Internet Society (Feb / Mar 2017)
+44. Hu, K., Zhang, Z., Guo, K.: Breaking the binding: Attacks on the merkle
+approach to prove liabilities and its applications. Comput. Secur. 87 (2019).
+https://doi.org/10.1016/j.cose.2019.101585, https://doi.org/10.1016/j.cose.
+2019.101585
+45. Kiayias, A., Russell, A., David, B., Oliynykov, R.: Ouroboros: A provably se-
+cure proof-of-stake blockchain protocol. In: Katz, J., Shacham, H. (eds.) Advances
+in Cryptology CRYPTO 2017. pp. 357388. Springer International Publishing,
+Cham (2017)
+46. K usters, R., Truderung, T., Vogt, A.: Accountability: denition and re-
+lationship to veriability. In: Al-Shaer, E., Keromytis, A.D., Shmatikov,
+V. (eds.) ACM CCS 2010. pp. 526535. ACM Press (Oct 2010).
+https://doi.org/10.1145/1866307.1866366
+47. Lamport, L., Shostak, R.E., Pease, M.C.: The byzantine generals problem. ACM
+Trans. Program. Lang. Syst. 4(3), 382401 (1982)
+48. Maxwell, G.: Coinjoin: Bitcoin privacy for the real world (2013), https://
+bitcointalk.org/index.php?topic=279249.0
+49. Meiklejohn, S., Pomarole, M., Jordan, G., Levchenko, K., McCoy, D., Voelker,
+G.M., Savage, S.: A stful of bitcoins: characterizing payments among men with no
+names. In: Papagiannaki, K., Gummadi, P.K., Partridge, C. (eds.) Proceedings of
+the 2013 Internet Measurement Conference, IMC 2013, Barcelona, Spain, October
+23-25, 2013. pp. 127140. ACM (2013). https://doi.org/10.1145/2504730.2504747,
+https://doi.org/10.1145/2504730.2504747
+50. Moore, T., Christin, N.: Beware the middleman: Empirical analysis of Bitcoin-
+exchange risk. In: Sadeghi, A.R. (ed.) FC 2013. LNCS, vol. 7859, pp. 2533.
+Springer, Heidelberg (Apr 2013). https://doi.org/10.1007/978-3-642-39884-1 3
+51. Nakamoto, S.: Bitcoin: A peer-to-peer electronic cash system (2009), http://
+bitcoin.org/bitcoin.pdf
+52. Narula, N., Vasquez, W., Virza, M.: zkledger: Privacy-preserving auditing for dis-
+tributed ledgers. In: 15th USENIX Symposium on Networked Systems Design and
+Implementation (NSDI 18). pp. 6580. USENIX Association, Renton, WA (Apr
+2018), https://www.usenix.org/conference/nsdi18/presentation/narula
+53. Pedersen, T.P.: Non-interactive and information-theoretic secure veriable secret
+sharing. In: Feigenbaum, J. (ed.) CRYPTO91. LNCS, vol. 576, pp. 129140.
+Springer, Heidelberg (Aug 1992). https://doi.org/10.1007/3-540-46766-1 9
+54. Poelstra, A.: Mimblewimble (2016), https://download.wpsoftware.net/
+bitcoin/wizardry/mimblewimble.pdf
+55. Poelstra, A., Back, A., Friedenbach, M., Maxwell, G., Wuille, P.: Condential as-
+sets. In: Zohar, A., Eyal, I., Teague, V., Clark, J., Bracciali, A., Pintore, F., Sala,
+24
+M. (eds.) FC 2018 Workshops. LNCS, vol. 10958, pp. 4363. Springer, Heidelberg
+(Mar 2019). https://doi.org/10.1007/978-3-662-58820-8 4
+56. Roose, S.: Standardizing bitcoin proof of reserves, https://blockstream.com/
+2019/02/04/en-standardizing-bitcoin-proof-of-reserves/
+57. Van Saberhagen, N.: Cryptonote v 2.0 (2013), https://cryptonote.org/
+whitepaper.pdf
+58. Wang, H., He, D., Ji, Y.: Designated-verier proof of assets for bitcoin exchange
+using elliptic curve cryptography. Future Gener. Comput. Syst. 107, 854862
+(2020). https://doi.org/10.1016/j.future.2017.06.028, https://doi.org/10.1016/
+j.future.2017.06.028
+59. W ust, K., Kostiainen, K., Capkun, V., Capkun, S.: PRCash: Fast, private and
+regulated transactions for digital currencies. In: Goldberg, I., Moore, T. (eds.)
+FC 2019. LNCS, vol. 11598, pp. 158178. Springer, Heidelberg (Feb 2019).
+https://doi.org/10.1007/978-3-030-32101-7 11
+A Cryptographic Background
+A.1 Consensus
+A consensus protocol allows a number of nodes to output a common agreement
+on input of a sequence of messages. In our setting, the commonly agreed value
+is typically recorded on a public ledger. The basic properties of a consensus pro-
+tocol are [36] a) Consistency: On some input, all honest nodes make the same
+output. b) Liveness: An input proposed by some honest node will be eventu-
+ally processed by all honest nodes after a nite number of rounds. A common
+distinction among consensus protocols is according to their failure model, where
+crash tolerant protocols assume failed nodes may become oine or otherwise
+stop interacting with the system, while Byzantine tolerant [47] protocols assume
+such nodes might also engage into malicious activity in order to defeat the above
+properties. These models typically assume dierent levels of adversarial power
+needed for the system to fail. Another distinction is based on the participation
+model, where permissioned consensus participation is open only to a closed set
+of parties, while permissionless is open to anyone, which however needs a mech-
+anism to prevent attacks through sybil identities such as Bitcoins Proof of
+Work [51] or Proof of Stake protocols [45].
+A.2 Distributed Payment Systems
+A distributed payment system DPS (also known as ledger-based payment sys-
+tem) can be simply dened by the following algorithms and protocols when
+already assuming the existence of a consensus layer.
+ pp,L Setup(): on input of security parameter , outputs public param-
+eters pp and initializes a public ledger Lto be maintained by the consensus
+layer. This algorithm is executed once in the setup phase of the system, and
+is run by either a single party or a quorum of parties in a multi-party com-
+putation (MPC) protocol. In the following algorithms and protocols, pp and
+L are default inputs and are omitted for simplicity.
+25
+ (pk,sk) CreateAcc(): Run by any party wishing to transact in the system5,
+outputs a public key pair.
+ tx CreateTx(skS,pkR,v): Run by a sender wishing to send value v to re-
+ceiver, and outputs a transaction tx. Although here for simplicity we assume
+a single sender and receiver, a transaction can generally accommodate mul-
+tiple senders and receivers. tx is sent to the consensus layer in order to be
+included in L after verication.
+ VerifyTx(tx) := {0,1}Veries the validity of a transactiontx, given the state
+of the ledger L. Verication is typically performed in a distributed fashion
+in the consensus layer among all veriers (often called miners), where
+agreement results in the update of the ledgers state to Lwhich contains tx.
+A.3 Commitment schemes
+Commitment schemes are very commonly used in private DPSs, to hide trans-
+action information. A non-interactive commitment scheme Com(pp,m,r ) takes
+as input public parameters pp, a message m and randomness r and outputs
+a commitment value cm. This value reveals no information about the message
+(hiding property) while it is hard to nd ( m,r) such that Com(pp,m,r ) =
+Com(pp,m,r), when m= m(binding property). Certain commitment schemes,
+i.e. Pedersen commitments [53] allow for homomorphic operations over commit-
+ted values, a useful property in private DPSs.
+A.4 Zero Knowledge Proofs
+A Zero Knowledge proof is an interactive protocol between a prover P and a
+verier V where P based on a common input statement proves knowledge of a
+witness wwithout revealing to V any additional information other than this fact
+alone. In DPSs, zero-knowledge proofs are used extensively to provide privacy-
+preserving attributes, with transacting parties proving validity of a transactions
+based on a public ledger without revealing the full transaction details, while in
+recent works they are also used to prove compliance with regulatory require-
+ments.
+Range Proofs are Zero Knowledge protocols proving that a committed value
+v lies within some interval ( a,b), with v as the witness. In a payment system
+setting, such proofs are typically used to show that v is positive or does not
+overow a maximum presentable value. Most well-known construction families
+for range proofs include square decomposition [40], multi-base decomposition
+[55] and Bulletproofs [21], with the latter being the most ecient in terms of
+proof size. Obviously, one can generate constant size range proofs from trusted-
+setup based SNARKs like Groth16 [41]. In privacy-preserving DPSs they are
+often used to ensure their basic core properties discussed in Section A.2, but
+5 Although participation in payment systems is typically achieved through public key
+cryptography, some systems achieve it through other primitives (e.g. spending in
+Mimblewimble [35,54] requires knowledge of a commitments blinding factor).
+26
+they are also used for regulation purposes (e.g. distinguish between transactions
+that exceed a value limit).
+A.5 Interactive Zero Knowledge Proofs
+An interactive zero-knowledge proof (ZKP) for statement {w: f(w,x)}where x
+is publicly known and witness wis known only to proverP, is a protocol between
+P and verier V that proves Ps knowledge of w such that f(w,x) holds. This
+protocol needs to satisfy the following:
+ Completeness: Honest V is always convinced by an honest P who knows
+a valid witness w.
+ Soundness: A malicious prover P cannot convince a verier for a false
+statement.
+ Zero Knowledge: After executing the protocol, a verier does not learn
+any additional information other than the validity of the statement.
+An interactive ZKP can be converted to a non-interactive zero knowledge
+proof (NIZK) using the Fiat-Shamir heuristic [33]. In turn, a ZK - Succinct
+Non-interactive ARgument of Knowledge (zk-SNARK) is a non-interactive zero-
+knowledge proof that is succinct, namely its proofs are very short O() with
+ecient verication O(|x|) [18].
+27
