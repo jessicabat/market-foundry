@@ -36,6 +36,7 @@ def load_model_openai():
 
 def extract_topics_openai(document):
     MODEL, client = load_model_openai()
+    
     response = client.chat.completions.create(
         model=MODEL,
         messages=[
@@ -113,6 +114,7 @@ def extract_topics_openai(document):
 
 def extract_topics(document):
     tokenizer, model = load_model_hf()
+    
     messages=[
             {
                 "role": "system",
@@ -187,10 +189,6 @@ def extract_topics(document):
 
     if not response:
         raise ValueError("Model returned empty response")
-    
-    del model
-    del tokenizer
-    gc.collect()
 
     # return json.loads(response)
     print("\nObserved Topics:\n", response)

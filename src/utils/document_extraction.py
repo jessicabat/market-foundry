@@ -38,9 +38,10 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
         try:
             with tempfile.TemporaryDirectory() as temp_dir:
 
-                topics = topic_extractor.extract_topics_openai(text)
+                topics = topic_extractor.extract_topics(text)
                 
-                topic_configs = yaml_generator.generate_yaml_configs_openai(
+                topic_configs = yaml_generator.generate_yaml_configs(
+                    get_basename(file),
                     classifications[file],
                     topics
                 )

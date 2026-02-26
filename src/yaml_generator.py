@@ -70,7 +70,7 @@ def safe_json_parse(text):
     print("⚠️ Could not parse JSON — returning empty fallback")
     return {"yaml_files": []}
 
-def generate_yaml_configs_openai(document_type, topic_map):
+def generate_yaml_configs_openai(document_name, document_type, topic_map):
     MODEL, client = load_model_openai()
 
     messages = [
@@ -162,7 +162,7 @@ def generate_yaml_configs_openai(document_type, topic_map):
         - Avoid narrow variants of the same concept.
 
         file_name MUST be:
-        {document_type}.yaml
+        {document_name}.yaml
 
         Return ONLY valid JSON.
         """
@@ -179,7 +179,9 @@ def generate_yaml_configs_openai(document_type, topic_map):
     # print("\nRAW MODEL RESPONSE:\n", content)
     return safe_json_parse(content)
 
-def generate_yaml_configs(document_type, topic_map):
+def generate_yaml_configs(document_name, document_type, topic_map):
+    
+    tokenizer, model = load_model_hf()
 
     messages = [
     {
@@ -270,7 +272,7 @@ def generate_yaml_configs(document_type, topic_map):
         - Avoid narrow variants of the same concept.
 
         file_name MUST be:
-        {document_type}.yaml
+        {document_name}.yaml
 
         Return ONLY valid JSON.
         """
