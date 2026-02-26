@@ -1,0 +1,1412 @@
+arXiv:2210.02586v1 [cs.GT] 5 Oct 2022
+Parity in Markets - Methods, Costs, and Consequences
+Alexander Peysakhovich, 1 Christian Kroer ,2 Nicolas Usunier 1
+1 Meta AI Research, 2 Columbia University
+Abstract
+Fisher markets are those where buyers with budgets compete
+for scarce items, a natural model for many real world markets
+including online advertising. W e show how market designers
+can use taxes or subsidies in Fisher markets to ensure that
+market equilibrium outcomes fall within certain constrain ts.
+W e adapt various types of fairness constraints proposed in
+existing literature to the market case and show who benets
+and who loses from these constraints, as well as the extent
+to which properties of markets including Pareto optimality ,
+envy-freeness, and incentive compatibility are preserved . W e
+nd that several prior proposed constraints applied to mark ets
+can hurt the groups they are intended to help.
+1 Introduction
+A market solves the economic problem of who gets
+what and why (Roth 2015). Market mechanisms are
+in place in many platform businesses such as online
+advertising, ride-sharing, and others. Unfortunately,
+there is no guarantee that market outcomes will al-
+ways align with other objectives of the market designer
+such as business needs or legal constraints. Recent
+work proposes the addition of fairness constraints into
+allocation mechanisms (Celis, Mehrotra, and V ishnoi
+2019; Ilvento, Jagadeesan, and Chawla 2020;
+Chawla and Jagadeesan 2022; Celli et al. 2022;
+Balseiro, Lu, and Mirrokni 2021). Our contribution to
+this problem two-fold. The rst is technical: we show how
+market designers can use price interventions in a Fisher
+market to implement constraints on market outcomes. The
+second is conceptual, we show the importance of studying
+second-order effects of making these interventions as who
+wins and who loses from interventions may not follow the
+intentions of the intervention.
+W e focus on Fisher markets where budget constrained
+buyers compete for items that are in limited supply
+(Eisenberg and Gale 1959). Given prices for items, demand
+is the result of buyers maximizing their utilities. An equil ib-
+rium in Fisher markets are prices and allocations such that
+supply equals demand.
+The Fisher model allows us to abstract away from the de-
+tails of how a market works and study equilibria as prop-
+erties of demand and supply directly. For example, even
+Preprint.
+though individual impressions in many real world advertis-
+ing markets are allocated via paced auctions, the aggregate
+outcome across all advertisers and impressions is that pric es
+make supply meets demand - in other words, a Fisher market
+equilibrium (Conitzer et al. 2019, 2022).
+From the perspectives of buyers and market designers,
+Fisher equilibria are well understood. The allocations are
+Pareto-optimal and envy-free up to budgets (no buyer strict ly
+prefers another buyers bundle to their own bundle when bud-
+gets are equal) (V arian 1974; Budish and Cantillon 2012).
+When markets are large buyers have no incentives to lie
+about their valuations of items (Azevedo and Budish 2018;
+Peysakhovich and Kroer 2019).
+However, equilibrium-based allocations can have unde-
+sirable distributive properties from the point of view of
+group-level fairness. For example, recent work argues ad-
+vertising markets may result in outcomes which may be
+unfair in various senses (Ali et al. 2019; Zhang 2021;
+Imana, Korolova, and Heidemann 2021).
+W e ask how market designers can adjust market out-
+comes to x these undesirable distributional properties.
+A common tool for market designers is price intervention
+(Pigou 1924) and our main technical contribution is to give
+designers a way to target these in Fisher markets. Given a
+family of linear constraints, we show how to use convex op-
+timization construct a set of price interventions - taxes an d
+subsidies for some purchases - such that there are allocatio ns
+which satisfy the constraints and are also market equilibri a.
+Many constraint families proposed in the literature can be
+written as linear constraints. For each of these proposed co n-
+straint families we ask: who wins and who loses when these
+interventions are made? The results are not always intuitiv e
+and, because second-order effects abound in markets, do not
+always achieve the stated goals of the constraints.
+Motivated by recent literature (Ali et al.
+2019; Celis, Mehrotra, and V ishnoi 2019;
+Ilvento, Jagadeesan, and Chawla 2020;
+Chawla and Jagadeesan 2022; Celli et al. 2022) we rst
+consider buyer parity constraints where items are split int o
+groups A and B and each buyer in a set is required to
+have parity in allocation with respect to these groups. This
+constraint guarantees parity in exposure between the A and
+B groups, however it does not guarantee Pareto optimality
+even when item group welfare is taken into account. In
+addition, this intervention can lead to the previously dis-
+advantaged group receiving less aggregate exposure than
+before.
+Motivated by the work on fairness in applicant/recruiter
+job search matching (Geyik, Ambler, and Kenthapadi 2019)
+we also consider the transpose of the above constraint - pe r
+item parity constraints. Buyers have group labels A and B
+and some set of items are each required to have equal ex-
+posure in the buyer groups. Here the goal is that items (e.g.
+recruiter impressions) have parity in exposure to buyers (e .g.
+resumes of two groups of individuals). Here, again, we lack
+Pareto optimality and the intervention can reduce the utili ty
+of a previously disadvantaged buyer group.
+W e consider a oor constraint where we require that a
+subset of buyers have a minimum exposure to a subset of
+items. W e nd that this intervention gives outcomes that
+are Pareto optimal if item exposure utility is taken into ac-
+count but not otherwise. Satisfying this constraint in mark et
+outcomes is equivalent to the market designer subsidizing
+constrained buyers purchases of the protected items, and
+though this may sound uniformly welfare improving, we
+show that buyers in the constrained group can have their wel-
+fare reduced by the intervention.
+Finally, we show that each of the above constraint families
+maintains the incentive properties of Fisher markets as lon g
+as the group of buyers on whom the constraint applies grows
+large with the market.
+2 Related W ork
+There is large interest in centralized market alloca-
+tion as a solution to the multi-unit assignment problem
+(Budish and Cantillon 2012). Here individuals report their
+valuations for items, a center computes an (approximate)
+equal-budget equilibrium allocation, and returns this all o-
+cation to the agents. This mechanism is known as com-
+petitive equilibrium from equal incomes (CEEI, (V arian
+1974)) and is used in the allocation of courses to univer-
+sity students though with more complex utility functions
+and computations than our Fisher case (Budish et al. 2013,
+2016). Recent work studies how general constraints can be
+added to CEEI allocations (Echenique, Miralles, and Zhang
+2021). Our work adds to this literature by showing proper-
+ties of specic constraints proposed in discussions of de-
+mographic fairness in allocation. W e do not seek to prove
+general results about all possible constraint families. In -
+stead, we focus on the more restrictive case of linear
+constraints in Fisher markets which allows us to derive
+stronger resultsi.e. the convex program to determine op-
+timal taxes/subsidiesthan in general unit demand markets
+studied by Echenique, Miralles, and Zhang (2021).
+Market equilibria in Fisher markets and their re-
+lationship to convex programming are well studied
+(Eisenberg and Gale 1959; Shmyrev 2009; Cole et al. 2017;
+Kroer et al. 2019; Cole et al. 2017; Cole and Gkatzelis 2018;
+Caragiannis et al. 2016; Murray et al. 2019; Gao and Kroer
+2020). Our work complements this existing work as we show
+that the convex program equivalence allows us to easily con-
+struct market interventions in the forms of taxes and subsi-
+dies.
+A recent literature has begun to study differen-
+tial outcomes in online systems (Ali et al. 2019;
+Geyik, Ambler, and Kenthapadi 2019; Zhang 2021;
+Imana, Korolova, and Heidemann 2021) across categories
+of users (e.g. job ads across gender). Though a highly
+studied cause of these differential outcomes are biases in
+machine learning systems, there are also market forces that
+can cause such issues. For example, Lambrecht and Tucker
+(2018) studies STEM job ads competing in a real ad
+market and shows that younger women are a prized
+demographic and are more expensive to show ads to. An
+algorithm that simply optimizes cost-effectiveness in ad
+delivery will deliver ads that were intended to be gender
+neutral in an apparently discriminatory way, because of
+crowding out. Our work further highlights the importance
+of understanding market dynamics before committing to
+various interventions.
+Other work has begun to study unintended conse-
+quences of fairness interventions (Fang and Moro 2011;
+Liu et al. 2018; Emelianov et al. 2022) as well as the
+fact that in many cases machine learning is used in
+ways where there are strategic agents (Hardt et al. 2016;
+Hu, Immorlica, and V aughan 2019). The market setting is
+particular interesting for both of these literatures as mar kets
+are places with large second order effects as well as strateg ic
+agents.
+A recent literature has looked at imple-
+menting various notions of fairness in sin-
+gle auctions (Celis, Mehrotra, and V ishnoi
+2019; Ilvento, Jagadeesan, and Chawla 2020;
+Chawla and Jagadeesan 2022), paced auctions
+(Celli et al. 2022) or online allocation problems
+(Balseiro, Lu, and Mirrokni 2021). Our work complements
+this by showing that in markets similar implementation can
+be done via the use of the price system. In addition, these
+papers study the performance of their algorithms but bypass
+the questions such as second order market effects, who wins
+and who loses, and whether good incentive properties are
+preserved.
+3 Fisher Markets
+Consider a market where there are n buyers (e.g. adver-
+tisers) and m items (e.g. individuals ad slots). Each item
+has supply sj which for the purposes of this section we
+take to be 1. W e assume that fractional allocations are al-
+lowed (in ad auctions these can be thought of as random-
+ized allocations). Fractional allocation ensures existen ce and
+polynomial time computability of equilibria. In practice
+Kroer and Peysakhovich (2019) shows numerically that in
+many Fisher markets with linear utility, almost all assign-
+ments are 1 or 0.
+For an allocation x Rnm
++ , we let xi Rm
++ be the
+bundle of goods assigned to buyer i with xij being the as-
+signment of item j. Each buyer has a utility function vi(xi).
+W e assume the utilities are all homogenous of degree one
+(i.e. that vi(xi) = vi(xi) for > 0), concave, and contin-
+uous. W e also assume that there exists an allocation x such
+that vi(xi) > 0 for all buyers i.
+This class of utilities includes the constant elasticity of
+substitution (CES) family of utilities, and linear utilite s are
+special case of CES utilities where each buyer has a value
+vij for each item and vi(xi) = 
+j vijxij . Linear utilities
+are precisely what is assumed in many studies of online ad-
+vertising markets (Conitzer et al. 2019; Balseiro et al. 202 1).
+Each item will be assigned a price pj > 0, with p being
+the full price vector, and each buyer has a budget Bi > 0.
+W e study the quasi-linear (QL) case where leftover money
+is kept by the buyer; this is most natural for several real
+world markets such as advertising markets. Most of our re-
+sults work the same for the non-QL case.
+Let i be the leftover budget under prices p with allocation
+xi (i = Bi pT xi). The quasilinear utility that a buyer
+experiences under prices p and allocation x is then
+ui(xi, i) = vi(xi) + i
+Given a price vector p, the demand of a buyer is
+Di(p) = argmax
+xi:x
+i pBi
+ui(xi, i).
+A market equilibrium is an allocation x and a price
+vector p such that 1) allocations are demands: for each i
+x
+i Di(p), and 2) markets clear: for each j, 
+i xij 1,
+with equality if pj > 0.
+In Fisher markets with our family of utilities, market
+equilibria always exist. The general problem of market equi -
+lbrium is computationally difcult (Chen and T eng 2009;
+V azirani and Y annakakis 2011; Chen, Kroer, and Kumar
+2021) but in the family of utilities we are considering
+the equilibrium allocation can be found via solving a
+version of the Eisenberg-Gale convex program (EG)
+(Eisenberg and Gale 1959):
+max
+x0,0
+
+i
+Bilog(vi(xi) + i) i
+s.t.
+
+i
+xij 1, j = 1 , . . . , m
+(1)
+The objective maximizes a monotone transformation of
+the budget-weighted geometric mean of buyer utilities. W e
+can get the price vector for the market equilibrium alloca-
+tion1 by looking at the values of the Lagrange multipliers on
+the supply constraints at the optimum (Eisenberg and Gale
+1959).2
+1 There may be multiple equilibria in a Fisher market, however
+the multiplicity only exists up to ties in the allocation, in the sense
+that in all equilibria the prices are the same, and though all ocations
+may differ, the utility realized by each buyer is the same. Th e in-
+tuition for this uniqueness comes from the convex program eq uiv-
+alence though there may be multiple solutions, the program is
+strictly convex in utilities, which leads to uniqueness.
+2 The fact that Fisher equilibria are allocations that maximi ze
+the budget weighted product of utilities is an important rea son
+they are studied in the fair division community . In the equal
+budget case Nash social welfare has been called an unreason -
+ably effective fairness criterion (Caragiannis et al. 201 6) and is
+used in practice in allocation mechanisms such as Spliddit. com
+(Goldman and Procaccia 2014).
+Desirable Properties of Market Equilibria
+Equilibria have several desirable properties: rst, they a re
+Pareto efcient. In the QL case this is dened using the
+leftover budget as well as the seller who receives the pay-
+ments. Let (xi, i) be the bundle of goods received by buyer
+i and their leftover budget with (x, ) being all buyers al-
+locations/budgets. An allocation (x, ) is Pareto optimal if
+for every alternative allocation (x, ) such that some buyer
+strictly improves their utility, it must be the case that for
+some other buyer i, we have vi(x
+i) + 
+i < v i(xi) + i or
+i 
+i > 
+i i, meaning that the seller is worse off. Simi-
+larly, if 
+i 
+i < 
+i i, meaning the seller strictly improves,
+then it must be the case that for some buyer i, we have
+vi(x
+i) + 
+i < v i(xi) + i.
+Equilibrium allocations are envy free when accounting
+for budgets. Let (x, ) be an equilibrium allocation. For any
+two buyers i, i with budget ratio = Bi
+Bi we always have
+that vi(xi) + i vi(xi ) + i .
+Envy freeness is related to another important property:
+strategy-proofness in the large. W e consider large in the
+market context follows: let there be n buyers, each with bud-
+get 1. The size of the market is determined by this n. Let
+there be m items with generic item j, and let the supply of
+each item be sj n where sj is some constant.
+Consider the Fisher mechanism : each individual reports
+their type (i.e. their valuation function) ti, a center computes
+the market equilibrium, and gives each individual their cor -
+responding allocation. At a high level, a mechanism is said
+to be strategy-proof in the large (SPL) if for any > 0
+for all types ti, there exists n such that if n > n the gain to
+any buyer of type ti from misreporting any t
+i instead of their
+true ti is less than .3
+In Appendix C, we give a formal denition as well as ex-
+pand this denition to cover the constrained case.
+Importantly though, it is known that:
+Known Properties 1. The centralized Fisher mechanism is
+SPL.
+All of these properties are important reasons that markets
+are considered useful allocative mechanisms.
+4 Changing Market Outcomes
+W e consider a market designer that wants market allocations
+to satisfy certain constraints. Though in some cases (e.g.
+fully centralized) the market designer can control quantit ies
+allocated directly, in some cases the market designer must
+work through the price system, or they may wish to do so
+due to efciency properties derived from doing so.
+W e consider a market designer that is able to subsidize
+and tax purchases. Let p be an n m matrix of these price
+interventions. W e assume that each buyer i faces price pj +
+pij for item j with pij > 0 being a tax and pij < 0 being
+3 In the real world, auction-based ad markets act like a semi-
+centralized Fisher mechanism. Buyers report their valuati ons for
+various events (clicks, conversions, impressions, etc... ) and the ad
+system bids for them for each impression. In this case, a noti on of
+strategy proofness is extremely important.
+a subsidy. Let pi Rm be the vector of price interventions
+for buyer i.
+The demand of a buyer i with base prices p and interven-
+tions p is then Di(p + pi). W e can now extend the denition
+of a market equilibrium. W e say that given a p the triple
+(x, p, p) is a tax-subsidy equilibrium if
+1. Each xi Di(p + pi)
+2. For all j 
+i xij 1, with equality if pj + pij > 0.
+Now , suppose that the market designer wants to force the
+market equilibrium outcome to satisfy a certain set of con-
+straints by appropriately designing a price intervention. That
+is, we look for a system of taxes and subsidies p such that
+there exists (x, p) such that (x, p, p) is a tax-subsidy
+equilibrium. The next proposition shows how to construct
+such a p:
+Proposition 1. Let D = {x : A1x b1, A2x = b2} for
+A1 RK1m, A2 RK2m, b1 RK1 , b2 RK2 be a set
+of linear constraints that the market designer wants an equi -
+librium allocation to satisfy. Suppose there exists a suppl y-
+feasible allocation x such that the constraints are satised
+and vi(xi) > 0 for all i. Then we can compute, in poly-
+nomial time, a tax/subsidy p along with a tax-subsidy equi-
+librium (x, p, p) such that all of the linear constraints are
+satised.
+The proof of this proposition is instructive as it provides
+the algorithm for computing p from a set of constraints so
+we leave a high-level version of the proof in the text.
+Proof. The proof is based on a straightforward generaliza-
+tion of the argument for the Eisenberg-Gale convex program
+with the additional constraint that x D :
+max
+x0,0
+
+iT
+Bi log
+(
+vi(xi) + i
+)
+ i
+s.t.
+
+i
+xij 1, j,
+A1x b1,
+A2x = b2.
+(2)
+Recall that in the standard EG argument, the prices corre-
+spond to the Lagrange multipliers {pj }j[m] on the supply
+constraints at the optimum.
+Here, we end up with an additional Lagrange multiplier
+1 RK1
++ and 2 RK2 .
+T o construct a tax-subsidy equilibrium we construct price
+interventions p
+ij = K1
+k=1 A1kj 
+1k + K2
+k=1 A2kj 
+2k using
+the Lagrange multipliers at optimality, set prices equal to
+the Lagrange multipliers p
+j on the supply constraints, and
+take the optimal solution x of Eq. (2) as the corresponding
+allocation.
+W e extend the EG argument for why the corresponding
+x, p from Eq. (1) constitute a market equilibrium, we use
+KKT conditions as well as a generalization of Eulers iden-
+tity for homogeneous functions to show that (x, p, p)
+form a tax-subsidy equilibrium.
+Let x, be an optimal solution to Eq. (2). Such a solution
+exists by our assumptions. W e use j ui(xi, i) to denote
+the jth component of an arbitrarily-selected subgradient of
+vi(xi). Let i and ij be the Lagrange multipliers for i 0
+and xij 0 respectively.
+W e start by showing that each buyer i spends their budget
+exactly. W e let ui = ui(xi, i). Now consider the KKT con-
+ditions for Eq. (2) (we leave out primal and dual feasibility
+conditions here since they are straightforward):
+1. (Stationarity) For each xij we have
+(j ui(xi, i))Bi
+ui
+pj
+K1
+k=1
+A1kj 1k
+K2
+k=1
+A2kj 2k+ij = 0 ,
+and for i we have Bi
+ui
++ i = 1 .
+2. (Complementary slackness)
+xij ij = 0 , i, j, (3)
+ii = 0 , i, (4)
+pj(1 
+
+i
+xij ) = 0 , j, (5)
+
+1 (b1 A1x) = 0 , (6)
+
+2 (b2 A2x) = 0 . (7)
+Rewriting stationarity, using the fact that xij ij = 0 , and
+using our denition of pij, we get
+(j ui(xi, i))Bi
+ui
+ pj + pij,
+where equality holds if xij > 0. Let pij = pj + pij. Now we
+multiply each side of the rewritten stationarity condition by
+xij, sum over j, and add i Bi
+ui
+= i to get
+
+j
+xij (j ui(xi, i))Bi
+ui
++ i
+Bi
+ui
+=
+
+j
+xij pij + i.
+Now we can apply the generalized Euler identity for subd-
+ifferentials (Y ang and W ei 2008): let g vi(xi) belong to
+the subdifferential of vi at xi. Then the generalized Euler
+identity states that 
+j gj xij = vi(xi).
+Applying this identity we get
+
+j
+xij pij + i = ui
+Bi
+ui
+= Bi.
+Since the left-hand side is expenditure, we get that buyer i
+spends their budget exactly.
+Next, we need to show that for every alternative bundle
+x
+i, 
+i such that 
+j x
+i pij +
+i Bi, we have ui ui(x
+i, 
+i).
+By concavity of ui we have
+ui(x
+i, 
+i) ui 
+
+j
+j ui(xi, i)(x
+ij xij ) + 
+i i
+= ui
+Bi
+
+j
+(pij ij)(x
+ij xij ) + ui
+Bi
+(1 i)(
+i i)
+= ui
+Bi
+( 
+j
+(pij ij)x
+ij + (1 i)
+i Bi
+)
+ ui
+Bi
+( 
+j
+pijx
+ij + 
+i Bi
+)
+ 0
+where the rst equality follows by stationarity, and the sec -
+ond by complementary slackness and the fact that (xi, i)
+spends the budget exactly. The second-to-last inequality f ol-
+lows because all variables are positive, and the last inequa l-
+ity follows by budget feasibility. Thus we have shown that
+each buyer i receives a bundle xi belonging to their demand
+set Di(p + pi).
+Finally we need to check the market clearing condition:
+this follows immediately from complementary slackness on
+pj and primal feasibility.
+W e also get a straightforward corollary about the power
+of taxes/subsidies in a Fisher market.
+Corollary 1. F or any feasible allocation x, we can use a
+convex program to compute a price intervention p such that
+there is a tax-subsidy equilibrium (x, p, p).
+The corollary above follows from the fact that {xij =
+xij } is a family of linear constraints. Of course, for ex-
+treme allocations the market designer may be required to
+make large taxes or subsidies.
+Note that arbitrary systems of constraints may re-
+quire a complex system of taxes/subsidies (e.g. specic
+taxes/subsidies for each buyer/item pair).
+However, the simpler the constraint, the simpler the
+tax/subsidy required to attain it. For example, consider th e
+exposure oor constraint that we will study further in later
+sections. Here B is a subset of buyers and R is a subset of
+items and our goal is that in aggregate buyers in B have at
+least some xed level of exposure to R. This is written as the
+constraint 
+iC
+
+jB xij L.
+A tax/subsidy to make our equilibrium allocation satisfy
+this goal will only require one common subsidy P that all
+buyers in B will face for all items in R.
+The effects of taxes and subsidies in Fisher markets are
+not always straightforward. In particular, in common discu s-
+sion taxes are viewed as ways to decrease demand (and in-
+crease price) and subsidies for the opposite. However, this is
+more complex in Fisher markets because base prices p are
+determined in equilibrium given the market designer chosen
+tax/subsidy schedule p.
+Consider what happens when the market designer subsi-
+dizes all purchases by all individuals an equal amount p.
+Here new equilibrium base prices will simply be the orig-
+inal equilibrium prices increased by p and there will be no
+net effect on revenue or allocation. Similarly, in a 2 good
+market a blanket subsidy for good 1 is equivalent in effect to
+a blanket tax on good 2. Thus, while we continue to refer to
+price interventions as taxes and subsidies it is important t o
+remember that it is relative, not absolute, levels of interv en-
+tions that matter for outcomes.
+5 Market Fairness Constraints
+W e now focus specically on fairness constraints that have
+been brought up in existing literature.
+Many of our motivating examples are from the literature
+on online ad markets. In this literature, the most commonly
+used utility function is the linear utility where buyers hav e
+vectors of utilities for each item and the total utility of a b un-
+dle is the sum of the item utilities vi(xi) = vT
+i xi. T o keep
+things simple we use this for our examples going forward.
+W e ask whether good properties of market allocations
+(Pareto optimality, envy freeness, SPL) are preserved unde r
+these interventions. In addition, we ask who wins and who
+loses from these interventions.
+Per Buyer Fractional Parity
+Ali et al. (2019) consider the issue of preferential exposur e
+of certain groups to certain kinds of job ads. A similar issue
+occurs in advertising for certain legally protected catego ries
+(e.g. housing).
+This leads to our rst family, per buyer fractional parity
+(PBFP) constraints.
+Let items have a binary attribute, either A or B. There is a
+subset of buyers called constrained buyers the set of which
+we denote by C. In order to combat disparate outcomes, con-
+strained buyers are required to have balanced exposure to
+items (e.g., in an online ad market these buyers could be
+housing or job ads). This leads to the following linear con-
+straints: for any i C we require that
+
+jA
+xij = 
+
+jB
+xij.
+Other examples in the literature can also be expressed as
+choices of . For example, the equal exposure constraint sets
+ = NB
+NA
+where NK is the size of each group. 4
+For this section, we will focus on purely equal exposure
+for simplicity of exposition. W e know that an equilibrium
+can be constructed to satisfy this constraint.
+Importantly, the implicit or explicit goal of PBFP con-
+straints is generally to help some underlying disadvantage d
+group. Therefore, any notion of Pareto optimality or winnin g
+and losing must also include this group.
+Formally, given an allocation X. For a buyer i let the i-
+disadvantaged item group be the one that has less exposure.
+Let the aggregate disadvantaged item group be the one
+that has less exposure to C buyers. W e will also refer to this
+group as the protected item group.
+Let P be a subset of items called the protected group.
+Let 
+iC
+
+jP xij be the aggregate exposure of the pro-
+tected group to the C buyers. An allocation (x, ) is buyer-
+protected-item Pareto optimal if for every alternative allo-
+cation (x, ) such that some buyer strictly improves their
+utility or such that the protected group P gains more ag-
+gregate exposure to C buyers, it must be the case that for
+some other buyer i, we have vi(x
+i) + 
+i < v i(xi) + i or
+i 
+i > 
+i i, meaning that the seller is worse off. Simi-
+larly, if 
+i 
+i < 
+i i, meaning the seller strictly improves,
+then it must be the case that for some buyer i, we have
+vi(x
+i) + 
+i < v i(xi) + i or the protected group loses expo-
+sure to C buyers. Finally, if P gets more aggregate exposure
+to C buyers it must be that either some buyer or the seller
+4 For the context of online job ads Ali et al. (2019) also sugges t
+using a weight of number of expected qualied candidates in e ach
+group rather than simply group size.
+V
+Buyer Item A Item B
+C 1.5 .4
+C .4 1.5
+U 5 2
+U 2 5
+XEG
+Buyer Item A Item B B i pxi ui
+C .33 0 .5 1
+C 0 .33 .5 1
+U .66 0 0 3.33
+U 0 .66 0 3.33
+Price 1.5 1.5 -
+XP BF P
+Buyer Item A Item B B i pxi ui
+C 0 0 1 1
+C 0 0 1 1
+U 1 0 0 5
+U 0 1 0 5
+Price 1 1 -
+T able 1: An example of a set of valuations with budgets set to 1 where imposing PBFP constraints leads to both parity con-
+strained (C) buyers exiting the market completely and all it ems going to the unconstrained (U) buyers. Under the constra ints,
+the U buyers get both items and get them cheaper than in the origina l equilibrium, so they are better off.
+is strictly worse off. W e refer to the original denition in
+Section 3 as buyer-only Pareto optimality .
+W e now ask whether PBFP constraints keep good market
+properties.
+Proposition 2. PBFP constrained equilibria are not buyer-
+only P areto optimal. PBFP constrained equilibria are also
+not buyer-protected-item-group P areto optimal.
+While lack of buyer-only Pareto optimality may not be
+surprising (since the goal of the intervention is to also
+improve the utility of a supply-group), the lack of buyer-
+protected-item-group Pareto optimality (shown in the Ap-
+pendix Example T able 5) is more troubling.
+In addition, imposing parity constraints on a single buyer
+also imposes pecuniary externalities (i.e. second order ef -
+fects) on other buyers. The net of these second order effects
+may be large. This means, winners and losers are not clear.
+Consider two buyers i, k. Suppose we add parity con-
+straints only to i, then i is made worse off. However, the
+addition of parity constraints changes is demand, it reduces
+demand for is originally advantaged group and increases
+it for is originally disadvantaged group. This means the
+second order effect can be positive or negative from buyer
+ks perspective. When implementing parity constraints on
+the entire group of C buyers, these second order effects can
+dominate, making net effects not obvious. In particular, th e
+constraint may completely miss the mark of its original goal .
+Proposition 3. Adding PBFP constraints can decrease the
+exposure of disadvantaged item groups to C buyers relative
+to the original equilibrium.
+W e see this in Example T able 1 adding parity constraints
+leads constrained buyers to exit the market. This means af-
+ter the imposition of PBFP constraints all items receive less
+exposure to the constrained buyers. However, parity con-
+straints also decrease competition and thus prices paid by
+unconstrained buyers.
+In the context of the job advertising example, we added
+parity requirements to job ads leading to a particular type
+of parity - nobody receives any job ads. The only welfare
+improved is the regular advertisers who now face less com-
+petition.
+Note that even which group of buyers wins or loses is
+not guaranteed. For example, all buyers are worse off in the
+example in Appendix T able 4.
+Shifting focus to envy-free and SPL properties, it is clear
+that in general there may be envy between a constrained and
+an unconstrained buyer who share the same valuation func-
+tion (since the constrained buyer effectively has a strictl y
+smaller choice set). However, within group this is not the
+case:
+Proposition 4. If buyers i, i are both constrained (or both
+unconstrained) then i does not have (budget adjusted) envy
+for i.
+Finally, and strongly related to the envy-free property, we
+see that SPL continues to hold:
+Proposition 5. The Fisher market with PBFP constraints
+and constant fraction of constrained buyers who cannot
+misreport whether they are constrained is SPL.
+W e relegate proofs of both propositions to the Appendix.
+Per Item Fractional Parity
+W e now turn to the transpose of the PBFP constraint.
+Geyik, Ambler, and Kenthapadi (2019) consider the case of
+job candidate search and the goal of creating a balanced slat e
+of candidates in any search query.
+The market version of such a constraint is that items
+(e.g. impressions) have a balanced exposure to different
+types of buyers. For example, this can be used in cer-
+tain recommender systems to balance the exposure of
+content consumers on certain types of content producers
+(Singh and Joachims 2018; Geyik, Ambler, and Kenthapadi
+2019).
+W e refer to such constraints as per item fractional parity
+constraints (PIFP).
+Formally, buyers are one of two types, either A or B.
+There is a subset of items which are constrained which we
+denote by C. Formally the constraint is given by
+j C,
+
+iA
+xij = 
+
+iB
+xij .
+As above this can always be expanded to different item
+groups C1, C2, . . . with their own values of .
+As before, there are many choices of . For simplicity, we
+again focus on parity of exposure, i.e. = NA
+NB
+. Note though,
+that various other choices of in the buyer parity case often
+have natural equivalents in the item parity case.
+Given an allocation X, we call the buyer group G which
+has less exposure to items C the disadvantaged buyer
+group. With this in mind, we now focus on the welfare con-
+sequences of implementing per item fractional parity con-
+straints.
+V
+Buyer Item C Item U
+A1 2 1
+A2 2 1.5
+B1 3 2
+B2 3 2
+XEG
+Buyer Item C Item U B i pxi ui
+A1 .167 0 .66 1
+A2 0 .75 0 1.12
+B1 .417 .125 0 1.5
+B2 .417 .125 0 1.5
+XP IF Por XAEF
+Buyer Item C Item U B i pxi ui
+A1 .382 0 .24 1
+A2 .118 .42 .14 1
+B1 .25 .29 0 1.33
+B2 .25 .29 0 1.33
+T able 2: An example of a set of valuations with budgets set to 1 where all buyers prefer C to U and A buyers are disadvantaged
+originally. However, adding PIFP constraints fails to impr ove their utility and decreases the utility of A2. Note that this is
+equivalent an AEF constraint of requiring .5 exposure of C to A buyers.
+Proposition 6. PIFP constraints do not lead to buyer-only
+P areto optimal allocations. Originally disadvantaged buy ers
+may be worse off after constraints are implemented.
+T o put this result into context, consider the use of some-
+thing like CEEI for job recommendation for recruiters. Here
+each item is a recruiter impression and each buyer is a job
+applicant. This means we take a job applicant-centric per -
+spective, i.e., we focus on maximizing the applicants goal s
+with a Nash social welfare criterion as a distributional goa l.
+On the other hand, to avoid discrimination on the recruiter
+side, we enforce parity of exposure to each recruiter expo-
+sure across some binary attribute of the applicants. Then, i t
+is possible that the job applicants we are trying to help are
+worse off after this anti-discrimination intervention.
+It is easy to construct an example where all buyers are
+worse off under PIFP by simply considering that PIFP can
+force an equal split of items which clearly can be Pareto
+dominated by many allocations (see T able 3 in the Ap-
+pendix).
+However, PIFP can backre in a different way as we see
+in Example T able 2. Here all buyers prefer item C to item
+U, and A buyers are less exposed to it than B buyers in equi-
+librium. Implementing PIFP fails to help A buyers. While it
+increases exposure of A1 and A2 buyers to C it strictly de-
+creases the welfare of buyer A2 because of increased com-
+petition from B buyers for item U.
+As with the PBFP constraints we see that envy free and
+SPL properties continue to hold.
+Proposition 7. If buyers i, i are both A (or both B) then
+i does not have (budget adjusted) envy for i in PIFP con-
+strained equilibrium.
+Proposition 8. The Fisher market with PIFP constraints
+and a constant fraction of buyers as A buyers where no
+buyers can misreport their group afliation is SPL.
+The full proofs of these propositions are in the Appendix.
+Aggregate Exposure Floor Constraints
+W e now turn to studying an extremely simple constraint: we
+set a oor below which aggregate exposure of some buy-
+ers to some items cannot fall. W e let C be a subset of con-
+strained buyers and P a subset of protected items.
+The aggregate exposure oor constraint (AEF) is writ-
+ten as 
+iC
+
+jP
+xij L
+where L is our oor level. W e require that L is jointly feasi-
+ble with the supply constraints. When P is a singleton buyer,
+this can be thought of as a minimum quota.
+W e see that here at least some form of Pareto optimality
+is preserved:
+Proposition 9. Adding AEF constraints to EG guarantees
+buyer-protected-item P areto optimality. However , it does not
+guarantee buyer-only P areto optimality.
+The proof and counter-example for this proposition is can
+be found in the Appendix.
+The AEF constraint can be used as an alternative to both
+PBFP and PIFP constraints above. Proposition 9 shows that
+it is more natural to wield the AEF constraint when the mar-
+ket designer cares specically about the increasing the exp o-
+sure of some set of items.
+However, we can also consider the buyer-only case where
+there may be a disadvantaged buyer group that the designer
+cares about helping. For example, in the job applicant setti ng
+the designer may want to increase exposure of some appli-
+cant group (buyers) to some group of recruiters (items).
+The AEF constraint is implemented via pricing by a blan-
+ket subsidy of p for all buyers in C for all items in P . It
+seems intuitive that subsidizing buyers can only improve
+their utility, but this is actually incorrect:
+Proposition 10. Adding AEF constraints can decrease the
+utility of buyers in the constrained group.
+This follows from the fact that AEF constraints set with
+the right threshold can simulate PIFP constraints. The PIFP
+constrained equilibrium in T able 2 is also achievable with
+AEF constraints. Again, adding AEF constraints helps buyer
+C1 get more of item P but buyer C2 prefers the non-
+protected item and, after implementation of AEF constraint s,
+faces increased competition from buyers outside of the C
+set.
+Thus, using AEF constraints purely as a way to improve
+buyer outcomes can also backre.
+Proposition 11. The Fisher market with AEF constraints is
+SPL when no buyers can misreport their group afliation is
+per-group envy free and SPL.
+Again, we relegate the proofs to the Appendix. Note that
+our SPL results require that the size of the constrained grou p
+grows to innity as the market gets large - this means that the
+subsidy is done at the buyer/item group level and is, in the in -
+nite limit, not affected by the report of an individual buye r.
+W e cannot in general derive SPL results for individualized
+quota constraints per buyer since this would imply individ-
+ualized subisidies and would incentivize buyers to underre -
+port their valuation in order to increase their subsidy.
+6 Conclusion and Future Directions
+W e have studied the implementation of parity constraints vi a
+prices. More importantly, we studied the effects of parity
+constraints and the winners and losers from their implemen-
+tation.
+W e do not make claim that one type of intervention is al-
+ways superior to another. The choice of intervention will, of
+course, be specic to the market being studied, the goals of
+the designer, and the sensitivity to various types of tradeo ffs.
+Rather, we hope that our work shows that in market settings
+there can be many second order effects which make inter-
+ventions work differently from what is intended or expected
+and these should be carefully studied and understood.
+References
+Ali, M.; Sapiezynski, P .; Bogen, M.; Korolova, A.; Mislove,
+A.; and Rieke, A. 2019. Discrimination through optimiza-
+tion: How Facebooks Ad delivery can lead to biased out-
+comes. Proceedings of the ACM on Human-Computer Inter-
+action, 3(CSCW): 130.
+Azevedo, E. M.; and Budish, E. 2018. Strategy-proofness in
+the large. The Review of Economic Studies , 86(1): 81116.
+Balseiro, S.; Kim, A.; Mahdian, M.; and Mirrokni, V . 2021.
+Budget-management strategies in repeated auctions. Opera-
+tions Research , 69(3): 859876.
+Balseiro, S.; Lu, H.; and Mirrokni, V . 2021. Regularized on-
+line allocation problems: Fairness and beyond. In Interna-
+tional Conference on Machine Learning , 630639. PMLR.
+Budish, E.; Cachon, G. P .; Kessler, J. B.; and Othman, A.
+2016. Course match: A large-scale implementation of ap-
+proximate competitive equilibrium from equal incomes for
+combinatorial allocation. Operations Research , 65(2): 314
+336.
+Budish, E.; and Cantillon, E. 2012. The multi-unit assign-
+ment problem: Theory and evidence from course allocation
+at Harvard. American Economic Review , 102(5): 223771.
+Budish, E.; Che, Y .-K.; Kojima, F .; and Milgrom, P . 2013.
+Designing random allocation mechanisms: Theory and ap-
+plications. American economic review , 103(2): 585623.
+Caragiannis, I.; Kurokawa, D.; Moulin, H.; Procaccia, A. D. ;
+Shah, N.; and W ang, J. 2016. The unreasonable fairness
+of maximum Nash welfare. In Proceedings of the 2016
+ACM Conference on Economics and Computation , 305322.
+ACM.
+Celis, E.; Mehrotra, A.; and V ishnoi, N. 2019. T oward
+controlling discrimination in online ad auctions. In In-
+ternational Conference on Machine Learning , 44564465.
+PMLR.
+Celli, A.; Colini-Baldeschi, R.; Kroer, C.; and Sodomka, E.
+2022. The parity ray regularizer for pacing in auction mar-
+kets. In Proceedings of the ACM W eb Conference 2022 , 162
+172.
+Chawla, S.; and Jagadeesan, M. 2022. Individual fairness
+in advertising auctions through inverse proportionality. In
+13th Innovations in Theoretical Computer Science Confer-
+ence (ITCS 2022) . Schloss Dagstuhl-Leibniz-Zentrum f ur
+Informatik.
+Chen, X.; Kroer, C.; and Kumar, R. 2021. The Complex-
+ity of Pacing for Second-Price Auctions. In Proceedings of
+the 22nd ACM Conference on Economics and Computation ,
+318318.
+Chen, X.; and T eng, S.-H. 2009. Spending is not easier
+than trading: on the computational equivalence of Fisher an d
+Arrow-Debreu equilibria. In International Symposium on Al-
+gorithms and Computation , 647656. Springer.
+Cole, R.; Devanur, N. R.; Gkatzelis, V .; Jain, K.; Mai, T .;
+V azirani, V . V .; and Y azdanbod, S. 2017. Convex program
+duality, sher markets, and nash social welfare. In 18th ACM
+Conference on Economics and Computation, EC 2017 . As-
+sociation for Computing Machinery, Inc.
+Cole, R.; and Gkatzelis, V . 2018. Approximating the nash
+social welfare with indivisible items. SIAM Journal on Com-
+puting, 47(3): 12111236.
+Conitzer, V .; Kroer, C.; Panigrahi, D.; Schrijvers, O.;
+Sodomka, E.; Stier-Moses, N. E.; and Wilkens, C. 2019. Pac-
+ing Equilibrium in First-Price Auction Markets. In Proceed-
+ings of the 2019 ACM Conference on Economics and Com-
+putation. ACM.
+Conitzer, V .; Kroer, C.; Sodomka, E.; and Stier-Moses, N. E.
+2022. Multiplicative pacing equilibria in auction markets .
+Operations Research , 70(2): 963989.
+Echenique, F .; Miralles, A.; and Zhang, J. 2021. Constraine d
+pseudo-market equilibrium. American Economic Review ,
+111(11): 36993732.
+Eisenberg, E.; and Gale, D. 1959. Consensus of subjective
+probabilities: The pari-mutuel method. The Annals of Math-
+ematical Statistics , 30(1): 165168.
+Emelianov, V .; Gast, N.; Gummadi, K. P .; and Loiseau, P .
+2022. On fair selection in the presence of implicit and dif-
+ferential variance. Articial Intelligence , 302: 103609.
+Fang, H.; and Moro, A. 2011. Theories of statistical discrim -
+ination and afrmative action: A survey. Handbook of social
+economics, 1: 133200.
+Gao, Y .; and Kroer, C. 2020. First-order methods for large-
+scale market equilibrium computation. Advances in Neural
+Information Processing Systems , 33: 2173821750.
+Geyik, S. C.; Ambler, S.; and Kenthapadi, K. 2019. Fairness-
+aware ranking in search & recommendation systems with
+application to linkedin talent search. In Proceedings of the
+25th acm sigkdd international conference on knowledge dis-
+covery & data mining , 22212231.
+Goldman, J. R.; and Procaccia, A. D. 2014. Spliddit: un-
+leashing fair division algorithms. SIGecom Exchanges ,
+13(2): 4146.
+Hardt, M.; Megiddo, N.; Papadimitriou, C.; and W ootters,
+M. 2016. Strategic classication. In Proceedings of the 2016
+ACM conference on innovations in theoretical computer sci-
+ence, 111122.
+Hu, L.; Immorlica, N.; and V aughan, J. W . 2019. The dis-
+parate effects of strategic manipulation. In Proceedings
+of the Conference on F airness, Accountability, and T rans-
+parency, 259268.
+Ilvento, C.; Jagadeesan, M.; and Chawla, S. 2020. Multi-
+category fairness in sponsored search auctions. In Proceed-
+ings of the 2020 Conference on F airness, Accountability,
+and T ransparency, 348358.
+Imana, B.; Korolova, A.; and Heidemann, J. 2021. Auditing
+for Discrimination in Algorithms Delivering Job Ads. In The
+W eb Conference.
+Kroer, C.; and Peysakhovich, A. 2019. Scalable fair
+division forat most onepreferences. arXiv preprint
+arXiv:1909.10925 .
+Kroer, C.; Peysakhovich, A.; Sodomka, E.; and Stier-Moses,
+N. E. 2019. Computing large market equilibria using ab-
+stractions. arXiv preprint arXiv:1901.06230 .
+Lambrecht, A.; and Tucker, C. E. 2018. Algorithmic bias?
+An empirical study into apparent gender-based discrimina-
+tion in the display of STEM career ads. An Empirical Study
+into Apparent Gender-Based Discrimination in the Display
+of STEM Career Ads (March 9, 2018) .
+Liu, L. T .; Dean, S.; Rolf, E.; Simchowitz, M.; and Hardt,
+M. 2018. Delayed impact of fair machine learning. In In-
+ternational Conference on Machine Learning , 31503158.
+PMLR.
+Murray, R.; Kroer, C.; Peysakhovich, A.; and Shah, P . 2019.
+Robust Market Equilibria with Uncertain Preferences. arXiv
+preprint arXiv:1912.04867 .
+Peysakhovich, A.; and Kroer, C. 2019. Fair Division With-
+out Disparate Impact. Mechanism Design for Social Good .
+Pigou, A. C. 1924. The Economics of W elfare . Macmillan.
+Roth, A. E. 2015. Who Gets What?and Why: The New Eco-
+nomics of Matchmaking and Market Design . Houghton Mif-
+in Harcourt.
+Shmyrev, V . I. 2009. An algorithm for nding equilibrium
+in the linear exchange model with xed budgets. Journal of
+Applied and Industrial Mathematics , 3(4): 505.
+Singh, A.; and Joachims, T . 2018. Fairness of exposure in
+rankings. In Proceedings of the 24th ACM SIGKDD Interna-
+tional Conference on Knowledge Discovery & Data Mining ,
+22192228.
+V arian, H. 1974. Efciency, equity and envy. Journal of
+Economic Theory , 9(1): 6391.
+V azirani, V . V .; and Y annakakis, M. 2011. Market equi-
+librium under separable, piecewise-linear, concave utili ties.
+Journal of the ACM (JACM) , 58(3): 125.
+Y ang, F .; and W ei, Z. 2008. Generalized Euler identity for
+subdifferentials of homogeneous functions and applicatio ns.
+Journal of mathematical analysis and applications , 337(1):
+516523.
+Zhang, S. 2021. Measuring Algorithmic Bias in Job Recom-
+mender Systems: An Audit Study Approach.
+A Appendix
+B Proof of Results
+W e organize the section by equilibrium property.
+Pareto Optimality
+Counter Examples for PBFP P areto Optimality. See Exam-
+ple 5 in the Extra Examples section.
+Counter Example to AEF Buyer-Only P areto Optimality.
+See Example 6 in the Extra Examples section.
+Proof that AEF is Buyer-Protected-Item P areto Optimal.
+Let x be the optimal solution to the standard EG program,
+and let xf be the optimal solution to EG with the oor
+constraint added for some set of buyers C and set of
+protected items A. W e break the proof into two exhaustive
+cases.
+Case 1: suppose that the EG objective is the same un-
+der x and xf . In that case, it must be that ui(x
+i , 
+i ) =
+ui(xf
+i , f
+i ) for all buyers i, since there is a unique set of equi-
+librium utilities for EG (this follow from strict convexity of
+the log function). It then follows that xf must be Pareto op-
+timal, since x is Pareto optimal.
+Case 2: suppose that the EG objective strictly decreases.
+In that case, let be the Lagrange multiplier on the oor con-
+straint. Since the oor constraint leads to a strict decreas e
+in objective, we must have that > 0. Now , by optimal-
+ity and Lagrangian duality, we know that xf must maxi-
+mize the objective 
+i Bi log ui(xi, i)+ 
+iC
+
+jA xij
+over the set of supply-feasible allocations x. But then it
+follows immediately that xf must be buyer-protected-item
+Pareto optimal, since if there exists an alternative alloca tion
+x such that ui(xi, i) ui(xf
+i , f
+i ) and 
+iC
+
+jA xij 
+iC
+
+jA xf
+ij , with strict inequality in at least one of
+these inequalities, then we could strictly improve the La-
+grangian objective, which is a contradiction.
+Since the EG objective must either stay the same or de-
+crease under xf , this shows that buyer-protected-item Pareto
+optimality holds.
+Envy Freeness
+In this section we show that allocation according to EG
+with PBFP , PIFP , or AEF constraints leads to envy-freeness
+within each buyer group. The proofs will all use the follow-
+ing observation:
+Fact 1. F or any pair of buyers i, i in a market equilibrium
+(possibly with constraints) we have that if buyer i can afford
+(Bi/Bi )(xi + i ) under their personalized prices p + pi,
+then ui(xi, i) (Bi/Bi )ui(xi , i ).
+This follows from the fact that buyer i receives something
+in their demand set along with the homogeneity of vi (and
+thereby of ui). If they preferred the other bundle (or a scaled
+version thereof), then they would want to buy that instead.
+W e can now easily prove that each allocation approach
+yields (budget-adjusted) envy freeness within each group.
+For unconstrained buyers the proof is the same for all the
+mechanisms: since unconstrained buyers all see the same
+price vector p, they already satisfy the affordability condi-
+tion in Fact 1. W e thus restrict each proof to handling the
+case of buyers that face constraints.
+Proposition 1. EG with PBFP constraints yields per-group
+envy freeness.
+Proof. Consider a pair of buyers i, i that are constrained to
+satisfy PBFP . W e know that their allocations xi, xi are such
+that 
+jA xij = 
+jB xij and 
+jA xij = 
+jB xi j .
+It follows that p
+i xi = p
+i xi = 0 , and moreover p
+i xi =
+jA xij 
+jB xi j = 0 , where is the Lagrange
+multiplier on the PBFP constraint of buyer i, which means
+that pij = for j A and pij = for j B. Since the
+only personalized price that i faces is the Lagrange multi-
+plier on their PBFP constraint, it follows immediately that i
+can afford (Bi/Bi )xi with leftover budget Bi/Bi i , and
+thus they have no budget-adjusted envy against i.
+Proposition 2. EG with PIFP constraints yields per-group
+envy freeness.
+Proof. For any pair of buyers i, i A, we have that they
+face the same price pj + j for each item j, where j is the
+Lagrange multiplier of the PIFP constraint. It immediately
+follows that i can afford (Bi/Bi )xi with leftover budget
+Bi/Bi i . The same argument holds for pairs of buyers in
+group B.
+Proposition 3. EG with AEF constraints yields per-group
+envy freeness.
+Proof. For any pair of buyers i, i C , we have that they
+face the same price pj + j for each item j, where j is the
+Lagrange multiplier of the oor constraint. It immediately
+follows that i can afford (Bi/Bi )xi with leftover budget
+Bi/Bi i .
+C Strategyproofness in the Large
+First we survey the result of Azevedo and Budish (2018).
+This is a result for a general class of mechanisms that specif y
+how agents can report types and how that leads to outcomes
+(which may include allocations as well as payments). W e
+will consider a variant of their result covered in the append ix
+of their paper: we will need a more general outcome space,
+and semi-anonymous mechanisms. W e use T to denote the
+set of probability distributions over a given set T , and T
+to denote the set of distributions with full support. W e note
+that this section overloads some notation that we used for
+Fisher markets; this is necessary in order to stay consisten t
+with the notation of Azevedo and Budish (2018), and to aid
+readability in terms of sticking to conventional notation.
+Next we specify the assumption made on the mechanism
+setting for the setting of Azevedo and Budish (2018). Let us
+call this the Azevedo-Budish setting . In the Azevedo-Budish
+setting, there is a nite set of types T and a measurable set
+of outcomes X0 (see the appendix of Azevedo and Budish
+(2018) for the measurable outcomes case) that an individual
+agent may receive. For each type ti T theres a utility
+function uti : X [0, 1], where X = X0 is the set
+of probability distributions over outcomes that an agent ma y
+receive. Note that in the Azevedo-Budish setup, any possibl e
+payments are included in X0 and uti , so we do not add an
+explicit extra variable corresponding to leftover budget.
+The sets T and X0 are held xed for all market sizes. For
+each market size n, where n is the number of agents, there is
+a set Yn (X0)n of feasible allocations. In our Fisher mar-
+ket setting Yn is simply the set of supply-feasible allocations
+given the supply of items for a market of size n.
+For a sequence of feasibility constraints {Yn}n we say
+that a direct mechanism is a sequence of allocation functions
+( n : T n (( X0)n))nN such that for all market sizes n
+and vectors of type reports t T n, n(t) is contained in
+Yn.5
+W e assume that the mechanism is semi-anonymous: the
+types space is partitioned into groups T = gGTg. In our
+Fisher market setting, the groups will be the constrained an d
+unconstrained buyers. Each agent of type t Tg is restricted
+to reporting a type in Tg. For our constrained market set-
+ting, this corresponds to the fact that buyers cannot lie abo ut
+whether they are constrained, but they may misreport their
+valuation function.
+For each n we assume that we are given some type distri-
+bution T resulting e.g. from the underlying distribu-
+tion over types composed with some, possibly randomized,
+map from types to report types. W e then need the function
+n : T T X which species the expected alloca-
+tion function for each buyer given a reported type and a type
+distribution. This is dened to be
+n(ti, ) =
+
+tiT n1
+ n
+i (ti, ti) Pr(ti|).
+Denition 1. A direct and semi-anonymous mechanism
+{ n}n is strategy-proof in the large (SPL) if, for any semi-
+anonymous type distribution with full support T and
+ > 0, there exists n0 such that for all n n0, all g G,
+and all ti, t
+i Tg,
+uti (n(ti, )) uti (n(t
+i, )) ,
+i.e. there exists an n0 such that for every type, the incentive
+to misreport is at most .
+Azevedo and Budish (2018) show the following result for
+semi-anonymous direct mechanisms:
+Theorem 1. Assume that we are in the Azevedo-Budish set-
+ting. If a mechanism is envy free within each group, then it is
+SPL. Given a type distribution with full support T
+and > 0, there exists C > 0 such that for all g 
+G, ti, t
+i Tg and n, the gain from deviating is bounded
+above by C n1/2+.
+Now we consider the following mechanism setting. Each
+agent reports a type (vi, c) specifying a homogeneous, con-
+cave, and continuous valuation function vi and a binary vari-
+able c denoting whether they are constrained or not (where
+they cannot lie about the constrained part). All agents are a s-
+sumed to have budget Bi = 1 , and all items are assumed to
+5 Azevedo and Budish (2018) also handle indirect mechanisms,
+but we do not need to consider that case here
+have supply n/|T | (that is, supply grows linearly in the mar-
+ket size; the 1/|T | factor is WLOG. and for convenience).
+Then the mechanism computes an EG solution with an AEF
+constraint 
+iC
+
+jP xij L(n, |C|) (here we parameter-
+ize the oor L since we generally want the oor constrain
+to depend on the market size or the number of constrained
+buyers). Each agent then receives the corresponding alloca -
+tion xi and pays 1 i. If multiple agents reported the same
+type, then from the perspective of EG-AEF we treat them as
+a single representative buyer i with budget equal to the num-
+ber of agents that reported the corresponding type, and spli t
+the allocation xi proportionally. W e call this the EG-AEF
+mechanism.
+Assume that there is a nite set T of possible valuation
+functions v. Clearly the outcome space Rm
++ is measurable,
+and the feasible set of allocation for market size n is the
+set of supply-feasible allocations and leftover budgets. M ore-
+over, the mechanism is also obviously semi-anonymous: the
+EG-AEF program is invariant to permutation within the con-
+strained and unconstrained buyer groups. Now , let T
+be the full-support distribution of type reports, potentia lly
+resulting from the underlying distribution over types com-
+posed with the strategy used by each type. In terms of the
+Azevedo-Budish setup, we have that X0 = Rm+1
++ is the set
+of allocations vectors and leftover budget pairs (xi, i) for a
+given buyer i.
+Azevedo and Budish (2018) assume that for each utility
+function uti , uti (x) [0, 1] for all x X0. But this
+clearly cannot hold when X0 = Rm+1
++ and our valuation
+functions v are homogeneous, since if vi(xi) > 0 for any
+(xi, i) X0, then by homogeneity we can make vi(xi)
+arbitrarily large by choosing a sufciently-large , thus vio-
+lating the utility lying in [0, 1]. T o alleviate this fact, consider
+a modied EG-AEF mechanism: we pick some large cutoff
+k such that ti > 1/k, and then if the allocation under the
+reported type vector results in an allocation x such that for
+some agent i and item j we have xij > k (after splitting pro-
+portionally among all agents that reported this type), then we
+throw away all the items and set xij = 0 , = 0 for all i, j.
+This modied EG-AEF mechanism is clearly still envy free:
+when we use an EG-AEF allocation we know that there is
+no envy within each group, and theres clearly no envy if no
+agent receives any allocation whatsoever. It follows that f or
+any full-support type distribution , the modied EG-AEF
+mechanism satises the conditions of Theorem 1 and is thus
+SPL.
+Now we can use this result to show that EG-AEF itself is
+SPL as a mechanism.
+Theorem 2. The EG-AEF mechanism is SPL. Moreover ,
+consider any distribution over types (vi, c) with full sup-
+port and an > 0. Then there exists C > 0 such that for
+all constrained or unconstrained buyers, true valuation fu nc-
+tions v, alternative valuation function reports v, and market
+sizes n, the gain from reporting v rather than v is bounded
+above by C n1/2+.
+Proof. W e already saw above that the modied EG-AEF
+mechanism is SPL. Now we show that the EG-AEF mech-
+anism and the modied EG-AEF mechanism achieve the
+same utility in an asymptotic sense.
+Consider a type distribution with full support. Now
+consider a market size n and a sampled set of buyers t =
+(v1, c1), . . . , (vn, cn). If the sampled set of buyers are such
+that the resulting allocation satises xij > k for some i, then
+the payoffs differ between EG-AEF and modied EG-AEF .
+Consider some particular type (vi, ci) in this scenario: under
+modied EG-AEF i gets utility zero. W e can upper bound
+the utility that i gets under EG-AEF by the utility that they
+get from receiving all the items, i.e. xi = ( n/|T |)1 and set
+i = 1 , which is ui(xi, i) = vi(xi) + 1 = ( n/|T |)vi(1) + 1
+by homogeneity. Let v = max (v,c)T v(1)/|T |, in which
+case we upper bound this by nv + 1 . So, in the worst case,
+a given type may gain nv + 1 from misreporting in the case
+where we sample a set of types t such that EG-AEF and
+modied EG-AEF differ.
+Let x, , xmod, mod be the solutions from EG-AEF and
+modied EG-AEF , where we suppress the dependence on
+the reported types and market size.
+Now x an > 0 and a type distribution with full support
+. It follows that for any type (v, c), they can gain at most
+C n1/2+ + (nv + 1)Pr(x = xmod|).
+Thus, in order to show that EG-AEF is SPL, we need to show
+that Pr (x = xmod|) gets small at a fast enough rate. In
+fact, we will show that this rate is exponential.
+Suppose an agent with reported type ti receives more than
+k units of some item j. In that case, we must have that in the
+corresponding EG-AEF allocation, the representative buye r
+i received k times the number of agents that reported type
+ti of that good, let number of such reports be . First, this
+implies that the supply of the good is at least k, so this only
+happens when n k. In the worst case, all n units of item j
+are allocated to the representative buyer i, in which case we
+need n/ k. This implies that n/k. Since the type
+reports of the other agents are distributed iid. according t o
+, this means that we must sample at most n/k 1 reports
+of type ti for x = xmod to occur. The expected number of
+reports of type ti is n ti .
+By Hoeffdings inequality, we now have that the probabil-
+ity of sampling n/k 1 reports of type ti or fewer is upper
+bounded by 2 exp((nti n/k +1)2/n). Since we chose
+k such that ti > 1/k, this grows small exponentially fast
+in n.
+The exact same proof goes through for PIFP and PBFP as
+well, because the result did not rely on any structure in the
+AEF constraint apart from the fact that for any pair of buyers
+i, i from the same group, we have that they do not envy each
+other.
+D Additional Examples
+Please, see the tables on the next page for additional exam-
+ples.
+V
+Buyer Item C Item U
+A 2 2
+B .1 3
+X
+Buyer Item C Item U B i pxi ui
+A 1 0 0 2
+B 0 1 0 3
+XP IF P *
+Buyer Item C Item U B i pxi ui
+A .5 .258 0 1.52
+B .5 .742 0 2.28
+T able 3: An example of a set of valuations with budgets set to 1 where imposing PIFP constraints on a subset of items leads to
+both originally disadvantaged ( B) and originally advantaged ( A) buyers being worse off.
+V
+Buyer Item A Item B
+C 2 1
+U 1 2
+X
+Buyer Item A Item B B i pxi
+C 1 0 0
+U 0 1 0
+Price 1 1 -
+XP BF P
+Buyer Item A Item B B i pxi
+C .5 .5 0
+U .5 .5 0
+Price .66 1.33 -
+T able 4: An example of a set of valuations with budgets set to 1 where imposing PBFP constraints leads to both parity con-
+strained (C) and unconstrained (U) buyers being worse off.
+V
+Buyer Item A Item B
+C 2 2
+U 0 2
+X
+Buyer Item A Item B B i pxi
+C 1 0 0
+U 0 1 0
+XP BF P
+Buyer Item A Item B B i pxi
+C .5 .5 0
+U .5 .5 0
+T able 5: An example of a set of valuations with budgets set to 1 where imposing PBFP constraints leads to an outcome that is
+Pareto suboptimal both in the buyer only case and the buyer-p rotected item case (here B is the originally disadvantaged group).
+XP BF P is Pareto dominated in both cases by any allocation which tra nsfers some item A to buyer C.
+V
+Buyer Item C Item U
+A 0 2
+B 2 0
+X
+Buyer Item C Item U B i pxi
+A 1 0 0
+B 0 1 0
+XAEF
+Buyer Item C Item U B i pxi
+A .5 1 0
+B .5 0 0
+T able 6: An example of a set of valuations with budgets set to 1 where imposing AEF constraints of xAC .5 leads to buyer
+Pareto suboptimal outcomes.

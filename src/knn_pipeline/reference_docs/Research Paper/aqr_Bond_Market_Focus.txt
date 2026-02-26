@@ -1,0 +1,837 @@
+October 2025 
+Bond Market Focus: Yield 
+Curves and Mean 
+Reverting Rate 
+Expectations 
+
+Understanding Return Expectations, Part 9 
+
+Executive Summary 
+Unlike in equity markets, where investors and analysts tend to extrapolate 
+returns even at long horizons, in bond markets investors and economists exhibit 
+mean-reverting rate expectations. There has been a decades -long debate on 
+whether the evolving yield curve shape mainl y reflects the markets rate 
+expectations or time -varying term premia. The answer is shifting towards rate 
+expectations, even if those expectations were wrong for decades predicting 
+rising rates which did not materialize. The new debate is whether those ra te 
+expectations were irrational or reflected rational learning when investors faced 
+repeated one-way surprises.
+Antti Ilmanen 
+Principal and Global 
+Co-Head of Portfolio 
+Solutions Group 
+The author thanks Thomas Maloney for helpful dialogues and Mehul Sachdev for 
+excellent research assistance. 
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 2 
+
+Introduction
+The previous paper in our Understanding Return 
+Expectations series turned from equity market s to 
+a bond market focus , and drilled into the key 
+determinants of 10 -year Treasury yields with the 
+help of survey data. This paper focuses on the 
+determinants of the yield curve. Yield curve 
+steepness or slope is often proxied by the yield 
+difference between the 10-year Treasury and a 
+short-term (say, 3-month) Treasury bill. 
+The y ield curve (YC) reflects some mix of the 
+markets expectations of future changes in 
+interest rates and required term premia (also 
+called bond risk premia, duration premia, or 
+maturity premia). The YC is steep if the market 
+expects rising short -term rates and/or requires a 
+large compensation for bearing interest rate risk. 
+The YC is inverted if the market expects rate 
+declines and/or is prepared to pay a negative term 
+premium (for example, because long bonds are 
+exceptional safe -haven assets or are requ ired to 
+match pension funds long-duration liabilities). In 
+practice, the YC tends to be upward sloping but its 
+slope varies over time and sometimes is inverted 
+for prolonged periods. 
+Investors and academics have long debated and 
+tried to estimate how much the YC reflects rate 
+expectations versus term premia. The mix likely 
+varies over time, but for decades central bankers 
+and investors talked as if the YC was only driven 
+by rate expectations (the pure expectations 
+hypothesis). Yet, empirical research in the 1980s 
+and beyond suggested that evolving YC shape 
+reflects time -varying term premia (which would 
+imply random -walk rate expectations , and thus 
+unchanged rates as the base case). 
+This conclusion deserves a reassessment. Survey 
+data give us direct estimates of interest rate 
+
+1 I proposed salience as a key reason for this difference in expectations formation patterns across the two asset classes. Bonds are quoted in yiel ds, 
+making forward-looking and mildly contrarian mindset more natural, whereas stocks are quoted in prices and mainly discussed in terms of realized 
+expectations and they can differ meaningfully 
+from unchanged rate forecasts. Economists 
+consensus predicted in vain rising rates through 
+several decades of falling rates since the early 
+1980s and the zero -rate era of 2010s. These 
+persistent forecast errors look foolish in hindsight 
+but were not exclusive to economists; the market 
+(YC shape) and some investor surveys made 
+similar errors. These fore cast errors in turn 
+boosted the YCs ability to predict future bond 
+returns besides any time-varying term premia. 
+I will show evidence that the time-variation in the 
+slope and sign of the YC is largely explained by 
+mean-reverting rate expectations: steep YC amid 
+low short rates (say, 2010s) and inverted YC amid 
+high short rates (say, 2023). The expectations were 
+often correct in capturing predictably 
+countercyclical monetary policy , but they missed 
+the secular decline in rates. 
+The next question is whether the forecasters were 
+irrational or whether they can be partly excused by 
+the abnormal phase of truly surprising rate 
+declines, one decade after another. I suggested 
+this interpretation in my books, and new 
+academic research confirms that a rational 
+Bayesian learner would have made similar 
+forecasts (and errors). I conclude by arguing that 
+while both equity and bond investors have made 
+persistent forecast errors in recent decades, it 
+seems likely that the former errors will conti nue, 
+while the latter wont. 
+This series has highlighted the extrapolative 
+nature of equity investors and analysts return 
+and growth expectations, and Part 3 contrasted 
+this pattern with the contrarian nature of mean -
+reverting rate expectations in bonds. 1 This paper 
+explores the latter story, while enhancing our 
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 3 
+
+understanding of the key drivers of YC steepness. 
+Part 8 described our best understanding of the 
+yield levels drivers by decomposing yields with the 
+help of survey data (separation of rate 
+expectations and required term premia as well as 
+separation of inflation and real rate expectations).
+What Drives the Yield Curve? Alternative 
+Theories
+The Appendix covers some simple bond math on 
+bond yields and yield curves. The crux of it is that 
+the yield curve reflects markets rate expectations 
+and required bond risk premia and theres been 
+a decades-long debate on how much of each. That 
+is, which of the two components has a larger 
+influence on the YC shape? To interpret the YC, 
+one can usefully contrast two hypotheses: 
+ The classic pure expectations hypothesis 
+(PEH) makes the extreme assumption that 
+bond risk premia are zero and is consistent 
+with the idea of investors risk -neutrality. One 
+can then virtually read the markets rate 
+expectations off the YC. According to the PEH, 
+a particularly steep YC indicates that the 
+market expects short rates and bond yields to 
+rise sharply (to exactly offset longer bonds 
+initial yield advantage; thus, all bond 
+investments have the same expected return). 
+ The random walk hypothesis makes the 
+opposite extreme assumption, that an upward-
+sloping yield curve only reflects required 
+compensation for bearing duration risk and 
+does not contain any information about the 
+markets rate expectations.
+Empirical Evidence on the Yield Curves 
+Predictive Ability
+Since both the markets rate expectations and 
+required risk premia are unobservable, 
+economists have long debated the relative 
+importance of the two components. For decades, 
+investors and central bankers seemed to take the 
+PEH as a given, equating YC shape with markets 
+rate expectations, despite accumulating contrary 
+evidence. Yet, when empirical studies in the 1980s 
+(e.g., Fama -Bliss (1987)) ran direct horseraces 
+between the two hypotheses, the results were 
+
+returns, making extrapolative rearview -mirror mindset more natural. 
+2 Macaulay (1938) found already before WWII that capital losses due to bond yield rises do not seem to offset an initial yield advantage amid upward -
+sloping YCs. Instead, capital gains tend to augment it due to yield falls. Fama -Bliss (1987) confirmed this finding with post-war data. 
+3 See Ilmanen (2011) chapters 9 and 22. A review shows that the rolling decadal correlation between the YC and near -term excess bond return was 
+pretty consistently positive over the past century. The two exceptions were after sharp bond bear markets in 1958 -59 and 2021-22 which began 
+clearly in favor of the random walk hypothesis: an 
+upward-sloping YC predicts empirically high 
+future excess bond returns rather than rising 
+yields.2 
+Empirical patterns may have weakened over time, 
+but newer analysis confirms that the YC predicts 
+near-term excess bond returns rather than near -
+term bond yield changes. The YC has positive 
+correlation with the former and negative with the 
+latter.3 While the YC is a poor forecaster of near -
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 4 
+term changes in long-dated yields (wrong sign for 
+PEH!), it is better at forecasting gradual changes 
+in short -rates over multi -year horizons (more in 
+line with PEH, see Campbell-Shiller (1991)). 
+Return predictability evidence in other asset 
+classes reinforced idea that the YC predicts excess 
+bond returns. It was just one of the positive -carry 
+strategies that seemed to work in the long run, 
+providing consistent evidence against risk-neutral 
+models which assumed that initial yield 
+advantages would be offset by changing 
+fundamentals or capital losses.4 
+Given all this evidence, the academic consensus 
+gradually shifted away from the PEH and toward 
+time-varying risk premia, but the pendulum 
+probably shifted too far. 5 I will argue that mean -
+reverting rate expectations have a greater role in 
+YC behavior than the academic consensus 
+appreciates, and there are signs of that consensus 
+changing.
+Exhibit 1. U.S. Yield Curve History, with Its Two Components, January 1983 August 2025 
+Source: AQR, NBER, St. Louis Fed FRED database.
+Challenges came from many directions: 
+ When survey data made it possible to get a
+cleaner proxy of the BRP, it became apparent
+that the YC is a poor proxy for the long -run
+BRP, despite its near -term return prediction
+ability.6 The survey -based BRPs post -war
+evolution shares broadly the mountain shape
+during a very steep YC. 
+4 The best-known parallel was the Uncovered Interest Parity hypothesis in foreign exchange markets which assumed that currency depreciat ion would 
+offset any initial short -rate (carry) advantage across countries. Empirical evidence in currency and bond market s and broader evidence of carry 
+strategies long-run profitability was consistent with positive carry predicting future excess returns rather than being offset by predicted r ate or 
+fundamental changes. It was debated, though, whether the cause was rational ly time-varying risk premia or irrational biased expectations. See Cochrane 
+(2011), Ilmanen (2011, chapters 13 and 22), and Koijen etal. (2018). 
+5 The same evidence guided us a decade ago to use so -called rolling yields for bonds in our capital market assumptions, effectively assuming unchanged 
+(random-walk) yield curves, which gives long bonds carry and rolldown advantage amid upward -sloping yield curves. (We may revisit this choice and give 
+some weight to PEH by using at most partial rolldown return.) For our cash assumptions for the next decade, we include a mix of random-walk 
+assumption and the PEH, recently adding survey -based forecasts as a thir d input. 
+6 See Best-Byrne-Ilmanen (1998), Kim-Wright (2006), and Ilmanen (2011). 
+7 See Chapter 9 in Ilmanen (2011) and Part 8 of this series. 
+of bond yields (see Exhibit 1): a secular rise up 
+to the 1980s and a subsequent secular fall. The 
+mountain shape is apparently related to level -
+related inflation uncertainty and the resulting 
+inflation risk premium.7 In contrast, the YC has 
+not exhibited any secular uptrend or 
+downtrend but lots of cyclical variation 
+0%
+2%
+4%
+6%
+8%
+10%
+12%
+14%
+16%
+-2%
+0%
+2%
+4%
+6%
+1925 1935 1945 1955 1965 1975 1985 1995 2005 2015 2025
+Rate Level
+10Y-3M Slope
+NBER-Defined Recession 10Y-3M Slope (LHS) 3M Rate (RHS) 10Y Rate (RHS)
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 5 
+
+between -200bps and +400 bps. Worse, the YC 
+was deeply inverted when inflation uncertainty 
+and the survey -based BRP peaked in the early 
+1980s. Conversely, the YC was steep in the 
+2010s when the survey -based BRP was 
+negative. 
+ While the YC kept predicting future bond 
+returns reasonably well until 2022, many other 
+carry strategies disappointed during and after 
+the Global Financial Crisis, which weakened 
+the broad supportive evidence. 
+ Academic researchers came up with rational 
+learning models which explained well why 
+forecast errors in rate direction had been so 
+persistent: truly unpredictable structural 
+changes. This analysis suggests that the YCs 
+ability to predict future bond return s had been 
+boosted by these forecast errors and that there 
+is little reason to assume continued systematic 
+errors. We should still expect YC to predict 
+bond returns, but just not as well.
+The Role of Mean-Reverting Rate 
+Expectations
+Exhibit 1 shows that the US YC has tended to be 
+upward sloping, i.e., positive. The past -century 
+average YC slope is 1.4%, likely reflecting a 
+positive average bond risk premium (term 
+premium). YC inversions have been rare but 
+famously predictive of forthc oming recessions, 
+probably indicative of tight Fed monetary policy 
+to battle high inflation. 8 Markets and economists 
+have been pretty good at predicting short -rate 
+moves related to monetary policy cycles. In 
+contrast, they have been less able to predict the 
+secular uptrend and downtrend in yields. The YC 
+was not particularly steep during the rising -rate 
+decades (1945-1981 average 1.0%), nor particularly 
+flat during the falling -rate decades (1982 -2021 
+average 1.8%), if anything the reverse. 
+So-called haircharts became , in the 2010s , a 
+popular way to visualize the forecasting failure of 
+both economists and markets when it came to the 
+
+8 The lead time between YC inversion and a subsequent recession has been increasing in recent decades. The latest inversion beg an in late 2022 and 
+there has been no US recession by late 2025. Before the 2020s, the only false alarm since the 1950s is 1966 whe n YC inversion was followed by a 
+mere slowdown as Vietnam war -related fiscal expansion supported economic growth. See AQR (2019) for further discussion. 
+9 This chart is personal for me, and not just because Ive tried to understand the yield curve for several decades. Convenientl y, the Fed updates regularly 
+the daily spot rate histories and breakeven forward rate paths of many maturities based on the Gurkayn ak-Sack-Wright (2007) study. The sample period 
+happens to cover my lifetime and I chose midyear forward paths to start each year on my birthday (displaying more frequent ha irs, i.e. forward paths, 
+would make the chart very messy). Recall that the forward p aths reflect markets expectation of future short rates if we assume there are no term 
+premia. Thus the forward paths are closely related to the YC shape; if the 5Y -1Y slope is positive, the hair slopes upwards. 
+direction of rates. We already showed in Exhibit 1 
+of Part 3 charts of both 10-year yields and 3-month 
+rates falling to ever lower levels in the 1990s and 
+2000s, and then staying near zero in the 2010s 
+until 2021while economists consensus forecasts 
+seemingly always predicted rising rates. Being so 
+persistently wrong in forecasts led to questions 
+like how could they (be so dumb)? or worse. 
+We will now show that market -based forecasts 
+(inferred from the forward rate path implied by 
+the YC) were no smarter than economists. 
+However, we will also offer a sympathetic 
+explanation of what drove these expectations and 
+why they may have been rational at the time the 
+forecasts were made. 
+Exhibit 2 shows the hairchart history of US one -
+year Treasury yield and its forward (expected) 
+paths each midyear. 9 The prevalence of rising 
+hairs is evident even during the falling -rate 
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 6 
+
+decades. However, when I mark in red the rare 
+exceptions when the hairs are inverted, it becomes 
+apparent that such inversions only occur when 
+the one-year rate is abnormally high compared to 
+its recent past. And those inversions were typically 
+followed by a falling one -year rateso not such a 
+bad predictor after all? 
+It seems like the variation in YC slope over time 
+mainly reflects mean -reverting rate expectations 
+(plus a relatively stable term premium which gives 
+the YC and the hairs their typical upward slope). 
+This is very different from the Fama -Bliss (1987) 
+finding that the YC shape variation over time 
+reflects time-varying term premia, which became 
+academic conventional wisdom in recent 
+decades. 
+Eyeballing the hairs in Exhibit 2 hints at a further 
+human pattern. Everyone gets sometimes 
+humbled by the markets and such humbling can 
+reduce our (over)confidence. Instead of seeing 
+particularly strong mean reversion forecasts in 
+1981 we see only mildly l ower rate predictions 
+from the 1981-82 double-digit rate levels, and even 
+a predicted rise from 1984. Having been humbled 
+in the 1970s by missing the rates uptrend, 
+investors no longer made as confident mean -
+reversion forecasts. Something similar happened 
+in 2020-21 when rates were at record lows and yet 
+investors mean reversion expectations were more 
+modest after a humbling experience with past 
+predictions of rising rates. Even with our 
+expectations formation process on long -run 
+returns, what have you d one for me lately 
+matters too much.
+Exhibit 2. A Big Mistake? Hairchart of One-Year Treasury Yield and Its 5-Year Forward Rate 
+Paths Each Year, June 30, 1961 June 30, 2025 
+
+Source: https://www.federalreserve.gov/econres/feds/the-us-treasury-yield-curve-1961-to-the-present.html. 
+Exhibit 3 tells the same story in a different way. It 
+plots the YC with a detrended short-term rate (the 
+latter on a second axis with an inverted scale). The 
+close co-movement is visually impressive. It also 
+explains why the yield curve was inverted in 
+2022-24people expected normalization toward 
+the near-zero rates of 2010s since our most salient 
+
+10 The chart shows the negative correlation of -0.7 between the two series. We can also sort the detrended short rate series into five quintiles (ranging 
+from -2.6% to +2.6%); the average YC for these quintiles are 2.7%, 1.7%, 1.6%, 1.0%, 0.2%. 
+memories are for the past decade. Just as an 
+inverted YC is typical when short rates are 
+elevated relative to recent history, an abnormally 
+steep YC (like in the early 2010s) is typical when 
+short rates are abnormally low relative to recent 
+history.10 
+0%
+2%
+4%
+6%
+8%
+10%
+12%
+14%
+16%
+1961 1966 1971 1976 1981 1986 1991 1996 2001 2006 2011 2016 2021 2026
+Yield
+5-Year Forward Rate Curves (red if inverted)
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 7 
+
+This evidence strongly suggests that the evolution 
+of the YC over time mainly reflects mean -
+reverting rate expectations. However, the mean 
+has not been constant over time. It shifted 
+gradually higher for decades until 1981 and then 
+shifted gradually lower, reflecting secular trends 
+in both expected inflation and expected real rates 
+(as discussed in Part 8). As shown in Part 3, similar 
+patterns hold for survey -based economist 
+forecasts as for market forward rates, and for both 
+short rates and long yields. Further analysis (not 
+shown here) suggests that mean reversion is 
+stronger in real rate expectations than in inflation 
+expectations.
+Exhibit 3. Mean-Reverting Rate Expectations Drive YC Evolution, January 1925 June 2025 
+
+Source: St. Louis Fed (FRED database), AQR.
+Mean-Reverting Expectations Turned Out 
+Wrong, Ex Post 
+So, mean-reverting rate expectations can explain 
+well how bond investors form their expectations, 
+and Ill soon return to the subject of this pattern 
+being very different from extrapolative equity 
+return expectations. But lets first deal with that 
+question, How could they get it so wrong for so 
+long? Economists and the markets predictions 
+of rate rises (back toward past norms) were 
+persistently wrong from the 1980s to 2021. The 
+anticipated mean reversion did not materialize 
+until 2022. 
+Some academics ignored survey data and were 
+impressed by the YCs ability to predict near-term 
+bond returns taken as evidence of rationally 
+time-varying required term premia. However, 
+once academics turned to survey -based rate 
+expectations, it became clear that there were 
+persistent forecast errors; both survey and market 
+forecasts overpredicted short rates for multiple 
+decades (after having s ystematically 
+underpredicted them before the 1980s). The initial 
+interpretation was some form of irrationality in 
+expectations. However, the most recent research 
+points to a more sympathetic explanation: 
+rational learning about sl ow structural shifts 
+which rates experienced over these decades is 
+really hard. 
+-6%
+-4%
+-2%
+0%
+2%
+4%
+6%
+8%-8%
+-6%
+-4%
+-2%
+0%
+2%
+4%
+6%
+1925 1935 1945 1955 1965 1975 1985 1995 2005 2015 2025
+3M minus its rolling 10Y avg 
+(inverted scale)
+10Y-3M Slope
+10Y-3M Slope (LHS)
+3M Rate Minus Its Rolling 10Y
+Avg (RHS, inverted)
+correl -0.7
+Inverted YC in 1981 and 2023 reflects 
+mean-reverting expectations of rate falls 
+when bill rates are high vs decade-average 
+Steep YC in 1992 and 2010 reflects 
+mean-reverting expectations of rate rises 
+when bill rates are low vs decade-average 
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 8 
+
+The return predictability regressions which 
+suggested that the YC predicts bond returns due to 
+time-varying term premia rely on the so-called 
+FIRE assumption (full information and rational 
+expectations). The full information assumption 
+can embed substantial hindsight, in this case 
+about the interest rate process and the gradual 
+shift in the rate mean , first higher until 1981 and 
+then lower. In real time, investors and 
+econometricians hardly recognized this shift (it 
+would have been very valuable information), yet 
+such hindsighted knowledge is presumed to be 
+part of full information. 
+A new line of research allows more realism by 
+recognizing that investors and econometricians 
+face incomplete information about the rates 
+process, and they must gradually learn about any 
+changes. Gradual structural changes in an 
+unobservable serieslike long-run target mean of 
+inflation or real ratesare particularly pernicious. 
+A recent study by Farmer , Nakamura and 
+Steinsson (2023) shows that a Bayesian rational 
+learner could have made just the kind of forecasts 
+(and persistent forecast errors) weve described 
+above and would have only learned very slowly 
+about the gradually shifting rate level. The 
+observed forecast errors are thus not a sign of 
+irrational expectations , but of the exceptionally 
+persistent one -way surprises that seem almost 
+perfectly designed to wrong-foot forecasters and 
+make them look foolish with hindsight.11
+Contrasting Bond and Equity Return 
+Expectations Formation 
+Bond investors ( as proxied by the YC) have had 
+some success in predicting mean -reverting 
+cyclical variation in rate levels, likely related to 
+monetary policy cycles. In contrast, they have 
+made systematic forecast errors in not foreseeing 
+the secular shifts in the long -run rate mean. 
+Whether these forecast errors reflected 
+irrationality or slow rational learning of structural 
+changes (my money is on the latter), they boosted 
+the YCs ability to predict near-term bond returns. 
+Simply put, the upward -sloping YC predicted 
+rising rates partly by mean -reversion logic, yet 
+repeated economic surprises meant that the 
+
+11 I feel a little smug in having made a similar argument about rational learning amid structural uncertainty in both my 2011 an d 2022 books, 
+emphasizing the difficulty of making predictions when the long -run rate level and the persistence of the rate generat ion process undergo significant 
+changes. Many studiesBacchetta et al. (2009), Piazzesi-Salomao-Schneider (2015), Bauer-Rudebusch (2020), Crump et al. (2023) and Farmer -
+Nakamura -Steinsson (2024)highlight the usefulness of survey evidence and the difficulty posed by gradual structural changes for real -time 
+forecasters (unlike econometricians who are given unrealistic foresight). Survey evidence suggests that much of the observed asset return predictability 
+in classic predictive regressions is not related to ex ante (survey -based) risk premia but rather to systematic forecasting errors perhaps just to 
+hindsight by the econometrician running those predictive regressions. 
+12 To be clear, the YC has some return predictive ability we can still count on just the average positive YC slope and average term premium, plus likely 
+some predictable time variation in returns but recent decades displayed more bond return predictability than we should expect in the future. Looking 
+ahead, a survey-based BRP should be a better predictor of near -term bond returns than the YC because it cleans the latter from the rates expectation 
+content. 
+predicted mean reversion never happened (well, 
+until 2022). Thus, long bonds positive -carry 
+advantage amid an upward -sloping YC was not 
+offset by capital losses due to predicted rate rises.12 
+As we have seen, academics long attributed the 
+YCs predictive ability fully to rationally time -
+varying term premia and ignored the role of mean-
+reverting rate expectations. This may explain why 
+the contrasting expectations formation patterns
+contrarian for bonds, extrapolative for equities 
+has gone unnoticed. Part 3 of this series focused 
+on that contrast by arguing that while rates 
+investors tend to expect mean reversion after a 
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 9 
+
+bullish (falling-rates) decade, equity analysts and 
+investors tend to extrapolate more of the same 
+after a bullish decade. Part 3 also explored reasons 
+for this difference and conjectured that salience 
+arguments dominate. 13 Bonds are quoted and 
+discussed in yields, making bond investors 
+naturally forward-looking and mildly contrarian. 
+Equities are quoted in prices and mainly 
+discussed in terms of past returns, making equity 
+investors naturally more prone to a rearview 
+mirror mindset and extrapolative expectations. 
+Thoughtful readers might challenge me on my 
+critical attitude toward equity analysts 
+overoptimistic and overextrapolative growth 
+forecasts, compared to my sympathetic attitude 
+toward bond investors persistent overpredictions 
+of rates in recent decades. Both groups have made 
+systematic forecast errors, but it is the equity 
+analysts EPS growth forecasts that I say we 
+should avoid as input s to capital market 
+assumptions. Why? The key difference is that 
+equity analysts tend to make irrational forecasts 
+which actually have negative market timing 
+ability. We should not poison our objective 
+expected return estimates by incorporating 
+analysts extra bullishness at times like 2000 and 
+2021 after a strong decade when market 
+valuations are very high. In contrast, bond 
+investors rates forecast errors were likely not 
+irrational but a case of rational learning amid 
+abnormal structural changes, so we should not 
+expect these systematic errors to repeat in the 
+future.14 In short, we can explain past forecast 
+errors in both earnings growth and interest rates, 
+but we can justify only the latter.
+Appendix: Understanding Yield Curve 
+Components 
+This section presents simple bond math on 
+returns, yields and the curve. 
+Realized and expected bond return 
+I first describe some identities before turning to 
+theories and evidence (which are more open to 
+debate). For illustration, I use a 10-year maturity 
+to represent the long bond and a 1 -year maturity 
+for the short-term rate.15 
+
+13 Part 3 further explored the possibility that investors have simply learned from history that they should be multi -year contrarian with bonds and multi -
+year extrapolative with equities. However, historical evidence on long -run return autocorrelations sugges ts the opposite. (Interestingly, real bond yields 
+have exhibited a centuries -long downtrend but cyclical variation around this trend. The zero -rate floor in nominal rates may in any case stop this 
+downtrend.) 
+14 There will inevitably be errors but we dont know their direction in advance. Anyway, the past errors augmented the YCs abil ity to predict future 
+returns instead of damaging it. If anything, the new emphasis on the role of mean -reverting expectations suggests that we may consider modifying our 
+bond CMA approach. Our CMA for 10-year Treasuries is the rolling yield which assumes that an unchanged YC is the best base case, so bonds should 
+earn all of their carry and roll advantage. We made this design choice more than a decade ago, guided by the Fama -Bliss evidence. If we now think that 
+the YC partly reflects required term premia and partly rate expectations, we could move away from this corner solution and as sume that part of the carry 
+and roll advantage will get offset. In a similar spirit, our cash rate forecasts for the next decade reflect as inputs the current short rate (in lin e with an 
+unchanged YC), long rate (in line with PEH), and economists consensus forecasts (survey evidence). 
+15 The choice of a one-year horizon lets me ignore annualization terms in the exposition. The analysis is approximate since I ignore so -called convexity, 
+rolldown, and credit risk effects, but it captures the key elements of yield curve behavior. For details , see Ilmanen (1996). This section follows Ilmanen 
+(2011) chapter 9. 
+Realized bond return (H10) over a year has two 
+components: the yield income earned over time, 
+and the capital gain or loss due to yield changes 
+(approximated by minus bond duration times 
+yield change): 
+H10 Y10 Duration10 * Y10 
+We can subtract the return of the short-term asset 
+(Y1) and take expectations to get a variant of the 
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 10 
+
+bond risk premium (or term premium) in next -
+year expected returns: 
+BRPH E(excess bond return over the one -year 
+riskless rate) (Y10 Y1) Duration10 * E(Y10) 
+If the yield curve is upward sloping, longer bonds 
+have an initial yield advantage over the riskless 
+shorter bond, which gives them some cushion 
+against capital losses caused by rising bond yields. 
+Break-even (forward) yields show how much the 
+bond yield c an rise next year before this cushion is 
+just offset. Longer bonds have a smaller cushion 
+because their long duration makes their prices more 
+interest rate sensitive. If no yield changes 
+materialize, bonds will earn their positive -carry 
+cushion measured by curve steepness (ignoring 
+rolldown). 
+Bond yield 
+Here is a brief explanation on how bond yields 
+reflect the markets rate expectations and required 
+bond risk premia. Break-even (forward) rates are, 
+by construction, a sequence of future short rates 
+such that an investor rolling over short -term 
+securities at those rates would earn exactly the 
+same return as the long bond. If investors are risk-
+neutral, these break-even rates equal the markets 
+expectations and the long yield equals the 
+expected average of future short rates. If not, the 
+long yield also contains a bond risk premium. This 
+observation merely states a consistency 
+requirement for expectations: if the market long -
+term yield is currently high while future short -
+term yields are expected to be low, then long-term 
+bond yield includes a positive required bond risk 
+premium.16 
+10-year yield Expected average 1-year rate over the 
+next decade + Bond risk premium. 
+or Y10 E(avgY1) + BRPY 
+This BRP Y is the average expected return of the 
+bond over its life in excess of a sequence of riskless 
+1-year investments. The two BRP variants, BRP Y 
+and BRP H above, are closely related: BRP Y is an 
+average of the bonds expected future BRP H each 
+year (a 10 -year bonds BRP H for the coming year, 
+9-year bonds BRP H for the following year, etc.). 
+Feel free to ignore the distinction between these 
+BRPs. 
+Curve steepness 
+A steep YC reflects either market expectations of 
+rising yields or high required bond risk premia or, 
+more likely, some combination of the two. The rate 
+expectation component can be expressed either in 
+terms of expected multi -year changes in the 1 -year 
+yield over the next decade or, alternatively, as the 
+expected next -year change in the 10 -year yield, 
+scaled by its (end-of-horizon) duration. The first YC 
+equation below focuses on gradual changes in short 
+rates and the yield -based BRP Y while the second 
+equation focuses on near -term changes in long 
+yields and the return-based BRPH. 
+YC Y10 Y1 = [E(avgY1) Y1] + BRPY = E(avgY1) 
++ BRPY 
+or YC Duration10 * E(Y10) + BRPH
+
+16 We could further slice nominal rate expectations into inflation and real rate expectations, as we did in Part 8 with its thre e-way yield decomposition: 
+Y10 E(avgInf) + E(avgR1) + BRP Y. 
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 11 
+
+References 
+AQR Alternative Thinking Q3 2019, Inversion Anxiety: Yield Curves, Economic Growth, and Asset 
+Prices, white paper. 
+Bacchetta, P., E. Mertens, and E. van Wincoop, 2009, "Predictability in Financial Markets: What Do 
+Survey Expectations Tell Us?" Journal of International Money and Finance, 28(3). 
+Bauer, M., and Rudebusch, 2020, Interest Rates Under Falling Stars, American Economic Review 
+110(5). 
+Best, P., A. Byrne, and A. Ilmanen, 1998, What Really Happened to U.S. Bond Yields, Financial 
+Analysts Journal, 54(3). 
+Campbell, J., and R. Shiller, 1991, Yield Spreads and Interest Rate Movements: A Birds Eye View, 
+Review of Economic Studies, 58. 
+Cochrane, J., 2011, Presidential Address: Discount Rates, Journal of Finance, 66(4). 
+Crump, R., S. Eusepi, E. Moench, and B. Preston, 2023, Chapter 17: The Term Structure of 
+Expectations, in the Handbook of Economic Expectations. 
+Fama, E., and R. Bliss, 1987, The Information in Long Maturity Forward Rates, American Economic 
+Review, 77. 
+Farmer L., E. Nakamura, and J. Steinsson, 2024, Learning about the Long Run, Journal of Political 
+Economy, 132(10). 
+Gurkaynak, R., B. Sack, and J. Wright, 2007, The U.S. Treasury Yield Curve: 1961 to the Present, 
+Journal of Monetary Economics, 54. 
+Ilmanen, A. (1996), Market Rate Expectations and Forward Rates, Journal of Fixed Income, 6(2). 
+Ilmanen, A., 2011, Expected Returns, John Wiley and Sons. 
+Ilmanen, A., 2022, Investing Amid Low Expected Returns, Wiley. 
+Kim, D., and J. Wright, 2005, An Arbitrage-free Three-factor Term Structure Model and the Recent 
+Behavior of Long-term Yields and Distant-Horizon Forward Rates, FEDS working paper, 2005-33, 
+Board of Governors of the Federal Reserve System. 
+Koijen, R., T. Moskowitz, L. Pedersen and E. Vrugt, 2018, Carry, Journal of Financial Economics, 
+127(2). 
+Macaulay, F., 1938, The Movements of Interest Rates, Bond Yields and Stock Prices in the United States since 
+1856, National Bureau of Economic Research. 
+Piazzesi, M., J. Salomao, and M. Schneider, 2015, Trend and Cycle in Bond Premia, Stanford University 
+working paper. 
+
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 12 
+
+Disclosures
+This document has been provided to you solely for information purposes and does not constitute an offer or solicitation of an offer or 
+any advice or recommendation to purchase any securities or other financial instruments and may not be construed as such. The 
+factual information set forth herein has been obtained or derived from sources believed by the author and AQR Capital Management, 
+LLC (AQR), to be reliable, but it is not necessarily all-inclusive and is not guaranteed as to its accuracy and is not to be regarded as a 
+representation or warranty, express or implied, as to the informations accuracy or completeness, nor should the attached information 
+serve as the basis of any investment decision. This document is not to be reproduced or redistributed without the written consent of 
+AQR. The information set forth herein has been provided to you as secondary information and should not be the primary source for 
+any investment or allocation decision. 
+Past performance is not a reliable indicator of future performance. 
+This document is not intended to, and does not relate specifically to any investment strategy or product that AQR offers. It is being 
+provided merely to provide a framework to assist in the implementation of an investors own analysis and an investors own view on 
+the topic discussed herein. This presentation is not research and should not be treated as research. This presentation does not 
+represent valuation judgments with respect to any financial instrument, issuer, security, or sector that may be described or referenced 
+herein and does not represent a formal or official view of AQR. 
+The views expressed reflect the current views as of the date hereof, and neither the author nor AQR undertakes to advise you of any 
+changes in the views expressed herein. It should not be assumed that the author or AQR will make investment recommendations in the 
+future that are consistent with the views expressed herein, or use any or all of the techniques or methods of analysis described herein 
+in managing client accounts. AQR and its affiliates may have positions (long or short) or engage in securities transactions that are not 
+consistent with the information and views expressed in this article. 
+The information contained herein is only as current as of the date indicated and may be superseded by subsequent market events or 
+for other reasons. Charts and graphs provided herein are for illustrative purposes only. The information in this presentation has been 
+developed internally and/or obtained from sources believed to be reliable; however, neither AQR nor the author guarantees the 
+accuracy, adequacy, or completeness of such information. Nothing contained herein constitutes investment, legal, tax, or other advice, 
+nor is it to be relied on in making an investment or other decision. 
+There can be no assurance that an investment strategy will be successful. Historic market trends are not reliable indicators of actual 
+future market behavior or future performance of any particular investment, which may differ materially, and should not be relied upon 
+as such. Target allocations contained herein are subject to change. There is no assurance that the target allocations will be achieved, 
+and actual allocations may be significantly different from those shown here. This presentation should not be viewed as a current or 
+past recommendation or a solicitation of an offer to buy or sell any securities or to adopt any investment strategy. 
+The information in this presentation might contain projections or other forward-looking statements regarding future events, targets, 
+forecasts, or expectations regarding the strategies described herein and is only current as of the date indicated. There is no 
+assurance that such events or targets will be achieved and might be significantly different from that shown here. The information in 
+this presentation, including statements concerning financial market trends, is based on current market conditions, which will fluctuate 
+and may be superseded by subsequent market events or for other reasons. Performance of all cited indices is calculated on a total 
+return basis with dividends reinvested. 
+The investment strategy and themes discussed herein may be unsuitable for investors depending on their specific investment 
+objectives and financial situation. Please note that changes in the rate of exchange of a currency might affect the value, price, or 
+income of an investment adversely. Neither AQR nor the author assumes any duty to, nor undertakes to update forward-looking 
+statements. No representation or warranty, express or implied, is made or given by or on behalf of AQR, the author, or any other 
+person as to the accuracy and completeness or fairness of the information contained in this document, and no responsibility or liability 
+is accepted for any such information. By accepting this presentation in its entirety, the recipient acknowledges its understanding and 
+acceptance of the foregoing statement. Diversification does not eliminate the risk of experiencing investment losses. Gross 
+performance results do not reflect the deduction of investment advisory fees and other expenses, which would reduce an investors 
+actual return. 
+Expected or Target returns or characteristics refer to expectations based on the application of mathematical principles to 
+portfolio attributes and/or historical data, and do not represent a guarantee. Changes in the assumptions may have a material impact 
+on the information presented. 
+Broad-based securities indices are unmanaged and are not subject to fees and expenses typically associated with managed accounts 
+or investment funds. Investments cannot be made directly in an index. The S&P 500 Index is the Standard & Poors composite index of 
+500 stocks, a widely recognized, unmanaged index of common stock prices. 
+There is a risk of substantial loss associated with trading commodities, futures, options, derivatives, and other financial instruments. 
+Before trading, investors should carefully consider their financial position and risk tolerance to determine whether the proposed 
+trading style is appropriate. Investors should realize that when trading futures, commodities, options, derivatives, and other financial 
+instruments, one could lose the full balance of their account. It is also possible to lose more than the initial deposit when trading 
+derivatives or using leverage. All funds committed to such a trading strategy should be purely risk capital. 
+
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 13 
+
+Regional Disclosures 
+Hong Kong: This presentation may not be copied, reproduced, republished, posted, transmitted, disclosed, distributed or disseminated, 
+in whole or in part, in any way without the prior written consent of AQR Capital Management (Asia) Limited (together with its affiliates, 
+AQR) or as required by applicable law. This presentation and the information contained herein are for educational and informational 
+purposes only and do not constitute and should not be construed as an offering of advisory services or as an invitation, inducement or 
+offer to sell or solicitation of an offer to buy any securities, related financial instruments or financial products in any jurisdiction. 
+Investments described herein will involve significant risk factors which will be set out in the offering documents for such investments 
+and are not described in this presentation. The information in this presentation is general only and you should refer to the final private 
+information memorandum for complete information. To the extent of any conflict between this presentation and the private 
+information memorandum, the private information memorandum shall prevail. The contents of this presentation have not been 
+reviewed by any regulatory authority in Hong Kong. You are advised to exercise caution and if you are in any doubt about any of the 
+contents of this presentation, you should obtain independent professional advice. 
+AQR Capital Management (Asia) Limited is licensed by the Securities and Futures Commission ("SFC") in the Hong Kong Special 
+Administrative Region of the People's Republic of China ("Hong Kong") pursuant to the Securities and Futures Ordinance (Cap 571) 
+(CE no: BHD676). AQR Capital Management (Asia) Limited Unit 2023, 20/F, One IFC, 1 Harbour View Street, Central Hong Kong, 
+Hong Kong. Licensed and regulated by the Securities and Futures Commission of Hong Kong (CE no: BHD676). 
+China: This document does not constitute a public offer of any fund which AQR Capital Management, LLC (AQR) manages, whether 
+by sale or subscription, in the People's Republic of China (the "PRC"). Any fund that this document may relate to is not being offered or 
+sold directly or indirectly in the PRC to or for the benefit of, legal or natural persons of the PRC. 
+Further, no legal or natural persons of the PRC may directly or indirectly purchase any shares/units of any AQR managed fund without 
+obtaining all prior PRCs governmental approvals that are required, whether statutorily or otherwise. Persons who come into 
+possession of this document are required by the issuer and its representatives to observe these restrictions. 
+Singapore: This document does not constitute an offer of any fund which AQR Capital Management, LLC (AQR) manages. Any fund 
+that this document may relate to and any fund related prospectus that this document may relate to has not been registered as a 
+prospectus with the Monetary Authority of Singapore. Accordingly, this document and any other document or material in connection 
+with the offer or sale, or invitation for subscription or purchase, of shares may not be circulated or distributed, nor may the shares be 
+offered or sold, or be made the subject of an invitation for subscription or purchase, whether directly or indirectly, to persons in 
+Singapore other than (i) to an institutional investor pursuant to Section 304 of the Securities and Futures Act, Chapter 289 of 
+Singapore (the SFA)) or (ii) otherwise pursuant to, and in accordance with the conditions of, any other applicable provision of the SFA. 
+Korea: Neither AQR Capital Management (Asia) Limited or AQR Capital Management, LLC (collectively AQR) is making any 
+representation with respect to the eligibility of any recipients of this document to acquire any interest in a related AQR fund under the 
+laws of Korea, including but without limitation the Foreign Exchange Transaction Act and Regulations thereunder. Any related AQR 
+fund has not been registered under the Financial Investment Services and Capital Markets Act of Korea, and any related fund may not 
+be offered, sold or delivered, or offered or sold to any person for re-offering or resale, directly or indirectly, in Korea or to any resident 
+of Korea except pursuant to applicable laws and regulations of Korea. 
+Japan: This document does not constitute an offer of any fund which AQR Capital Management, LLC (AQR) manages. Any fund that 
+this document may relate to has not been and will not be registered pursuant to Article 4, Paragraph 1 of the Financial Instruments 
+and Exchange Law of Japan (Law no. 25 of 1948, as amended) and, accordingly, none of the fund shares nor any interest therein may 
+be offered or sold, directly or indirectly, in Japan or to, or for the benefit, of any Japanese person or to others for re-offering or resale, 
+directly or indirectly, in Japan or to any Japanese person except under circumstances which will result in compliance with all 
+applicable laws, regulations and guidelines promulgated by the relevant Japanese governmental and regulatory authorities and in 
+effect at the relevant time. For this purpose, a Japanese person means any person resident in Japan, including any corporation or 
+other entity organised under the laws of Japan. 
+Australia: AQR Capital Management, LLC, is exempt from the requirement to hold an Australian Financial Services License under the 
+Corporations Act 2001, pursuant to ASIC Class Order 03/1100 as continued by ASIC Legislative Instrument 2016/396 (as 
+extended by amendment). AQR is regulated by the Securities and Exchange Commission ("SEC") under United States of America laws 
+and those laws may differ from Australian laws. 
+Canada: This material is being provided to you by AQR Capital Management, LLC, which provides investment advisory and 
+management services in reliance on exemptions from adviser registration requirements to Canadian residents who qualify as 
+permitted clients under applicable Canadian securities laws. No securities commission or similar authority in Canada has reviewed 
+this presentation or has in any way passed upon the merits of any securities referenced in this presentation and any representation to 
+the contrary is an offence. 
+Information for clients in the Middle East 
+AQR Capital Management (Europe) LLP (DIFC Representative Office) is regulated by the Dubai Financial Services Authority of the 
+Dubai International Financial Centre as a Representative Office (firm reference number: F007651). Its principal place of business is 
+Gate Village 10, Level 3, Unit 4, DIFC, Dubai, UAE. This marketing communication is distributed on behalf of AQR Capital 
+Management, LLC. 
+
+Bond Market Focus: Yield Curves and Mean Reverting Rate Expectations Understanding Return Expectations, Part 9 14 
+
+Information for clients in the United Kingdom 
+This product is based overseas and is not subject to UK sustainable investment labelling and disclosure requirements. The information 
+set forth herein has been prepared and issued by AQR Capital Management (Europe) LLP, a UK limited liability partnership with its 
+office at 15 Bedford Street, Covent Garden, London, WC2E 9HE, which is authorised and regulated by the UK Financial Conduct 
+Authority (FCA). 
+Information for clients in the EEA 
+AQR in the European Economic Area is AQR Capital Management (Germany) GmbH, a German limited liability company (Gesellschaft 
+mit beschrnkter Haftung; GmbH), with registered offices at Maximilianstrasse 13, 80539 Munich, authorized and regulated by the 
+German Federal Financial Supervisory Authority (Bundesanstalt fr Finanzdienstleistungsaufsicht, BaFin), with offices at Marie-
+Curie-Str. 24-28, 60439, Frankfurt am Main und Graurheindorfer Str. 108, 53117 Bonn, to provide the services of investment 
+advice (Anlageberatung) and investment broking (Anlagevermittlung) pursuant to the German Securities Institutions Act 
+(Wertpapierinstitutsgesetz; WpIG). The Complaint Handling Procedure for clients and prospective clients of AQR in the European 
+Economic Area can be found here: https://ucits.aqr.com/Legal-and-Regulatory 
+This is a marketing communication in the European Economic Area (EEA) and approved as a Financial Promotion in the United 
+Kingdom (UK). It is only intended for Professional Clients. 
+Request ID: 392383 
+
+www.aqr.com 
+
+AQR Capital Management, LLC One Greenwich Plaza, Greenwich, CT 06830 P +1.203.742.3600 F +1.203.742.3100
