@@ -1,5 +1,6 @@
 from __future__ import annotations
 import os
+import re
 import pickle
 import numpy as np
 from sentence_transformers import SentenceTransformer
@@ -53,7 +54,6 @@ def _clean_text(text: str) -> str:
 def get_embedder():
     global _embedder
     if _embedder is None:
-        # print(f"⏳ Loading embedding model '{MODEL_NAME}'... (This may take a moment first time)")
         _embedder = SentenceTransformer(MODEL_NAME)
     return _embedder
 
@@ -100,13 +100,12 @@ class KNNClassifier:
                 fpath = os.path.join(label_dir, fname)
                 try:
                     text, enc = read_text_robust(fpath, max_bytes=100000)
-                    
                     text = _clean_text(text)
-                    
                     text = text[:1000]
                     if len(text) < 50: continue
 
-                    vector = embedder.encode(text)
+                    vector = embedder.encode(text, normalize_embeddings=True)
+                    
                     self.embeddings.append(vector)
                     self.labels.append(label)
                     count += 1
@@ -127,16 +126,27 @@ class KNNClassifier:
             return "INTERNAL_MEMO", 0.0
 
         embedder = get_embedder()
-        
         clean_input = _clean_text(text[:1500])
-        query_vec = embedder.encode(clean_input[:1000])
+        query_vec = embedder.encode(clean_input[:1000], normalize_embeddings=True)
         
-        norm_query = np.linalg.norm(query_vec)
-        norm_refs = np.linalg.norm(self.embeddings, axis=1)
-        
-        if norm_query == 0: return "INTERNAL_MEMO", 0.0
-        
-        similarities = np.dot(self.embeddings, query_vec) / (norm_refs * norm_query)
-        
-        best_idx = np.argmax(similarities)
-        return self.labels[best_idx], float(similarities[best_idx])
+        # norm_query = np.linalg.norm(query_vec)
+        # norm_refs = np.linalg.norm(self.embeddings, axis=1)
+        # if norm_query == 0: return "INTERNAL_MEMO", 0.0
+        # similarities = np.dot(self.embeddings, query_vec) / (norm_refs * norm_query)
+
+        similarities = np.dot(self.embeddings, query_vec)
+        k = min(5, len(self.labels))
+        top_k_idx = np.argsort(similarities)[-k:]
+
+        for i in top_k_idx:
+            label = self.labels[i]
+            weighted_votes[label] += similarities[i]
+
+        # label w/ highest accumulated similarity points
+        best_label = max(weighted_votes, key=weighted_votes.get)
+        winning_scores = [similarities[i] for i in top_k_idx if self.labels[i] == best_label]
+        best_score = float(np.mean(winning_scores))
+
+        return best_label, best_score
+        # best_idx = np.argmax(similarities)
+        # return self.labels[best_idx], float(similarities[best_idx])
