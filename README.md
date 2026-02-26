@@ -93,7 +93,7 @@ To build the knowledge graph, you must have a running instance of **Neo4j**. You
    - (Optional) Install Neo4j locally by following the instructions at [Neo4j Downloads](https://neo4j.com/download/).  
    - Start the Neo4j server and record your **username** and **password**.
 
-In the `construct` section of the schema configuration found in `src/document_extraction.py`, provide your database URL, username, and password. Neo4j can be launched locally (via Docker) or accessed remotely through the cloud.
+In the `construct` section of the schema configuration found in `src/utils/extraction_config.yaml`, provide your database URL, username, and password. Neo4j can be launched locally (via Docker) or accessed remotely through the cloud.
 
 Below are two example `construct` configuration blocks for connecting to a Neo4j database—choose one based on your setup, and replace placeholder values with actual credentials.
 
@@ -138,26 +138,28 @@ In addition to the default API's, OneKE also supports the following model catego
 
 > **Note**: OneKE's own model does *not* support Triple Extraction, so we did not include it in the list of supported models for our case. However, you can still use it for the other tasks OneKE supports such as: Named Entity Recognition (NER), Relation Extraction (RE) and Event Extraction (EE).
 
-In `src/utils/document_extraction.py`, you can specify any Hugging Face model from the supported model categories listed above. Just update the `category` and `model_name_or_path` fields in the `model` portion of the configuration. If you choose a API-based model (e.g. LocalServer, OpenAI, DeepSeek), make sure to also include the necessary authentication credentials (e.g. API key) and base URL if applicable.
+In `src/utils/extraction_config.yaml`, you can specify any Hugging Face model from the supported model categories listed above. Just update the `category` and `model_name_or_path` fields in the `model` portion of the configuration. If you choose a API-based model (e.g. LocalServer, OpenAI, DeepSeek), make sure to also include the necessary authentication credentials (e.g. API key) and base URL if applicable.
 
 ### Example Model Configuration Using LocalServer
 
-```python
-# For a LocalServer config we use an LM Studio server on our local network
-config['model']['category'] = "LocalServer"
-config['model']['model_name_or_path'] = "qwen/qwen3-4b-2507" # Use the API identifier for your LocalServer model
-config['model']['api_key'] = os.getenv("LM_STUDIO_API_KEY") # API key may be required for authentication, depending on your setup
-config['model']['base_url'] = os.getenv("LM_STUDIO_URL")
+```yaml
+model:
+  category: LocalServer
+  model_name_or_path: "qwen/qwen3-4b-2507"  # API identifier for your LocalServer model
+  api_key: ${LM_STUDIO_API_KEY}  # API key may be required for authentication, depending on your setup
+  base_url: ${LM_STUDIO_URL} # For a LocalServer config we use an LM Studio server on our local network
 ```
 
 For safety, we recommend using environment variables to store sensitive information like API keys and database credentials. You can set these in your terminal or include them in a `.env` file (and ensure it’s added to `.gitignore` to prevent accidental commits).
 
 ### Example Model Configuration Using Hugging Face
 
-```python
-# For a Hugging Face config we use Qwen3-4B-Instruct-2507
-config['model']['category'] = "Qwen"
-config['model']['model_name_or_path'] = "Qwen/Qwen3-4B-Instruct-2507" # Use the Hugging Face model identifier, which typically includes the username and model name
+```yaml
+model:
+  category: Qwen
+  model_name_or_path: "Qwen/Qwen3-4B-Instruct-2507"  # Use the Hugging Face model identifier (username/model-name)
+  api_key: "" # Not required for Hugging Face models, but you can include it if your model requires authentication
+  base_url: "" # Not required for Hugging Face models, but you can include it if your model requires a custom endpoint
 ```
 
 ## Running Market Foundry Pipeline  
@@ -172,7 +174,7 @@ We used **Qwen3-4B-Instruct-2507** from Hugging Face — an open-source, instruc
 > 3. Run the following command and enter your token when prompted:
 
 ```bash
-huggingface-cli login
+hf auth login
 ```
 
 Once authenticated, you’re ready to run the pipeline.

@@ -1,20 +1,26 @@
 # cos similarity only
 import os
+import sys
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from typing import Tuple
 
-from mf_utils.text_io import read_text_robust  # <-- ADD
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
-MODEL_NAME = 'all-MiniLM-L6-v2'
+from src.knn_pipeline.mf_utils.text_io import read_text_robust
+
+MODEL_NAME = 'all-MiniLM-L12-v2'
 _embedder = None
 
 def get_embedder():
     global _embedder
     if _embedder is None:
-        print(f"⏳ Loading embedding model '{MODEL_NAME}'... (This may take a moment first time)")
-        _embedder = SentenceTransformer(MODEL_NAME)
-        print("✅ Model loaded.")
+        _embedder = SentenceTransformer(
+            MODEL_NAME, 
+            tokenizer_kwargs={'clean_up_tokenization_spaces': True}
+            )
     return _embedder
 
 class KNNClassifier:
@@ -29,7 +35,7 @@ class KNNClassifier:
             print(f"⚠️ WARNING: Reference directory '{self.reference_dir}' not found.")
             return
 
-        print(f"📂 Loading reference docs from {self.reference_dir}...")
+        # print(f"📂 Loading reference docs for KNN Classifier")
         embedder = get_embedder()
 
         candidates = 0
@@ -62,7 +68,7 @@ class KNNClassifier:
 
         if self.embeddings:
             self.embeddings = np.array(self.embeddings)
-            print(f"✅ Classifier ready with {count}/{candidates} reference examples.")
+            # print(f"✅ KNN Classifier ready with {count}/{candidates} reference examples.")
         else:
             print(f"⚠️ No reference documents found! (0/{candidates} usable) Defaulting to INTERNAL_MEMO.")
 

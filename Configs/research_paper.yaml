@@ -10,44 +10,38 @@ extraction:
   task: Triple # task type, chosen from Base, NER, RE, EE.
   constraint: [
   [
-    "paper", "study", "research", "analysis", "experiment",
-    "method", "model", "approach", "framework", "algorithm",
-    "dataset", "corpus", "benchmark",
-    "training set", "test set", "validation set",
-    "hyperparameter", "regression model", "panel model",
-    "neural network", "classifier",
-
-    "accuracy", "precision", "recall", "f1 score",
-    "auc", "loss", "error rate",
-    "results", "performance", "statistical significance", "p-value",
-
-    "revenue", "net income", "profit", "earnings",
-    "cash flow", "assets", "liabilities", "equity",
-    "market capitalization", "valuation",
-    "stock return", "excess return", "volatility",
-    "alpha", "beta", "risk premium",
-    "interest rate", "inflation", "gdp",
-    "financial statement", "balance sheet", "income statement",
-    "portfolio", "investment strategy",
-    "credit risk", "default risk", "liquidity",
-    "cost of capital"
+    "Research Paper",
+    "Author",
+    "Institution",
+    "Method",
+    "Model",
+    "Algorithm",
+    "Dataset",
+    "Benchmark",
+    "Task",
+    "Problem",
+    "Experiment",
+    "Metric",
+    "Result",
+    "Theorem",
+    "Hypothesis"
   ],
   [
-    "proposes", "introduces", "presents", "develops",
-    "uses", "applies", "employs", "estimates",
-    "models", "predicts", "analyzes",
-    "is based on", "consists of", "includes",
-    "is trained on", "is evaluated on",
-    "compares with", "outperforms", "improves",
-    "achieves", "obtains", "reports",
-    "increases", "decreases", "reduces",
-    "affects", "influences", "impacts",
-    "is associated with", "is correlated with",
-    "is defined as", "is calculated as",
-    "was conducted on", "was performed on",
-    "as shown in", "as reported in",
-    "compared to", "relative to",
-    "explains", "drives", "results in"
+    "authored_by",
+    "affiliated_with",
+    "proposes",
+    "introduces",
+    "uses",
+    "applies",
+    "evaluated_on",
+    "trained_on",
+    "compares_with",
+    "outperforms",
+    "improves",
+    "achieves",
+    "defines",
+    "proves",
+    "supports"
   ]
 ]
   use_file: false # whether to use a file for the input text. Default set to false.
@@ -55,9 +49,3 @@ extraction:
   mode: customized # extraction mode, chosen from quick, detailed, customized. Default set to quick. See src/config.yaml for more details.
   update_case: false # whether to update the case repository. Default set to false.
   show_trajectory: false # whether to display the extracted intermediate steps
-
-# construct: # (Optional) If you want to construct a Knowledge Graph, you need to set the construct field, or you must delete this field.
-#   database: Neo4j # database type, now only support Neo4j.
-#   url:  # your database URL，Neo4j's default port is 7687.
-#   username:  # your database username.
-#   password:  # your database password.

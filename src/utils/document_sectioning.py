@@ -88,11 +88,10 @@ def section_document(text):
     for line in text.splitlines():
         line_lower = line.lower()
 
-        if is_header_like(line):
-            for section, headers in SECTION_HEADERS.items():
-                if any(h in line_lower for h in headers):
-                    current_section = section
-                    break
+        for section, headers in SECTION_HEADERS.items():
+            if any(h in line_lower for h in headers):
+                current_section = section
+                break
 
         if current_section:
             sections[current_section].append(line)
@@ -112,9 +111,9 @@ def section_documents(texts):
             if content.strip()
         }
         # List the identified sections for each document
-        # print(
-        #     f"Sections for {get_basename(file)}:\n",
-        #     list(filled_sections_only.keys())
-        # )
+        print(
+            f"Sections for {get_basename(file)}:\n",
+            list(filled_sections_only.keys())
+        )
         sectioned_documents[file] = filled_sections_only
     return sectioned_documents

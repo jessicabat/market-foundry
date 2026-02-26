@@ -1,19 +1,17 @@
+from sympy import content
+
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from topic_extractor import load_model_hf, load_model_openai
+from openai import OpenAI
 import torch
+import gc
 import json
 import yaml
 import os
 import copy
+from dotenv import load_dotenv
 
-MODEL = "meta-llama/Llama-3.2-1B-Instruct"
-
-tokenizer = AutoTokenizer.from_pretrained(MODEL)
-model = AutoModelForCausalLM.from_pretrained(
-    MODEL,
-    dtype=torch.float32,
-    device_map="auto"
-)
-
+load_dotenv()
 
 BASE_YAML_TEMPLATE = {
     "model": {
@@ -39,9 +37,11 @@ def safe_json_parse(text):
 
     # Try direct parse first
     try:
-        return json.loads(text)
+        print("\nObserved Topics:\n", text)
+        json_response = json.loads(text)
+        return json_response
     except:
-        pass
+        print("The format of the extracted topics is not valid JSON. Attempting to recover valid JSON from the text...")
 
     # Attempt to extract FIRST valid JSON object
     brace_stack = 0
@@ -63,102 +63,221 @@ def safe_json_parse(text):
                 try:
                     return json.loads(candidate)
                 except:
-                    break
+                    start_idx = None
+                    brace_stack = 0
+                    continue
 
     print("⚠️ Could not parse JSON — returning empty fallback")
     return {"yaml_files": []}
 
-
-def generate_yaml_configs(document_type, topic_map):
+def generate_yaml_configs_openai(document_name, document_type, topic_map):
+    MODEL, client = load_model_openai()
 
     messages = [
     {
         "role": "system",
         "content": """
-You are a structured JSON generator.
+        You are a structured JSON generator.
 
-CRITICAL RULES:
+        CRITICAL RULES:
 
-- Output ONLY valid JSON.
-- NEVER output explanations.
-- NEVER output markdown.
-- NEVER output text before or after JSON.
-- If unsure, output:
+        - Output ONLY valid JSON.
+        - NEVER output explanations.
+        - NEVER output markdown.
+        - NEVER output text before or after JSON.
+        - If unsure, output:
 
-{"yaml_files":[]}
-"""
-    },
+        {"yaml_files":[]}
+        """
+            },
+            {
+                "role": "user",
+                "content": f"""
+        You are designing knowledge extraction constraints for a knowledge graph.
+
+        INPUTS:
+
+        Document Type:
+        {document_type}
+
+        Topic Map:
+        {json.dumps(topic_map, indent=2)}
+
+        TASK:
+
+        Generate YAML extraction plans grounded in the topic map.
+
+        OUTPUT FORMAT:
+
+        {{
+        "yaml_files": [
+            {{
+            "file_name": "string.yaml",
+            "instruction_focus": "short semantic focus",
+            "entity_types": ["entity1","entity2"],
+            "relation_types": ["relation1","relation2"]
+            }}
+        ]
+        }}
+
+        RULES (CRITICAL):
+
+        - Generate EXACTLY 1 YAML file.
+        - The YAML must cover ALL main topics from the topic map.
+
+        ONTOLOGY DISCIPLINE RULES:
+
+        - Entity types MUST represent stable real-world classes.
+        - Entity types must be literal ontological categories (e.g., "Company", "Product", "Technology", "Stock", "Index", "Financial Metric", "Event").
+        - Do NOT create abstract interpretive categories (e.g., "Corporate Strategy", "Market Reaction", "Stock Performance", "Technical Capability", "Investment Entity").
+        - Do NOT convert roles or behaviors into entity types.
+        - Do NOT encode outcomes, sentiments, reactions, or states as entity types.
+        - Entity types must be reusable across many documents in the same domain.
+
+        RELATION DISCIPLINE RULES:
+
+        - Relation types must describe observable relationships stated in text.
+        - Do NOT generate interpretive or inferred causal relations unless explicitly stated in text.
+        - Do NOT create meta-level reporting relations (e.g., "claims", "states", "asserts") unless speech attribution is a core topic.
+        - Prefer concrete semantic relations (e.g., "acquires", "partners_with", "drops_by", "uses", "competes_with").
+        - Merge semantically similar relations into one reusable category.
+
+        SCOPE CONTROL RULES:
+
+        - Avoid fabricating economic interpretation (e.g., "market sentiment shift", "pricing power erosion") unless explicitly described.
+        - Avoid encoding analysis, inference, or narrative framing.
+        - Focus strictly on extractable factual structure.
+        
+        DOMAIN ADAPTATION RULE:
+
+        - Entity and relation types must reflect the primary domain of the document.
+        - Do not reuse finance-oriented types unless the document is about finance.
+        - Infer the domain from the topic map before generating types.
+
+        TYPE COUNT RULES:
+
+        - Create 10–15 entity types maximum.
+        - Create 10–15 relation types maximum.
+        - Types must be reusable across multiple triples.
+        - Avoid narrow variants of the same concept.
+
+        file_name MUST be:
+        {document_name}.yaml
+
+        Return ONLY valid JSON.
+        """
+        }
+    ]
+
+    response = client.chat.completions.create(
+        model=MODEL,
+        messages=messages,
+        temperature=0.1,
+        max_tokens=1024,
+    )
+    content = response.choices[0].message.content.strip()
+    # print("\nRAW MODEL RESPONSE:\n", content)
+    return safe_json_parse(content)
+
+def generate_yaml_configs(document_name, document_type, topic_map):
+    
+    tokenizer, model = load_model_hf()
+
+    messages = [
     {
-        "role": "user",
-        "content": f"""
-You are designing knowledge extraction constraints for a knowledge graph.
+        "role": "system",
+        "content": """
+        You are a structured JSON generator.
 
-INPUTS:
+        CRITICAL RULES:
 
-Document Type:
-{document_type}
+        - Output ONLY valid JSON.
+        - NEVER output explanations.
+        - NEVER output markdown.
+        - NEVER output text before or after JSON.
+        - If unsure, output:
 
-Topic Map:
-{json.dumps(topic_map, indent=2)}
+        {"yaml_files":[]}
+        """
+            },
+            {
+                "role": "user",
+                "content": f"""
+        You are designing knowledge extraction constraints for a knowledge graph.
 
-TASK:
+        INPUTS:
 
-Generate YAML extraction plans grounded in the topic map.
+        Document Type:
+        {document_type}
 
-OUTPUT FORMAT:
+        Topic Map:
+        {json.dumps(topic_map, indent=2)}
 
-{{
-  "yaml_files": [
-    {{
-      "file_name": "string.yaml",
-      "instruction_focus": "short semantic focus",
-      "entities": ["entity1","entity2"],
-      "relations": ["relation1","relation2"]
-    }}
-  ]
-}}
+        TASK:
 
-RULES (CRITICAL):
+        Generate YAML extraction plans grounded in the topic map.
 
-- Generate EXACTLY 3 YAML files.
-- Each YAML must focus on ONE main topic from the topic map.
-- file_name MUST be unique:
-  {document_type}_focus_1.yaml
-  {document_type}_focus_2.yaml
-  {document_type}_focus_3.yaml
+        OUTPUT FORMAT:
 
-ENTITY GENERATION PROCESS (FOLLOW STRICTLY):
+        {{
+        "yaml_files": [
+            {{
+            "file_name": "string.yaml",
+            "instruction_focus": "short semantic focus",
+            "entity_types": ["entity1","entity2"],
+            "relation_types": ["relation1","relation2"]
+            }}
+        ]
+        }}
 
-Step 1:
-Identify the CORE concept of the topic.
+        RULES (CRITICAL):
 
-Step 2:
-List related BUSINESS OBJECTS discussed under this concept.
-Examples of object types:
-- financial metrics
-- business operations
-- costs
-- forecasts
-- stakeholders
-- investments
-- risks
+        - Generate EXACTLY 1 YAML file.
+        - The YAML must cover ALL main topics from the topic map.
 
-Step 3:
-Convert those objects into canonical noun phrases.
+        ONTOLOGY DISCIPLINE RULES:
 
-Step 4:
-Return 12–18 DISTINCT entities.
+        - Entity types MUST represent stable real-world classes.
+        - Entity types must be literal ontological categories (e.g., "Company", "Product", "Technology", "Stock", "Index", "Financial Metric", "Event").
+        - Do NOT create abstract interpretive categories (e.g., "Corporate Strategy", "Market Reaction", "Stock Performance", "Technical Capability", "Investment Entity").
+        - Do NOT convert roles or behaviors into entity types.
+        - Do NOT encode outcomes, sentiments, reactions, or states as entity types.
+        - Entity types must be reusable across many documents in the same domain.
 
-IMPORTANT:
-- Entities must be DIFFERENT concepts, not paraphrases.
-- Do NOT repeat the topic words directly.
-- Expand outward from the topic into related domain concepts.
+        RELATION DISCIPLINE RULES:
 
-Return ONLY valid JSON.
-"""
-    }
-]
+        - Relation types must describe observable relationships stated in text.
+        - Do NOT generate interpretive or inferred causal relations unless explicitly stated in text.
+        - Do NOT create meta-level reporting relations (e.g., "claims", "states", "asserts") unless speech attribution is a core topic.
+        - Prefer concrete semantic relations (e.g., "acquires", "partners_with", "drops_by", "uses", "competes_with").
+        - Merge semantically similar relations into one reusable category.
 
+        SCOPE CONTROL RULES:
+
+        - Avoid fabricating economic interpretation (e.g., "market sentiment shift", "pricing power erosion") unless explicitly described.
+        - Avoid encoding analysis, inference, or narrative framing.
+        - Focus strictly on extractable factual structure.
+        
+        DOMAIN ADAPTATION RULE:
+
+        - Entity and relation types must reflect the primary domain of the document.
+        - Do not reuse finance-oriented types unless the document is about finance.
+        - Infer the domain from the topic map before generating types.
+
+        TYPE COUNT RULES:
+
+        - Create 10–15 entity types maximum.
+        - Create 10–15 relation types maximum.
+        - Types must be reusable across multiple triples.
+        - Avoid narrow variants of the same concept.
+
+        file_name MUST be:
+        {document_name}.yaml
+
+        Return ONLY valid JSON.
+        """
+        }
+    ]
 
     inputs = tokenizer.apply_chat_template(
         messages,
@@ -179,7 +298,7 @@ Return ONLY valid JSON.
         skip_special_tokens=True
     ).strip()
 
-    print("\nRAW MODEL RESPONSE:\n", response)
+    # print("\nRAW MODEL RESPONSE:\n", response)
 
     return safe_json_parse(response)
 
@@ -194,8 +313,8 @@ def write_yaml_files(config_json, output_dir="generated_yamls", input_file_path=
 
         yaml_obj = copy.deepcopy(BASE_YAML_TEMPLATE)
 
-        entities = config.get("entities", [])
-        relations = config.get("relations", [])
+        entities = config.get("entity_types", [])
+        relations = config.get("relation_types", [])
 
         yaml_obj["extraction"]["constraint"] = [entities, relations]
         yaml_obj["extraction"]["file_path"] = input_file_path
@@ -225,7 +344,7 @@ def write_yaml_files(config_json, output_dir="generated_yamls", input_file_path=
             # INLINE constraint formatting
             f.write("  constraint: [\n")
             f.write("  " + json.dumps(entities) + ",\n")
-            f.write("  " + json.dumps(relations) + "\n")
+            f.write("  " + json.dumps(relations) + ",\n")
             f.write("  ]\n")
 
             f.write("  use_file: false\n")
