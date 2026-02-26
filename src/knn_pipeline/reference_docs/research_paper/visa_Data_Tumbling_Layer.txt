@@ -1,0 +1,1904 @@
+DTL: Data Tumbling Layer
+A Composable Unlinkability for Smart Contracts
+Mohsen Minaei
+Visa Research
+Pedro Moreno-Sanchez
+IMDEA Software Institute, Visa
+Research, MPI-SP
+Zhiyong Fang
+Texas A&M University
+Srinivasan Raghuraman
+Visa Research and MIT
+Navid Alamati
+Visa Research
+Panagiotis Chatzigiannis
+Visa Research
+Ranjit Kumaresan
+Visa Research
+Duc V. Le
+Visa Research
+Abstract
+We propose Data Tumbling Layer (DTL), a cryptographic scheme for
+non-interactive data tumbling. The core concept is to enable users
+to commit to specific data and subsequently re-use to the encrypted
+version of these data across different applications while removing
+the link to the previous data commit action. We define the following
+security and privacy notions for DTL: (i) no one-more redemption : a
+malicious user cannot redeem and use the same data more than the
+number of times they have committed the data; (ii) theft prevention:
+a malicious user cannot use data that has not been committed
+by them; (iii) non-slanderabilty: a malicious user cannot prevent
+an honest user from using their previously committed data; and
+(iv) unlinkability: a malicious user cannot link tainted data from an
+honest user to the corresponding data after it has been tumbled.
+To showcase the practicality of DTL, we use DTL to realize ap-
+plications for (a) unlinkable fixed-amount payments; (b) unlinkable
+and confidential payments for variable amounts; (c) unlinkable
+weighted voting protocol. Finally, we implemented and evaluated
+all the proposed applications. For the unlinkable and confidential
+payment application, a user can initiate such a transaction in less
+than 1.5 on a personal laptop. In terms of on-chain verification,
+the gas cost is less than 1.8 million.
+1 Introduction
+Distributed Ledger Technology is poised to revolutionize traditional
+banking by offering a secure, transparent, and efficient platform
+for financial transactions. Banks adopting distributed ledger tech-
+nologies can significantly reduce operational costs and fraud risk,
+automate compliance, and provide real-time transaction processing.
+The robust and scalable nature of blockchain applications is further
+exemplified by the success of Ethereum, which supports more than
+44 million applications and oversees assets exceeding 224 billion
+USD. This integration not only positions banks at the forefront
+of financial innovation, but also opens up new revenue avenues
+by catering to the burgeoning demand for decentralized financial
+services.
+However, distributed ledgers are commonly known for their
+inability to provide user privacy, a factor that hampers widespread
+adoption. Transactions on these networks publicly disclose details,
+such as transaction amounts and the addresses of both senders and
+recipients. Although this information does not directly reveal an
+individuals identity, the publicly accessible data can be subject to
+analysis, potentially compromising a users privacy.
+In response to this weakness, both the academic and practitioner
+communities have proposed solutions that address various aspects
+of privacy, including unlinkability (e.g., AMR [32]), confidentiality
+(e.g., Zether [12]), and untraceability (e.g., Stealth Address [ 31]).
+These solutions offer a comprehensive method to protect user in-
+formation. They can be broadly classified into (i) add-on privacy
+solutions, which are built on existing non-private blockchains, and
+(ii) private-by-design blockchains , like Monero [36] and Zcash [39].
+However, these privacy-enhancing approaches lack composabil-
+ity as they are specifically tailored for functions such as money
+transfers or obfuscating payment graphs, without the ability to
+integrate with other existing on-chain applications. Consequently,
+an important research question emerges:
+How can we design privacy-enhancing solutions that can be
+composed with existing on-chain applications to enhance user
+privacy throughout the entire system?
+We believe that modularity and composability are fundamental
+properties that are often overlooked by both practitioners and aca-
+demics in blockchain privacy solutions. While existing approaches
+like mixers and privacy-preserving protocols tend to be tightly
+coupled to specific applications (e.g., token transfers) or implement
+privacy features from scratch, this work introduces a more sys-
+tematic approach. We extract unlinkability as a core primitive and
+develop it into a composable building block - similar to how Tor
+provides a reusable privacy layer for network communications. Our
+formalized primitive can be seamlessly integrated into diverse smart
+contract applications to provide unlinkability guarantees. By gener-
+alizing unlinkability techniques to support both fixed and arbitrary
+data types, we enable developers to add privacy features to com-
+plex smart contract logic without reimplementing cryptographic
+protocols. This modular design facilitates enhanced flexibility in
+building privacy-preserving systems while maintaining strong se-
+curity properties.
+Our Approach. Our aim is to provide adata tumbling layer DTL, es-
+sentially an exchange of data among users, autonomously managed
+by a smart contract, CDTL. We illustrate our approach in Figure 1.
+In more detail, assume a set of users, each of which wants to com-
+mit a piece of data, data {0,1}(e.g., data can be an integer
+representing a number of coins). In the first phase 1 , each user
+1
+arXiv:2503.04260v1 [cs.CR] 6 Mar 2025
+Conference acronym XX, June 0305, 2018, Woodstock, NY Trovato et al.
+2
+2
+1
+Blockchain, 
+Figure 1: DTL Composability: Users leverage DTL to achieve
+unlinkability when interacting with other on-chain applica-
+tions. Here, [data]denotes the encrypted version of data.
+ commits the data data to the smart contract, CDTL. In the sec-
+ond phase 2 , each user redeems the (encrypted) version of data
+data from the smart contract for use in other applications. Our
+proposed DTL addresses a number of technical challenges, namely
+security, privacy, and composability.
+1.1 Technical Challenges
+Security. The correct execution of the code in a smart contract is
+verified by the distributed ledger operators (e.g., miners in Ethereum).
+However, this correctness guarantee does not suffice to provide
+smart contract users with guarantees about the security of their
+mixed data. For instance, the ownership of data data by user is
+often encoded as a cryptographic operation. Since a smart contract
+can, in principle, be invoked by any user, it opens the door for an
+adversary to steal the victims data by breaching the cryptogra-
+phy used in the smart contract. In the data tumbling problem, the
+following security properties are of interest:
+Theft prevention. An adversary must not be able to use data
+data previously committed by an honest user .
+Non-slanderability. Assume that honest user commits data
+data into the smart contract. Then, the adversary must not be
+able to prevent the honest user from taking the data data to
+use it in other applications.
+Privacy. The sensitivity of financial applications makes users de-
+mand strong privacy guarantees. The largely refuted hypothesis
+that pseudonyms (as used in Ethereum) provide a meaningful no-
+tion of privacy, has aroused scientific and industry interest for
+formally defined privacy notions and cryptographic protocols for
+blockchain applications with formally proven privacy guarantees.
+In particular, in the data tumbling problem, the following privacy
+notions are of interest:
+Unlinkability for fixed data inputs. Assume that honest users,
+1,..., , have committed their data, data1,..., data, to the
+smart contract where all data are the same (e.g., the same
+integer representing a transaction amount) and, in a second
+phase, these honest users have used data1,..., data from the
+smart contract. In such a setting, an adversary with access to
+the information stored in the smart contract must not be able
+to link the committing and redeeming operations of user .
+Unlinkability for arbitrary data inputs. For applications where
+the data being committed is unique (e.g., NFT), we want to offer
+the same guarantee as for the redeeming of fixed data inputs.
+In particular, an adversary cannot determine whether a specific
+data data committed previously is being redeemed.
+Composability. In distributed ledgers such as Ethereum, every
+smart contract is a Lego of sorts, one should be able to use the
+functionality available in one smart contract as a building block
+in the design of a new smart contract. Similar to other areas such
+as cryptography or software development, composability of smart
+contracts is crucial to allow modular designs that build upon other,
+well-studied smart contracts providing formally proven security
+and privacy guarantees. Assume that a user has committed data
+ to our data tumbling layer and later wants to use the (encrypted)
+version of the data in different applications. Such data should be
+poised for use as input for another smart contract without the
+need for further processing, while concurrently, the data tumbling
+layer should be capable of verifying data ownership and preventing
+unauthorized use of the data.
+Hence, in the data tumbling problem, the following properties
+are of interest:
+Correctness. A user who commits to the data previously should
+be able to redeem the same data to use in other applications.
+No one-more redemption. A user who commits data inputs,
+should not be able to redeem more than data outputs.
+1.2 Our Contributions
+In summary, our main contributions are as follows:
+We introduce a cryptographic primitive termed the "Data Tum-
+bling Layer" (DTL). We then generalize this to accommodate
+arbitrary data. We formalize crucial properties of DTL such as
+theft prevention, non-slanderability, unlinkability, and no one-
+more redeeming .
+We provide two concrete DTL constructions: one for a fixed data
+input and another for arbitrary data input. The security and
+privacy of these constructions are cryptographically proven.
+We demonstrate that both DTL constructions satisfy the com-
+posability property by utilizing DTL as a building block to
+construct applications with unlinkability features such as un-
+linkable fixed-amount payment, unlinkable confidential pay-
+ment, and unlinkable confidential weighted voting. The goal of
+composability in this work is to have a single contract that can
+be used to provide unlinkability for different applications.
+Finally, we implement the proposed applications, demonstrat-
+ing that they are practical to run on existing blockchains like
+Ethereum.
+2 Related Work
+This work aims to develop a data tumbling layer for blockchains, of-
+fering security, privacy, and composability. This layer would allow
+for seamless integration with blockchain applications, ensuring the
+unlinkability of transactions. Achieving these properties simulta-
+neously presents a significant challenge. Below, we explore several
+existing attempts to design solutions that fulfill these requirements.
+Private By Design Blockchain. Cryptocurrencies, such as Mon-
+ero [35], Zerocash [39], Zerocoin [34] and Quisquis [20], have been
+designed with tailored functionalities to provide privacy guaran-
+tees. Despite the robust privacy protections these cryptocurrencies
+provide, private-by-design blockchains are typically restricted to
+2
+DTL: Data Tumbling Layer
+A Composable Unlinkability for Smart Contracts Conference acronym XX, June 0305, 2018, Woodstock, NY
+Table 1: Comparisons with previous works.
+Anonymity Set Confidential Amount
+Composability
+(Plug-and-Play
+with minimal changes)
+Availability Applications
+Privacy-preserving
+Cryptocurrencies
+Monero <24 Unlinkable and Confidential Payment
+Zerocoin Any Unlinkable and Confidential Payment
+Zerocash Any Unlinkable and Confidential Payment
+Quisquis, Monero 24 Unlinkable and Confidential Payment
+Veksel Any Unlinkable and Confidential Payment
+Off-chain Privacy
+Solutions
+TumbleBit Any Unlinkable Fixed-Amount Payment
+A2L, A2L+ Any Unlinkable Fixed-amount Payment
+Blindhub Any Unlinkable and Confidential Payment
+Accio Any Unlinkable and Confidential Payment
+On-chain Privacy
+Solutions
+CoinShuffle/CoinShuffle++ Small Unlinkable Fixed-Amount Payment
+Mobius <10 Unlinkable Fixed-Amount Payment
+AMR Any Unlinkable Fixed-Amount Payment
+Anonymous Zether <25 Unlinkable and Confidential Payment
+Ours Any
+Unlinkable Fixed-Amount Payment (6.2),
+Unlinkable and Confidential Payment (6.3),
+Unlinkable Weighted Voting (6.4)
+transactions that only involve asset transfers. Consequently, in
+such environments, the concept of composability holds limited
+significance, as there are no other native applications to interact
+with. Also, each of these blockchains only supports a specific suite
+of cryptographic primitives (e.g., Zcash is restricted to transac-
+tion authorization based on zero-knowledge proofs), making it
+even more difficult to interoperate with other applications. Like
+Zcash, Veksel [14] is a blockchain design that utilizes an optimized
+cryptographic suite, achieving larger anonymity sets and reduced
+transaction sizes. However, if deployed on Ethereum, its practical
+performance would be costly due to its reliance on RSA accumu-
+lators and slower zero-knowledge proof verification compared to
+Zcash.
+Add-on Privacy Solutions: Off-chain Solutions. Another ap-
+proach is to rely on an off-chain centralized server for tumbling,
+including Tumblebit [27], A2L [41], A2L+ [23], BlindHub [37] and
+Accio [22], which mainly utilize a centralized off-chain server for
+mixing user funds. These designs offer a lower level of trust in the
+off-chain server compared to alternatives like Mixcoin and Blind-
+coin, as they prevent the server from misappropriating participant
+funds. Nevertheless, centralized tumbling methods fall short in
+guaranteeing availability, as the central system can block client
+deposits.
+Add-on Privacy Solutions: On-chain Solutions. On the one
+hand, decentralized tumbler approaches like Coinshuffle and Coin-
+join have been designed as a peer-to-peer protocol overlay over
+existing cryptocurrencies. They aim to solve the availability issue
+with off-chain solutions by enabling users to interact and create
+transactions that conceal the identities of senders and recipients.
+However, ensuring the presence of participants and their interaction
+poses challenges and could potentially expose privacy vulnerabil-
+ities. Additionally, the composability of these solutions presents
+obstacles, as funds are typically restricted to the tumbling opera-
+tion, limiting users ability to freely use those funds to interact with
+other on-chain applications.
+On the other hand, there is also a line of work on add-on so-
+lutions for on-chain privacy developed on blockchains that sup-
+port smart contracts. They leverage the expressiveness of smart
+contracts to implement a wide array of cryptographic primitives.
+Notably, Meiklejohn et al. [33] introduced an Ethereum-based mix-
+ing service named Mbius, utilizing linkable ring signatures and
+stealth address mechanisms, similar to those in Monero, to conceal
+the identities of the sender and recipient. However, the anonymity
+Mbius provides is capped by the rings size, with the withdrawal
+transactions gas cost rising linearly with the ring size.
+While more recent solutions have emerged, they face various
+limitations. Zapper [ 40], which provides both data and identity
+privacy, requires a custom assembly language (Zasm) and cannot
+be directly deployed on Ethereum due to EVM incompatibility.
+Popular on-chain mixers like Railgun [38] can be viewed as specific
+instances of fixed-data tumbling, but they lack formal security
+analysis.
+Bnz et al. [12] developed Zether, a protocol for private pay-
+ments on Ethereum, which conceals client balances using ElGamal
+encryption. The downside is that Zethers transaction fees are high
+(7.8 million gas), and it still reveals the sender and receiver of the
+transaction. To remedy this, Anonymous Zether [16] was proposed
+by Diamond, enhancing privacy but still incurs high costs. Le et
+al. [32] proposed AMR, an unlinkable fixed-amount payment. It
+can be integrated with existing DeFi protocols such as Aave [1] or
+Compound [2], aiming to motivate user participation to expand the
+anonymity set. However, AMR only serves as an ad-hoc solution
+tailored for specific applications.
+In contrast, our work provides a comprehensive approach: we
+formally define DTL with cryptographically proven security prop-
+erties, extend it to handle arbitrary data types, and demonstrate
+how it can be modularly composed with different applications. This
+systematic treatment enables privacy-preserving smart contract
+development with formal security guarantees.
+The key distinction is that while existing works offer tradeoffs
+between anonymity set size, availability, and application specificity,
+none provide generic composability. Our work is the first to deliver
+this feature, demonstrating its utility across multiple applications.
+(1) unlinkable fixed-amount payments; (2) Unlinkable and confiden-
+tial payments; and, different from previous works, (3) unlinkable
+weighted voting.
+3
+Conference acronym XX, June 0305, 2018, Woodstock, NY Trovato et al.
+3 Preliminaries
+Notation. We denote the security parameter by 1 and a negligi-
+ble function in 1 by negl(). We let []denote the set {1,..., }.
+We use ()
+=1 to denote a list of elements, (1,..., ). We let
+PPT denote probabilistic polynomial time. We define the security
+properties of our protocol as games written in pseudocode. These
+games invoke a probabilistic-polynomial time (PPT) adversary, A,
+with access to some oracles.
+zk-SNARK. A zero-knowledge Succinct Non-interactive ARgu-
+ment of Knowledge (zk-SNARK) is a succinct non-interactive zero-
+knowledge proofs (NIZK) for arithmetic circuit satisfiability. For a
+field F, an arithmetic circuittakes as inputs elements inF and out-
+puts elements inF. We adopt a similar definition from Zerocash [39]
+to define the arithmetic circuit satisfiability problem. An arithmetic
+circuit satisfiability problem of a circuit : FF F is captured
+by the relation = {(stmt,wit) F F : (,wit)= 0}, with
+the language L = {stmt F | wit F . (stmt,wit)= 0}.
+Definition 1 (zk-SNARK [26]). zk-SNARK, , for arithmetic
+circuit satisfiability is a triple of algorithms (Setup,Prove,Verify):
+ (prvK,vrfyK) Setup(1,)takes as input the security pa-
+rameter and the arithmetic circuit , outputs a proving key prvK,
+and a verification key vrfyK. The public parameters, pp, is given
+implicitly to both proving and verifying algorithms.
+ Prove(prvK,stmt,wit)takes as input the evaluation key
+ek and (,wit) , outputs a proof for the statement L
+0/1 Verify(vrfyK,stmt,)takes as input the verification
+key vrfyK, the public input , the proof , outputs 1 if is valid
+proof for L.
+Apart from correctness, soundness, and zero-knowledge properties,
+a zk-SNARK requires two additional properties, succinctness and
+simulation extractability .
+Commitment Scheme. A commitment scheme contains two oper-
+ations: committing and revealing. During the committing operation,
+a user commits to selected values while concealing them from oth-
+ers. The user can choose to reveal the committed value during the
+revealing operation.
+Definition 2 (Commitment Scheme).A commitment scheme,
+COM defined over (X,Y), consists of two algorithms:
+ppcommit Setup(1)takes as input the security parameter,
+1, it outputs the public parameters are implicit input to all sub-
+sequent algorithms.
+cm Commit(; )accepts a message and a secret random-
+ness as inputs and returns the commitment string cm.
+0/1 Verify(,cm; )accepts a message , a commitment
+cm and a value as inputs, and returns 1 if the commitment is
+opened correctly and 0 otherwise.
+A commitment scheme should satisfy two security requirements:
+(i) Binding: Except for a negligible probability, no probabilistic-
+polynomial time adversary can efficiently produce cm, (1,1)and
+(2,2)such that Verify(1,cm; 1)= Verify(2,cm; 2)= 1
+and1 2, (ii)Hiding: Except for a negligible probability,cm does
+not reveal anything about the committed data. We can instantiate
+com with a hash function in the random oracle model.
+Merkle Tree. In this work, we focus solely on the Merkle tree,
+which is an authenticated data structure used for set membership.
+A Merkle tree leverages a collision-resistant hash function to con-
+struct the data structure. A Merkle tree consists of four algorithms
+that work as follows:
+Definition 3 (Merkle Tree).A Merkle tree, MT defined over
+(X,Y), consists of the following algorithms:
+root Init(1,()
+=1)takes the security parameter and a
+list ()
+=1 as inputs, where X, is a power of 2, and the
+algorithm outputs root Y.
+path Prove(,, ()
+=1)takes an element , an index, 
+[], and a sequence ()
+=1 as inputs, and outputs the proof ,
+which can prove that is the element in the sequence ()
+=1.
+0/1 Verify(,, root,path)takes an index [], an ele-
+ment , a root, root {0,1} and a proof path as inputs. The
+algorithm outputs 1 if is the element in ()
+=1 and 0 other-
+wise.
+A Merkle tree should satisfy correctness and security. For the
+formal definitions of these properties, we refer to the cryptography
+introduction book of Boneh and Shoup [9].
+Tagging Scheme. We use the definition of the tagging scheme
+from [31]. However, our tagging scheme does not require the homo-
+morphic property as defined in their protocol. Hence, we modified
+the security experiments to not use the related input oracles.
+Definition 4 (Tagging Scheme [31]). A tagging scheme, TAG
+defined over (K,P,T), is a triple of algorithms, where:
+ppTAG TagSetup(1): On input the security parameter 1, it
+outputs the public parameter, ppTAG. The public parameters are
+implicitly input to all subsequent algorithms.
+cpk TagKGen(csk): On input the key csk from the secret key
+space K, it deterministically outputs a public key cpk P.
+tag TagEval(csk): On input the secret key csk, it determinis-
+tically outputs the tag tag T.
+The tagging scheme should satisfyone-wayness, collision-resistance,
+and pseudo-randomness.
+Encryption Scheme. For arbitrary data construction, we need to
+use encryption scheme defined as follows.
+Definition 5. A public-key encryption scheme, E, defined over
+(M,C), works as follows:
+ (dk,ek) KGen(1): On input the security parameter 1, the al-
+gorithm outputs a pair of decryption and encryption keys, (dk,ek).
+ Enc(ek,; ): On input an encryption key, ek , a message,
+ M, and randomness , the algorithm outputs a ciphertext,
+ C.
+Dec(dk,): On input a decryption key, dk and a ciphertext
+ C, the algorithm outputs a message, M.
+The encryption scheme should be correct and satisfy ciphertext
+indistinguishability under chosen-plaintext attacks (IND-CPA). For
+certain applications, we require the encryption scheme to be addi-
+tively homomorphic . We assume there is a deterministic function
+derive, which takes as input the decryption key and outputs the
+encryption key, i.e. ek = derive(dk).
+4
+DTL: Data Tumbling Layer
+A Composable Unlinkability for Smart Contracts Conference acronym XX, June 0305, 2018, Woodstock, NY
+4 Data Tumbling Layer
+In this section, we first define the notion of the Data Tumbling Layer.
+Then we introduce the security and privacy notions of interest.
+Definition 6 (Data Tumbling Layer (DTL)).A data tumbling
+layer ( DTL) is a tuple of algorithms ( Setup, Create, Accumulate,
+Redeem, Verify) as follows:
+pp Setup(1): On input the security parameter 1, it outputs
+the public parameters pp. The public parameters pp are implicitly
+input to all subsequent algorithms.
+ (cpk,csk) Create(data): On input the public parameters pp
+and the data, data D , outputs the public ( cpk) and private
+(csk) key representations of data.
+st Accumulate((cpk)
+=1): On input a sequence of public
+keys (cpk)
+=1, it outputs a state st.
+{( tag,),} Redeem((cpk)
+=1,csk,): On input a list of
+public keys (cpk)
+=1, an application-dependent message M,
+and the private key of a piece of data csk, it outputs a pair of tag,
+proof, (tag,), or .
+ Verify(st,tag,, ): On input a state st, a tag, tag, a proof,
+, and a message , it outputs a bit .
+We say that a DTL is correct if for all N, all poly()and all
+, s.t. 1 , any data D, M it holds that:
+Pr
+
+pp Setup(1),
+(cpk,csk) Create(data)for [],
+st Accumulate((cpk)
+=1 ),
+(tag,) Redeem((cpk)
+=1,csk,),
+s.t. [],Verify(st,tag,,)= 1
+
+= 1
+Next, we discuss the notions of interest for a DTL scheme.
+No One-More Redeeming. We require a notion calledno one-more
+redeeming for a DTL scheme. Intuitively, this property guarantees
+that no user (including the adversary) can redeem a public key
+cpk more than once, even if he knows the corresponding csk. This
+property thereby captures the idea that an adversary cannot use
+a DTL scheme to redeem more than the number of keys that it
+controls. We formally describe this property in Definition 7.
+Definition 7 (DTL Security: No One-more Redeeming).We
+say that a DTL scheme is secure against one-more redeeming if
+for all N there exists a negligible function negl()such that
+Pr
+h
+ExpOneMoreRedeemA(1)
+i
+negl(), where the experiment
+ExpOneMoreRedeem is defined in Figure 2.
+Theft Prevention. We require another security notion called theft
+prevention for a DTL scheme. This property guarantees that it is
+infeasible for an adversary to successfully redeem a public key cpk
+for which they do not know the corresponding private key csk.
+This property thereby captures the idea that an adversary should
+not be able to steal a public key from an honest user. We formally
+describe this property in Definition 8.
+Definition 8 (DTL Security: Theft prevention).We say that
+a DTL scheme is secure against theftif for all N there exists a neg-
+ligible function negl()such that Pr
+h
+ExpTheftA(1)
+i
+negl(),
+where ExpTheft is defined in Figure 2.
+Non-slanderability. Another security notion required in a DTL
+is non-slanderability. This property guarantees that an adversary
+cannot prevent an honest user from successfully redeeming their
+previously committed data. This property thereby captures the
+idea that the adversary cannot launch a denial of service attack
+against an honest user. Note that non-slanderability differs from
+theft prevention in that in the former, the adversary is required
+to successfully redeem the victims public key cpk whereas, in
+the latter, the adversary does not necessarily redeem the victims
+cpk and yet can prevent the victim from redeeming their cpk. We
+formalize this notion in Definition 9.
+Definition 9 (DTL Security: Non-slanderability).We say
+that a DTL scheme is non-slanderable if for all N there exists
+a negligible function negl()such that Pr
+h
+ExpNSlanderA(1)
+i
+
+negl(), where ExpNSlander is defined in Figure 2.
+Unlinkability. The privacy notion required by a DTL isunlinkabil-
+ity. Intuitively, this property guarantees that an adversary cannot
+link a Redeem operation from an honest user to the public key cpk
+being redeemed. We formally capture this notion in Definition 10.
+Definition 10 (DTL Privacy: Unlinkability).We say that a
+DTL scheme provides unlinkability if for all N there exists a neg-
+ligible function negl()such that
+Pr
+h
+ExpUnlinkA(1)
+i
+1/2
+
+negl(), where ExpUnlink is defined in Figure 2.
+5 DTL Constructions
+In this section, we provide two constructions for DTL. One is for
+a fixed data input scenario where input data is identical, and the
+other is for arbitrary data where the input data can be arbitrary.
+5.1 DTLfixed: DTL Construction for Fixed Data
+For certain applications, like fixed-amount mixers or equal-weight
+voting systems, all users will have identical data (for instance, a set
+amount of money or voting eligibility). The primary aim here is to
+disassociate the data from its original depositor. Realizing a DTL
+with identical data is fairly straightforward.
+The detailed construction of DTLfixed is in Figure 3. Below, we
+explain in detail each segment of this construction.
+Parameter Setup. To construct DTLfixed, one needs to instantiate
+a secure zk-SNARK scheme , a Merkle tree MT, a secure tagging
+scheme TAG, and a predefined data datafixed. We run TAG setup
+algorithm to generate the public parameter for the tagging scheme,
+ppTAG. Additionally, a one-time setup is required for the statement
+asserting the ownership of a secret key that corresponds to one of
+the public keys that have been accumulated into the Merkle tree.
+Specifically, we have: stmt := (st,tag,)and witnesses wit :=
+(,csk,path), with the relation defined as follows:
+fixed :=
+
+(stmt := (st,tag,); wit := (,csk,path)):
+MT.Verify(,cpk,st,path)
+cpk = TAG.TagKGen(csk)
+tag = TAG.TagEval(csk)
+
+(1)
+Finally, the algorithm outputs the public parameters, including the
+zero-knowledge proof key pair and the public parameter for the
+tagging scheme.
+Creating Key Pair. This algorithm uniformly samples two random
+elements, ,, from {0,1}. It returns the secret key, csk = (,),
+and the public key, cpk := TAG.TagEval(csk).
+5
+Conference acronym XX, June 0305, 2018, Woodstock, NY Trovato et al.
+CreateO(data)
+(cpk,csk) Create(data)
+ := {(cpk,csk)}
+return cpk
+ExpOneMoreRedeemA(1)
+pp Setup(1), := , := 
+{(tag,,)}[+1],(cpk)
+=1 A( pp)
+st Accumulate((cpk)
+=1 )
+0 := [+1]Verify(st,tag,,)
+1 := [+1],tag tag
+return 0 1
+ExpUnlinkA(1)
+pp Setup(1), := , := 
+
+$
+ M
+data0,data1 A( pp,)
+(cpk0,csk0 ) Create(data0 )
+(cpk1,csk1 ) Create(data1 )
+(tag0,0 ) Redeem((cpk0,cpk1 ),csk0,)
+(tag1,1 ) Redeem((cpk0,cpk1 ),csk1,)
+
+$
+ {0,1}
+ACreateO,RedeemO(cpk0,cpk1,(tag0,0),(tag1,1))
+0 := = 
+1 := (,cpk0,,,) (,cpk1,,,) 
+return 0 1
+RedeemO((cpk)
+=1,, )
+if (cpk,csk) |cpk= cpk return 
+let (cpk,csk) |cpk= cpk
+st Accumulate((cpk)
+=1 )
+(tag,) Redeem((cpk)
+=1,csk,)
+:= {(st,cpk,tag,,)}
+return (tag,)
+ExpTheftA(1)
+pp Setup(1), := , := 
+((cpk)
+=1,tag,, )A CreateO,RedeemO(pp)
+st Accumulate((cpk)
+=1 )
+0 := Verify(st,tag,, )
+1 := cpk (cpk)
+=1,(cpk,) 
+2 := (st,,tag,,) 
+return 0 1 2
+ExpNSlanderA(1)
+pp Setup(1), := , := 
+(cpk,cpk),(tag,,)A CreateO,RedeemO(pp)
+st Accumulate((cpk,cpk))
+0 := (cpk,) 
+
+$
+ M
+(tag,) RedeemO((cpk,cpk),1,)
+1 := tag = tag
+2 := Verify(st,tag,,)
+3 := (st,,tag,,) 
+return 0 1 2 3
+Figure 2: Definition of oracles and various experiments.
+Setup(1)
+Let:
+ be a zk-SNARK scheme,
+MT be a Merkle tree instance,
+TAG be a tagging scheme,
+datafixed be the default data
+ppTAG TAG.TagSetup(1)
+(prvK,vrfyK) .Setup(1,fixed )
+pp := (prvK,vrfyK,ppTAG,datafixed )
+return pp
+Accumulate({cpk}[])
+st MT.Init(1,(cpk)
+=1 )
+return st
+Verify(st,tag,, )
+(zk,data) 
+stmt := (st,tag,)
+return .Verify(vrfyK,stmt,zk )
+Create()
+
+$
+ {0,1},
+$
+ {0,1}
+csk := (, )
+cpk TAG.TagKGen(csk)
+return (cpk,csk)
+Redeem({cpk}[],csk,)
+cpk TAG.TagKGen(csk)
+if cpk {cpk}[]return 
+let 1,..., : cpk = cpk
+st MT.Init(1,(cpk)
+=1 )
+path MT.Prove(,cpk,(cpk)
+=1 )
+tag TAG.TagEval(csk)
+stmt := (st,tag,)
+wit := (,csk,path)
+zk .Prove(prvK,stmt,wit)
+ := zk
+return (tag,)
+Figure 3: Our construction of DTLfixed for fixed data.
+Accumulating Keys. This algorithm takes a list of public keys as
+input and produces a succinct representation of them. The algo-
+rithm executes the MT.Init()function to accumulate those public
+keys into a Merkle root, denoted as st and subsequently outputs st.
+Redeeming Data. The primary objective of this algorithm is to
+generate a cryptographic proof that confirms a users control over
+one of the keys from the provided list of public keys. This is coupled
+with linking a specific message, , to the proof.
+6
+DTL: Data Tumbling Layer
+A Composable Unlinkability for Smart Contracts Conference acronym XX, June 0305, 2018, Woodstock, NY
+More precisely, the algorithm takes a list of public keys,(cpk)
+=1,
+a secret key, csk, and an arbitrary message as its inputs. If the
+public key corresponding to csk is not found within (cpk)
+=1, the
+algorithm returns . However, if a match is found, the algorithm
+triggers the zk-SNARK instance to generate the proof . This proof
+verifies the statement detailed in Equation (1).
+Notably, a static message is also incorporated into the public
+statement. For example, in applications like unlinkable payment,
+this message may consist of the address of the recipient and the
+fee paid for the tumbling contract. This message cannot be altered
+by any adversary if the zk-SNARK instance has the simulation
+extractability property.
+Verifying Redemption. The algorithm runs .Verify to verify
+the validity of the statement defined Equation (1).
+5.2 DTLarb: DTL Construction for Arbitrary Data
+In this construction, it is crucial to encrypt the data when it is
+redeemed. If data inputs vary and are not encrypted during redemp-
+tion, it could easily allow a public key to be linked to its proof,
+undermining the desired unlinkability. As such, we must leverage
+the commitment schemes hiding property during key creation to
+obscure the data and implement an encryption scheme when the
+data is redeemed. Furthermore, to facilitate the encryption process,
+the input message of the redemption function must include the
+public encryption key, ek , as its first element.
+Setting Up Parameters. Similar to DTLfixed, one needs to instan-
+tiate a secure zk-SNARK scheme, , a Merkle tree, MT, a secure
+tagging scheme, TAG. Additionally, for DTLarb, an IND-CPA secure
+encryption scheme, E and a hiding and binding commitment scheme
+COM are utilized.
+Furthermore, a one-time setup is required for the statement. This
+statement verifies that an individual has control over a secret key
+corresponding to a public key integrated into the Merkle tree root.
+It also ensures that the data used to compute the public key is
+identical to the data being encrypted. Finally, we may need to prove
+that the data satisfies some predicate ()(e.g., a range proof).
+To be more specific, we utilize zk-SNARK to address the sub-
+sequent hard relation: for statement stmt := (st,tag,ek,)and
+witnesses wit := (csk,path,enc)where csk := (,, data).
+arb :=
+
+(stmt := (st,tag,ek,); wit := (csk,path,enc )):
+MT.Verify(,cpk,st,path)
+tag = TAG.TagEval(csk)
+cpk= TAG.TagKGen(csk)
+cpk = COM.Commit(data; cpk)
+ = E.Enc(ek,data; enc )(data)= 1
+
+(2)
+Similar to DTLfixed, we run TAG setup to generate the public
+parameter, ppTAG. Finally, the algorithm outputs as the public pa-
+rameters the zero-knowledge proof key pair (i.e., evaluation key and
+verification key) and the public parameter for the tagging scheme.
+Creating Key Pair. This algorithm takes data as input and outputs
+a pair of secret key and public key such that data is binding to
+the public key. To accomplish this, the algorithm samples two ele-
+ments , from {0,1}. It then executes TAG.TagEval using (,)
+to obtain cpkand uses this key as randomness to compute the
+public key cpk = COM.Commit(data,cpk). Finally, the algorithm
+outputs, csk = (,, data)and cpk.
+Accumulating Keys. This algorithm is identical to DTLfixed.
+Redeeming Encrypted Data. Unlike DTLfixed, the redeem proof
+now includes the encryption of data associated with the public key.
+This algorithm demonstrates that the user has control over one
+of the keys, and that the data linked to the public key is indeed
+encrypted within the ciphertext. To achieve this, the message must
+contain the encryption key, ek. During the redeeming step, the
+algorithm encrypts the data associated with the encryption key,
+then utilizes the zk-SNARK instance to verify that the ciphertext
+is an encryption of the data linked to the public key. Finally, the
+algorithm outputs the tag and proof pair consisting of the tag, tag,
+and the proof which consists of the zk-SNARK proof, zk, that
+verifies Equation (2) and the ciphertext = E.Enc(ek,data).
+Verifying Redemption. The verification takes as input the tag
+and the proof , consisting of the zk-SNARK proof zk and the
+ciphertext . The algorithm runs .Prove to verify the validity of
+the statement defined in Equation (2).
+The detailed construction of DTLarb is defined in Figure 4.
+5.3 Security Analysis
+We formally prove the security of both DTLfixed and DTLarb. Due to
+the space limit, we shift the proofs to Appendix C.
+Theorem 1. Given the security of zk-SNARK instance, , the
+Merkle tree, MT, and the tagging scheme, TAG as defined in Section 3,
+then DTLfixed for fixed input data satisfies correctness, no one-more
+redemption, theft prevention, non-slanderability, and unlinkability.
+Theorem 2. Given the security of zk-SNARK instance, , the
+Merkle tree, MT, the tagging scheme, TAG the commitment scheme,
+COM and the IND-CPA encryption scheme, E as defined in Section 3,
+then DTLarb for arbitrary input data satisfies correctness, no one-
+more redemption, theft prevention, non-slanderability, and unlink-
+ability.
+6 Composability of DTL with Blockchain
+Applications
+In this section, we showcase the composability of DTL, specifi-
+cally, its ability to provide unlinkability to numerous blockchain
+applications that inherently lack this assurance.
+6.1 Our Generic Approach for Composability
+System Model and Assumptions. The use of our data tumbler
+layer is orchestrated by a smart contract,CDTL. Multiple users, who
+have access to the tumbler contract, use it to tumble their data in
+a decentralized manner. More concretely, users commit their data
+to the tumbler contract so that later only the intended recipient
+(which can be the same as the depositing user) can withdraw. An
+illustrative example is in Figure 1.
+We assume that users have enough funds to pay for the fees
+charged to interact with the tumbler contract. Moreover, we assume
+authenticated, confidential communication channels between any
+two users that interact with each other outside the tumbler contract.
+The code of the smart contracts is trusted for integrity, but not for
+privacy. This reflects the fact that, in practice, the distributed ledger
+operators (e.g., miners) reach consensus on the correct execution
+of a call to tumbler contract, but they have access to data used for
+7
+Conference acronym XX, June 0305, 2018, Woodstock, NY Trovato et al.
+Setup(1)
+Let:
+ be a zksnark scheme,
+MT be a Merkle tree instance,
+TAG be a tagging scheme
+E be an encryption scheme
+COM be a commitment scheme
+ppTAG TAG.TagSetup(1)
+(prvK,vrfyK) .Setup(1,arb )
+pp := (prvK,vrfyK,ppTAG)
+return pp
+Accumulate((cpk)
+=1)
+st MT.Init(1,(cpk)
+=1 )
+return st
+Verify (st,tag,, )
+ek 
+(zk,) 
+stmt := (st,tag,ek,)
+return .Verify(vrfyK,stmt,zk )
+Create(data)
+
+$
+ {0,1},
+$
+ {0,1}
+csk:= (, )
+cpkTAG.TagKGen(csk)
+csk = (,, data)
+cpk = COM.Commit(data,cpk)
+return (cpk,csk)
+Redeem((cpk)
+=1,csk,)
+(,, data) csk
+csk:= (, )
+cpkTAG.TagKGen(csk)
+cpk COM.Commit(data; cpk)
+if cpk (cpk)
+=1 return 
+let {1,..., }: cpk = cpk
+st MT.Init(1,(cpk)
+=1 )
+path MT.Prove(,cpk,(cpk)
+=1 )
+tag TAG.TagEval(csk)
+= (ek,... )
+enc
+$
+ {0,1}
+ := E.Enc(ek,data; enc )
+stmt := (st,tag,, )
+wit := (,, data,path,enc )
+zk .Prove(prvK,stmt,wit)
+ := (zk,)
+return (tag,)
+Figure 4: Our construction of DTLarb for arbitrary data.
+such computation. Users can be arbitrarily malicious and interact
+with the tumbler contract in any fashion. They are only restricted
+to respect the API of the tumbler contract, since otherwise, the call
+is straightforwardly rejected by the distributed ledger operators.
+Additional Data Structures used in DTL. To manage the con-
+currency of multiple commits, the smart contract must maintain
+a deposit history, denoted as AccHistory, which includes all com-
+mits 1. Additionally, it requires an accumulator history,AccList,
+consisting of recent Merkle roots. The reason is that each data
+commit will alter the root of the Merkle tree; hence, storingroots,
+allows DTL to handle up toconcurrent data commits. Depending
+on the speed of the blockchain, this parameter can be adjusted
+accordingly. We refer readers to [ 32] for a detailed explanation.
+Finally, to prevent double redeeming , DTL needs to maintain a tag
+list, TagList, storing all tags, tag, resulting from data redeemptions.
+6.2 Unlinkable Fixed-amount Payment
+Problem Statement. Assume a set of senders Sand a set of re-
+ceivers R. Each sender S owns a coin of a fixed value amt.
+In this setting, the unlinkable payment problem consists of trans-
+ferring each coin from a sender to a receiver so that the
+following properties are maintained: (i) correctness : the coin is
+transferred from to the intended ; (ii) unlinkability : on input
+the set of transfers, an adversary cannot determine which honest
+receiver received the coin from an honest sender better than
+guessing among the set of honest receivers; (iii) theft prevention : an
+adversary cannot transfer a coin from honest sender to a receiver
+other than the intended ; (iv) availability : an adversary cannot
+prevent any honest user from sending/receiving their coins.
+1For the concrete implementation, each deposit can be realized as a triggering event,
+allowing users to avoid storage costs. Explicitly referencing AccHistory simplifies the
+explanation of our protocol.
+Our Solution. To implement this application, we use DTLfixed
+within the tumbler smart contract, as shown in Figure 5. The sys-
+tem consists of two components: the clients and the smart contract
+running at address CDTL. The clients utilize blockchain addresses
+to communicate with CDTL, which manages an asset pool . Clients
+have the capability to either deposit or withdraw coins into or from
+this pool via the following two functionalities: CreateDepositTx
+and CreateWithdrawTx.
+Similarly, the smart contract has two functions that help process
+deposit and withdraw transactions from clients: AcceptDeposit
+and IssueWithdraw. The system utilizes the DTLfixed construction
+(see Section 5.1) and works as follows:
+(1) Deposit, addrclient CDTL: Upon receiving a valid deposit
+from a client, CDTL accumulates it into a Merkle tree.
+(2) Unlinkable Withdrawal, CDTL addrreceiver: In order to make
+a payment, clients issue a withdrawal transaction with message
+designating the recipient address. This transaction demon-
+strates that the client possesses the witness to one of the public
+keys accumulated to the Merkle tree. If verified as valid, the
+smart contract transfers the funds to the recipient.
+Given a secure DTLfixed, reasoning about the security properties
+of the suggested construction becomes straightforward. Unlink-
+able Fixed-amount Payment defined in Figure 5 effectively ensures
+correctness, unlinkability, and theft prevention , primarily due to
+the inherent properties of the DTLfixed. Regarding availability, it is
+ensured by the censorship resistance provided by the underlying
+blockchain protocol and the non-slanderability property ofDTLfixed.
+6.3 Unlinkable Confidential Payment
+The approach in section 6.2 requires transactions with fixed amounts.
+Here we show how to integrate DTLarb with confidential payment
+contracts like Zether [12], to provide their users with additional
+8
+DTL: Data Tumbling Layer
+A Composable Unlinkability for Smart Contracts Conference acronym XX, June 0305, 2018, Woodstock, NY
+Blockchain,L
+Alice CDTL addrrecv
+CreateDepositTx():
+1 : cpk,cskDTLfixed.Create()
+2 : txDeposit:=(cpk,amt)and storecsk
+3 : Invoketubl.AcceptDeposit(txDeposit)
+AcceptDeposit(txDeposit)
+1 : ParsetxDeposit=(cpk,amt)
+2 : Requireamt=amt
+3 : AppendcpktoAccHistory
+4 : ObtainstDTLfixed.Accumulate(AccHistory)
+5 : AppendsttoAccList
+CreateWithdrawTx(csk,addrrecv):
+1 : ObtainAccHistoryfromCDTL
+2 : stDTLfixed.Accumulate(AccHistory)
+3 : (tag,)DTLfixed.Redeem(AccHistory,csk,addrrecv)
+4 : Settxwithdraw=(st,tag,,)
+5 : InvokeCDTL.IssueWithdraw(txwithdraw)
+IssueWithdraw(txwithdraw):
+1 : Parse(st,tag,,addrrecv)txwithdraw
+2 : Require:
+-stAccList
+-tagTagList
+- DTLfixed.Verify(st,tag,,addrrecv)=1
+3 : AppendtagtoTagList
+// Sendamttoaddrrecv
+4 : Invokeaddrrecv.transfer(amt)
+txDeposit
+txwithdraw
+amt
+Figure 5: Fixed-amount Unlinkable Payment Using DTLfixed (highlighted in gray). In this construction, Alice uses different
+addresses to invoke the deposit and withdraw functions. The recipient of the funds is encoded as the message during the
+withdrawal process.
+unlinkability guarantees. This leads to a payment system with un-
+linkability and confidentiality.
+Problem Statement. We consider here the same problem state-
+ment as in 6.2, relaxing the condition that all payments must be of
+a fixed value.
+Our Solution. To implement this application, we start with the
+assumption of a confidential payment system like Zether (CConf).
+We then compose this system with a smart contract, CDTL, us-
+ing DTLarb. The specifics of our approach are illustrated in Fig-
+ure 6. In this scenario, CDTL is assumed to have the capability
+to directly fund and burn the balances of accounts on CConf
+through the functions Fund()and Burn()upon valid transactions.
+In this construction, CreateDepositTx, CreateCDepositTx, and
+CreateUCWithdrawingTx outline the methods which clients create
+transactions to deposit transparent amounts from the blockchain
+to CDTL, deposit confidential amounts from CConf to the CDTL, and
+fund confidential amounts from CDTL to CConf, respectively.
+(1) Transparent Deposit, addrsender CDTL. Similar to the deposit
+procedure described in Section 6.2, this method enables ex-
+isting users to deposit arbitrary amounts of tokens from the
+blockchain into CDTL, preparing them for subsequent with-
+drawal into a confidential contract like CConf. Upon receiving
+a deposit, CDTL integrates the depositors public key into the
+Merkle Tree.
+(2) Confidential Deposit, CConf CDTL. In this scenario, clients
+aim to deposit a confidential token amount, denoted as
+transfer = Enc(ek,amt), fromCConf to theCDTL contract. Upon
+receiving a valid confidential deposit, CDTL stores cpk, a com-
+mitment to the same amount Commit(amt,), as a leaf in the
+Merkle tree. However, before updating the tree, the CDTL con-
+tract must verify that transfer uses the identical amt value
+used in cpk. To facilitate this, we introduce an additional zero-
+knowledge proof here. We denotebal as the senders encrypted
+balance. The concrete relation is as in Equation (3).
+(3) Unlinkable Confidential Withdrawal, CDTL CConf. The un-
+linkable confidential withdrawal is straightforward and directly
+leverages Redeem in DTLarb. Senders obtain a valid redeem proof
+containing transfer, an encryption of amt using the recipients
+encryption key. This ciphertext can be homomorphically added
+to the recipients encrypted balance to update it.
+equality :=
+
+stmt := (bal,transfer,cpk,ek);
+wit := (bal,dk,csk = (,, amt)):
+bal = Dec(dk,bal ) amt = Dec(dk,transfer )
+ek = derive(dk) 0 amt bal 
+cpk= TAG.TagKGen(csk)
+cpk = COM.Commit(amt; cpk)
+
+(3)
+Given a secure DTLarb, it is straightforward to reason that our
+unlinkable and confidential payment achieves similar properties as
+defined in Section 6.2.
+Flexibility in Choosing Privacy Guarantee. The composabil-
+ity of CDTL grants users the flexibility to choose between issuing
+unlinkable, confidential, or both types of transactions, without re-
+quiring that all transactions adhere to the unlinkable model. This
+level of flexibility is not commonly offered by existing solutions
+like Monero, Zcash, or Zether, which typically focus on either un-
+linkability or confidentiality.
+Users can prioritize privacy or efficiency based on their needs.
+An unlinkable and confidential payment can take two forms: Trans-
+parent Deposit (1) followed by Unlinkable Confidential Withdrawal
+(3), or Confidential Deposit (2) followed by Unlinkable Confidential
+Withdrawal (3). This type of payment, detailed in Section 7, con-
+sumes around 1.1 to 1.8 million gas. Alternatively, a confidential
+9
+Conference acronym XX, June 0305, 2018, Woodstock, NY Trovato et al.
+Blockchain,L
+Alice CDTL CConf
+Transparent Deposit:addrrecvCDTL
+CreateDepositTx(amt):
+1: cpk,cskDTLarb.Create(amt)
+2: (,,amt)csk
+3: csk:=(,)
+4: cpkTAG.TagKGen(csk)
+5: txDeposit:=(cpk,amt)and storecsk
+6: InvokeCDTL.AcceptDeposit(txDeposit)
+AcceptDeposit(txDeposit)
+1: (cpk,amt)txDeposit
+2: cpkCOM.Commit(amt,cpk)
+3: AppendcpktoAccHistory
+4: stDTLarb.Accumulate(AccHistory)
+5: AppendsttoAccList
+txDeposit
+Confidential Deposit:CConfCDTL
+CreateCDepositTx(dksender,eksender,amt):
+1: cpk,cskDTLarb.Create(amt)
+2: Read(eksender,bal)fromCConf
+3: enc $ {0,1}
+4: transfer=E.Enc(eksender,amt;enc)
+5: stmt:=(bal,transfer,cpk,eksender)
+6: wit:=(bal,dk,csk)
+7: equal.Prove(prvKequality,stmt,wit)
+8: txCDeposit:=(transfer,cpk,eksender,equal)
+9: InvokeCDTL.ConfidentialDeposit(txCDeposit)
+ConfidentialDeposit(txDeposit):
+1: Parse(transfer,cpk,ek,equal)txDeposit
+2: Read(eksender,bal)fromCConf
+3: Setstmt=(bal,transfer,cpk,eksender)
+4: Require:
+-.Verify(vrfyKequality,stmt,equality)=1
+5: AppendcpktoAccHistory
+6: stDTLarb.Accumulate(AccHistory)
+7: AppendsttoAccList
+8: InvokeCConf.Burn(eksender,transfer)
+txCDeposit
+Burn(eksender,transfer)
+Unlinkable Confidential Withdrawing:CDTLCConf
+CreateUCWithdrawingTx(csk,ekrecv):
+1: ObtainAccHistoryfromDTL
+2: (,tag)DTLarb.Redeem(AccHistory,csk,ekrecv)
+3: stDTLarb.Accumulate(AccHistory)
+4: txUCWithdraw:=(st,tag,,ekrecv)
+5: InvokeCDTL.UCWithdraw(txUCWithdraw)
+UCWithdraw(txUCWithdraw):
+1: Parse(st,tag,,ekrecv)txUCWithdraw
+2: Require:
+-stAccList
+-tagTagList
+- DTLarb.Verify(st,tag,,ekrecv)=1
+3: AppendtagtoTagList
+4: Parse(zk,)
+/* add the encrypted amount toekrecv*/
+5: CConf.Fund(ekrecv,)
+txUCWithdraw
+Fund(ekrecv,bal)
+Figure 6: Confidential and Unlinkable Payment Using DTLarb (highlighted in gray).
+payment can be executed entirely within CConf, requiring only one
+step and costing approximately 1 million gas, as shown in [5].
+6.4 Unlinkable Weighted Voting
+We further highlight the composability property of DTL by demon-
+strating its ability to constuct unlinkable and weighted voting pro-
+tocols. This effectively addresses the shortcomings, such as the
+absence of privacy and confidentiality, commonly found in existing
+DAO (Decentralized Autonomous Organization) voting protocols.
+Problem Statement. We aim to create a voting system that incor-
+porates varying voting powers among participants. In contrast to
+typical blockchain voting systems, our objective is to additionally
+achieve the property of Ballot Privacy . This entails safeguarding
+the confidentiality of individual voters preferences, encompassing
+both the candidate they vote for and the quantity of their vote.
+Our Solution. Similar to the construction outlined in section 6.3,
+the protocol can be implemented using a contract, CDTL using
+DTLarb for unlinkability and a contract CConf for confidentiality.
+For a voting protocol, our system can be divided into four steps:
+setup, registration, voting , and reveal. In particular, these phases are:
+(1) Setup Phase, addr CConf: In the Setup phase, candidates,
+addr, register their public encryption key to CConf.
+Conceptually, this can be understood as each candidate being
+associated with a unique encryption key to which voters can
+securely send their votes.
+(2) Registration Phase, addrvoter CDTL: The Registration phase
+resembles the transparent deposit, where voters deposit tokens
+into CDTL. These tokens act as representations of voters eligi-
+bility and voting influence. They should be allocated to voters
+before the start of the voting process.
+(3) Unlinkable and Confidential Voting, CDTL CConf: This pro-
+cess mirrors the unlinkable and confidential withdrawing de-
+scribed in Section 6.3. Once all participants have completed
+registration, the voting phase starts. Voters cast their ballots for
+10
+DTL: Data Tumbling Layer
+A Composable Unlinkability for Smart Contracts Conference acronym XX, June 0305, 2018, Woodstock, NY
+candidates with both unlinkability and confidentiality ensured.
+Voters achieve this by withdrawing voting powers fromCDTL
+and allocating them to their chosen candidates, encrypting the
+number of tokens in the process. Leveraging the additive ho-
+momorphic properties of the encryption scheme, the sum of
+all encrypted votes for a candidate can be securely computed,
+resulting in the encryption of the total votes received by that
+candidate. Utilizing the capabilities of DTLarb effectively elimi-
+nates the link between voters and their selected candidates.
+(4) Reveal, addr CConf: In the reveal stage, each candidate,
+addr, discloses their total vote count by revealing the decrypted
+total of their vote balance. To ensure the integrity of this dis-
+closure, candidates must prove that the revealed total is the
+actual decrypted amount. Therefore, the candidate is required
+to additionally provide a zero-knowledge proof to validate the
+following statement:
+reveal :=
+stmt := (ek,,bal); wit := dk :
+ek = Derive(dk) bal = E.Dec(dk,)
+
+where and , respectively, stand for the encrypted and plain-
+text accumulated votes. The prover proves it knows the decryp-
+tion key dk corresponds to a public encryption key ek, and all
+the decryptions are correct.
+In this protocol, it is straightforward to see that ballot privacy is
+guaranteed by properties of DTLarb.
+Finally, due to the space constraints, we move the details of this
+protocol to Appendix A.
+7 Evaluation
+7.1 Testbed
+Cryptographic Primitives. In this evaluation, we use Groth16 zk-
+SNARK [26] as our zero-knowledge proof system for its efficiency
+in proof size and on-chain verification cost. We use the Poseidon
+Hash [25] to instantiate Merkle Tree as it yields a fewer number of
+constraints in circuits (or R1CS), and a lower gas cost on blockchain.
+Similarly, we use the Pedersen Hash [28] for the implementation of
+the tagging scheme as well as the commitment scheme. In DTLarb,
+we use ElGamal encryption with the Baby Jubjub elliptic curve.
+The underlying prime field of Baby Jubjub has the same order as
+the BN254 curve. This is essential because this makes it easier to
+do elliptic curve operations inside a circuit whose satisfiability is
+going to be proved by Groth16 (with BN254). For all applications,
+we set the Merkle tree depth to 20, allowing for an anonymity set
+of up to 220.
+Software and Hardware. We implemented all the circuits (R1CS)
+for the zero-knowledge proof using Circom [6]. We then use the
+SnarkJS [7] library for proof generation and on-chain verifier cre-
+ation in Solidity. We deploy it to a test network using the Truffle
+toolchain. We test our implementation on a PC with 4-core 11th
+Gen Intel(R) Core(TM) i5-1137G7 @2.40Hz and 8GB memory.
+7.2 Performance
+We implemented all proposed applications and report the number
+of constraints in R1CS, proving time, and verification gas cost.
+Unlinkable Fixed-amount Payment. We report the numbers for
+the unlinkable fixed-amount payment in Table 2, where addrsender,
+Table 2: Unlinkable Fixed-amount Payment Performance.
+Deposit
+addrsenderCDTL
+Withdraw
+CDTLaddrreceiver
+R1CS Constraints - 8,146
+Proving Time - 1.15s
+Gas Cost 767,565 233 ,375
+CDTL, and addrreceiver denotes the sender, the tumbling contract
+employing DTLfixed, and the receiver, respectively. We recall that
+an unlinkable payment works as follows: A sender can deposit
+money to the contract and later withdraw it to the recipient address
+(addrsender CDTL addrreceiver).
+Unlinkable and Confidential Payment. We report the numbers
+for the unlinkable and confidential payment in Table 3, where
+addrclient, CDTL, and CConf stand for the address of the client,
+the DTL Contract, and the Confidential Payment Contract (i.e.,
+Zether), respectively. We recall that there are two ways to con-
+duct unlinkable and confidential transfers: a user can send money
+from addrclient to CDTL, then withdraw to CConf (i.e., addrclient 
+CDTL CConf), or user can transfer money from CConf to CDTL
+then withdraw back to CConf (CConf CDTL CConf). This
+unlinkable and confidential transfer incurs a total gas cost of ap-
+proximately 1 for the first approach and 1.8 for the second
+approach, for an anonymity set size of up to 220. This is a signifi-
+cant improvement upon the previous state-of-the-art anonymous
+and confidential transfer solution [17], where the gas cost is 7.3
+for an anonymity set of8 users, rising to36for 64 users, exceeding
+the Ethereum block gas limit of 302.
+Unlinkable Weighted Voting. Recall that there are three main
+phases in unlinkable weighted voting: the registration phase, the
+voting phase, and the revealing phase. We omit the setup phase as
+it is fairly straightforward. In this context, addrvoter, addr, DTL,
+and CConf represent the voter, the candidate, the DTL contract, and
+the confidential contract, respectively. Voters register their tokens
+first and then vote for the candidate with the token in an unlinkable
+manner. At the end of voting, the candidate will reveal all the votes
+in zero knowledge with the private key. The registration phase is
+akin to the deposit step in other applications, primarily due to the
+Merkle tree cost. Similarly, the unlinkable voting phase mirrors that
+of unlinkable withdrawal in confidential and unlinkable payments.
+The only difference is the reveal step performed by the candidate.
+The numbers are reported in Table 4.
+8 Discussion
+zk-SNARK setup. As discussed in Section 7, we used Groth16 zk-
+SNARK to instantiate DTL for efficiency, which requires a trusted
+setup [26]. However, our DTL framework is zk-SNARK agnostic
+and can be instantiated with any zk-SNARK proof system providing
+the API in Section 3. If the trusted setup assumption is undesirable,
+DTL can be instantiated using proof systems utilizing a multi-party
+computation (MPC) protocol where multiple users contribute shares
+to the trusted setup [8, 10, 11], or zk-SNARK proof systems with a
+universal setup [13, 15, 21], though at an efficiency cost.
+2https://ethereum.org/en/developers/docs/gas/
+11
+Conference acronym XX, June 0305, 2018, Woodstock, NY Trovato et al.
+Table 3: Confidential and Unlinkable Payment Performance. The anonymity set of Anonymous Zether transfer reported in the
+table is 8, while ours is 220.
+Transparent Deposit
+addrclientCDTL
+Confidential Deposit
+CConfCDTL
+Unlinkable Withdraw
+CDTLCConf
+AZether[17]
+Transfer (8)
+R1CS Constraints - 8,671 11 ,521 -
+Proving Time - 1.16s 1.32s 1.9s
+Gas Cost 767,565 1 ,051,112 258 ,467 7 ,306,703
+Table 4: Unlinkable Weighted Voting Cost
+Registration
+addrvoterCDTL
+Unlinkable Vote
+CDTLCConf
+Reveal
+addrCConf
+R1CS Constraints - 11,521 6 ,750
+Proving Time - 1.19s 1.03s
+Gas Cost 767,565 258 ,467 291 ,151
+Network Layer Privacy. Most blockchain wallet clients, like
+MetaMask, typically rely on centralized services such as Infura
+for blockchain data. These services, having access to the clients
+blockchain addresses, IP addresses, and queries about contract
+states, hold significant privacy implications. They could potentially
+link various addresses belonging to the same client. To enhance
+privacy, it is advisable for clients to either run an independent vali-
+dating full blockchain node or employ network-level anonymity
+tools, such as Tor, Nym [18], or a Virtual Private Network (VPN),
+prior to connecting with these centralized services. This approach
+can help in safeguarding their privacy and reducing the risk of
+address linkage.
+Using Relayer For Transaction Fee. Initiating a transaction
+necessitates the payment of fees. To preserve anonymity, clients
+should avoid using the same address for these payments, as doing
+so may allow their addresses to be linked. In real-world applica-
+tions, users can use a relayer. This relayer can send transactions on
+behalf of users and is potentially compensated for a portion of a
+successful transaction. The address of the relayer can be encoded
+in the application-dependent message, . The relayer can obtain
+the relevant client proof via a separate communication channel.
+Further Optimization: Batch Update of Merkle Tree. A sin-
+gle update to the Merkle Tree constitutes a significant cost in our
+applications, coming in at 767 gas on the blockchain. A poten-
+tial enhancement is to employ the technique introduced in [ 43].
+The contract can postpone the update process until adequate new
+leaves are available to formulate a compact sub-tree. update. Im-
+plementing this method could significantly decrease the gas cost
+for transactions related to Merkle Tree updates by 0.5gas for a
+subtree of size 4.
+Application to Anonymous Rate Limiting Nullifier. Anony-
+mous Rate Limiting Nullifiers (RLNs) [ 19, 42] are cryptographic
+constructs that enable spam prevention in anonymous messaging
+systems by limiting each user to one message per time period while
+preserving their privacy. The key challenge is maintaining unlinka-
+bility between messages from the same user across different time
+periods while ensuring they cannot send multiple messages within
+the same period.
+The Data Tumbling Layer ( DTLfixed) provides a simple way
+to implement RLNs. In DTL, users can commit their secret
+key, which then generates unique nullifiers per round through
+TAG.TagEval(csk||round). The redeem function can be used to ver-
+ify membership and check for duplicate nullifiers within rounds,
+preventing spam while maintaining cross-round unlinkability. This
+approach leverages DTLfixeds proven security properties for mem-
+bership proofs while adding the rate-limiting capability through
+round-specific nullifiers, providing a robust foundation for anony-
+mous spam prevention. Moreover, the system can further enforce a
+slashing mechanism on spam users by having them commit to a
+polynomial using polynomial commitment [30] which helps reveal
+their identity if they exceed the message threshold.
+9 Conclusion
+In this work, we introduced the Data Tumbling Layer (DTL), a
+novel cryptographic primitive that enables non-interactive data
+tumbling with strong security and privacy guarantees. Through
+two constructions - DTLfixed for fixed data and DTLarb for arbitrary
+data - we demonstrated how to achieve crucial security properties
+including theft prevention, non-slanderability, unlinkability, and no
+one-more redemption. We proved the security of both constructions
+under standard cryptographic assumptions and showcased DTLs
+practical utility through three concrete applications: unlinkable
+fixed-amount payments, unlinkable confidential payments, and
+unlinkable weighted voting. Our implementation and evaluation
+demonstrated that DTL transactions can be processed efficiently,
+taking less than 1.5 seconds on a standard laptop with gas costs un-
+der 1.8 million, while supporting large anonymity sets of up to 220.
+By providing a modular primitive that can be easily integrated with
+existing applications, DTL bridges an important gap in blockchain
+privacy solutions, enabling developers to add unlinkability guaran-
+tees to their applications without designing complex cryptographic
+protocols from scratch.
+Disclaimer
+Case studies, comparisons, statistics, research and recommenda-
+tions are provided AS IS and intended for informational purposes
+only and should not be relied upon for operational, marketing, legal,
+technical, tax, financial or other advice. Visa Inc. neither makes any
+warranty or representation as to the completeness or accuracy of
+the information within this document, nor assumes any liability or
+responsibility that may result from reliance on such information.
+The Information contained herein is not intended as investment
+or legal advice, and readers are encouraged to seek the advice of a
+competent professional where such advice is required.
+12
+DTL: Data Tumbling Layer
+A Composable Unlinkability for Smart Contracts Conference acronym XX, June 0305, 2018, Woodstock, NY
+These materials and best practice recommendations are provided
+for informational purposes only and should not be relied upon for
+marketing, legal, regulatory or other advice. Recommended mar-
+keting materials should be independently evaluated in light of your
+specific business needs and any applicable laws and regulations.
+Visa is not responsible for your use of the marketing materials, best
+practice recommendations, or other information, including errors
+of any kind, contained in this document.
+References
+[1] 2024. Aave. Available at: https://aave.com/.
+[2] 2024. Compound. Available at: https://compound.finance/.
+[3] Shweta Agrawal, Elena Kirshanova, Damien Stehl, and Anshu Yadav. 2022.
+Practical, Round-Optimal Lattice-Based Blind Signatures. In Proceedings of the
+2022 ACM SIGSAC Conference on Computer and Communications Security (Los
+Angeles, CA, USA) (CCS 22) . Association for Computing Machinery, New York,
+NY, USA, 3953. https://doi.org/10.1145/3548606.3560650
+[4] Shashank Agrawal, Venkata Koppula, and Brent Waters. 2018. Impossibility of
+Simulation Secure Functional Encryption Even with Random Oracles. InTCC 2018,
+Part I (LNCS, Vol. 11239) , Amos Beimel and Stefan Dziembowski (Eds.). Springer,
+Heidelberg, 659688. https://doi.org/10.1007/978-3-030-03807-6_24
+[5] Zachary Williamson Antonio Salazar Cardozo. 2018. EIP1108. https://eips.
+ethereum.org/EIPS/eip-1108.
+[6] Jordi Baylina, Kobi Gurkan, Roman Semenov, Alexey Pertsev, adria0, Ehud Ben-
+Reuven, arnaucube, Eduard S., and Marta Bells. 2020. circomlib.
+[7] Jordi Baylina, Kobi Gurkan, Roman Semenov, Alexey Pertsev, adria0, Ehud Ben-
+Reuven, arnaucube, Eduard S., and Marta Bells. 2020. snarkjs.
+[8] Eli Ben-Sasson, Alessandro Chiesa, Matthew Green, Eran Tromer, and Madars
+Virza. 2015. Secure Sampling of Public Parameters for Succinct Zero Knowledge
+Proofs. In 2015 IEEE Symposium on Security and Privacy . IEEE Computer Society
+Press, 287304. https://doi.org/10.1109/SP.2015.25
+[9] Dan Boneh and Victor Shoup. 2020. A graduate course in applied cryptography.
+Draft 0.5 (2020).
+[10] Sean Bowe, Ariel Gabizon, and Matthew D. Green. 2019. A Multi-party Protocol
+for Constructing the Public Parameters of the Pinocchio zk-SNARK. In FC 2018
+Workshops (LNCS, Vol. 10958) , Aviv Zohar, Ittay Eyal, Vanessa Teague, Jeremy
+Clark, Andrea Bracciali, Federico Pintore, and Massimiliano Sala (Eds.). Springer,
+Heidelberg, 6477. https://doi.org/10.1007/978-3-662-58820-8_5
+[11] Sean Bowe, Ariel Gabizon, and Ian Miers. 2017. Scalable Multi-party Computation
+for zk-SNARK Parameters in the Random Beacon Model. Cryptology ePrint
+Archive, Report 2017/1050. https://eprint.iacr.org/2017/1050.
+[12] Benedikt Bnz, Shashank Agrawal, Mahdi Zamani, and Dan Boneh. 2019. Zether:
+Towards Privacy in a Smart Contract World. IACR Cryptol. ePrint Arch. 2019
+(2019), 191.
+[13] Matteo Campanelli, Dario Fiore, and Anas Querol. 2019. LegoSNARK: Modular
+Design and Composition of Succinct Zero-Knowledge Proofs. In ACM CCS 2019 ,
+Lorenzo Cavallaro, Johannes Kinder, XiaoFeng Wang, and Jonathan Katz (Eds.).
+ACM Press, 20752092. https://doi.org/10.1145/3319535.3339820
+[14] Matteo Campanelli and Mathias Hall-Andersen. 2022. Veksel: Simple, Effi-
+cient, Anonymous Payments with Large Anonymity Sets from Well-Studied
+Assumptions. In ASIA CCS 22: ACM Asia Conference on Computer and Com-
+munications Security, Nagasaki, Japan, 30 May 2022 - 3 June 2022 , Yuji Suga,
+Kouichi Sakurai, Xuhua Ding, and Kazue Sako (Eds.). ACM, 652666. https:
+//doi.org/10.1145/3488932.3517424
+[15] Alessandro Chiesa, Yuncong Hu, Mary Maller, Pratyush Mishra, Noah Vesely,
+and Nicholas P. Ward. 2020. Marlin: Preprocessing zkSNARKs with Universal and
+Updatable SRS. In EUROCRYPT 2020, Part I (LNCS, Vol. 12105) , Anne Canteaut and
+Yuval Ishai (Eds.). Springer, Heidelberg, 738768. https://doi.org/10.1007/978-3-
+030-45721-1_26
+[16] Benjamin E Diamond. 2020. " Many-out-of-Many" Proofs with Applications to
+Anonymous Zether. IACR Cryptol. ePrint Arch. 2020 (2020), 293.
+[17] Benjamin E Diamond. 2021. Many-out-of-many proofs and applications to
+anonymous zether. In 2021 IEEE Symposium on Security and Privacy (SP) . IEEE,
+18001817.
+[18] Claudia Daz, Harry Halpin, and Aggelos Kiayias. 2021. The Nym Network The
+Next Generation of Privacy Infrastructure.
+[19] Privacy & Scaling Explorations. 2023. Rate-Limiting Nullifier. https://rate-
+limiting-nullifier.github.io/rln-docs/what_is_rln.html.
+[20] Prastudy Fauzi, Sarah Meiklejohn, Rebekah Mercer, and Claudio Orlandi. 2019.
+Quisquis: A New Design for Anonymous Cryptocurrencies. 11921 (2019), 649678.
+https://doi.org/10.1007/978-3-030-34578-5_23
+[21] Ariel Gabizon, Zachary J. Williamson, and Oana Ciobotaru. 2019. PLONK: Per-
+mutations over Lagrange-bases for Oecumenical Noninteractive arguments of
+Knowledge. Cryptology ePrint Archive, Report 2019/953. https://eprint.iacr.org/
+2019/953.
+[22] Zhonghui Ge, Jiayuan Gu, Chenke Wang, Yu Long, Xian Xu, and Dawu Gu.
+2023. Accio: Variable-Amount, Optimized-Unlinkable and NIZK-Free Off-Chain
+Payments via Hubs. In Conference on Computer and Communications Security
+(CCS).
+[23] Noemi Glaeser, Matteo Maffei, Giulio Malavolta, Pedro Moreno-Sanchez, Erkan
+Tairi, and Sri Aravinda Krishnan Thyagarajan. 2022. Foundations of Coin Mixing
+Services. In Conference on Computer and Communications Security (CCS) .
+[24] Vipul Goyal, Rafail Ostrovsky, Alessandra Scafuro, and Ivan Visconti. 2014. Black-
+box non-black-box zero knowledge. In 46th ACM STOC , David B. Shmoys (Ed.).
+ACM Press, 515524. https://doi.org/10.1145/2591796.2591879
+[25] Lorenzo Grassi, Dmitry Khovratovich, Christian Rechberger, Arnab Roy, and
+Markus Schofnegger. 2021. Poseidon: A New Hash Function for Zero-Knowledge
+Proof Systems.. In USENIX Security Symposium , Vol. 2021.
+[26] Jens Groth. 2016. On the size of pairing-based non-interactive arguments. In
+Annual international conference on the theory and applications of cryptographic
+techniques. Springer, 305326.
+[27] Ethan Heilman, Leen Alshenibr, Foteini Baldimtsi, Alessandra Scafuro, and
+Sharon Goldberg. 2017. Tumblebit: An untrusted bitcoin-compatible anony-
+mous payment hub. In Network and Distributed System Security Symposium .
+[28] iden3 Team. 2023. Pedersen Hash Implementation. https://iden3-
+docs.readthedocs.io/en/latest/iden3_repos/research/publications/zkproof-
+standards-workshop-2/pedersen-hash/
+[29] Russell Impagliazzo and Steven Rudich. 1989. Limits on the Provable Con-
+sequences of One-Way Permutations. In 21st ACM STOC . ACM Press, 4461.
+https://doi.org/10.1145/73007.73012
+[30] Aniket Kate, Gregory M Zaverucha, and Ian Goldberg. 2010. Constant-size
+commitments to polynomials and their applications. In International conference
+on the theory and application of cryptology and information security . Springer,
+177194.
+[31] Russell WF Lai, Viktoria Ronge, Tim Ruffing, Dominique Schrder, Sri Ar-
+avinda Krishnan Thyagarajan, and Jiafan Wang. 2019. Omniring: Scaling Private
+Payments Without Trusted Setup. In Proceedings of the 2019 ACM SIGSAC Con-
+ference on Computer and Communications Security . 3148.
+[32] Duc V Le and Arthur Gervais. 2021. AMR: Autonomous Coin Mixer with Privacy
+Preserving Reward Distribution. ACM Conference on Advances in Financial
+Technologies (AFT21) (2021).
+[33] Sarah Meiklejohn and Rebekah Mercer. 2018. Mbius: Trustless tumbling for
+transaction privacy. Proceedings on Privacy Enhancing Technologies 2018, 2 (2018),
+105121.
+[34] Ian Miers, Christina Garman, Matthew Green, and Aviel D Rubin. 2013. Zerocoin:
+Anonymous distributed e-cash from bitcoin. In 2013 IEEE Symposium on Security
+and Privacy . IEEE, 397411.
+[35] Surae Noether. 2014. Review of CryptoNote white paper. HY-
+PERLINK" http://monero. cc/downloads/whitepaper_review. pdf" http://monero.
+cc/downloads/whitepaper_review. pdf (2014).
+[36] Shen Noether and Adam Mackenzie. 2016. Ring Confidential Transactions.Ledger
+1, 0 (Dec 2016), 118.
+[37] Xianrui Qin, Shimin Pan, Arash Mirzaei, Zhimei Sui, Oguzhan Ersoy, Amin
+Sakzad, Muhammed F. Esgin, Joseph K. Liu, Jiangshan Yu, and Tsz Hon Yuen.
+2023. BlindHub: Bitcoin-Compatible Privacy-Preserving Payment Channel Hubs
+Supporting Variable Amounts. In 44th IEEE Symposium on Security and Privacy,
+SP 2023, San Francisco, CA, USA, May 21-25, 2023 . IEEE, 24622480. https:
+//doi.org/10.1109/SP46215.2023.10179427
+[38] Railgun Project Team. 2023-11-22. Railgun Protocol . Railgun. railgun.xyz
+[39] Eli Ben Sasson, Alessandro Chiesa, Christina Garman, Matthew Green, Ian Miers,
+Eran Tromer, and Madars Virza. 2014. Zerocash: Decentralized anonymous
+payments from bitcoin. In Symposium on Security and Privacy . IEEE, 459474.
+[40] Samuel Steffen, Benjamin Bichsel, and Martin Vechev. 2022. Zapper: Smart
+Contracts with Data and Identity Privacy. InProceedings of the 2022 ACM SIGSAC
+Conference on Computer and Communications Security (Los Angeles, CA, USA)
+(CCS 22). Association for Computing Machinery, New York, NY, USA, 27352749.
+https://doi.org/10.1145/3548606.3560622
+[41] Erkan Tairi, Pedro Moreno-Sanchez, and Matteo Maffei. 2021. A2L: Anonymous
+Atomic Locks for Scalability in Payment Channel Hubs. InSymposium on Security
+and Privacy (SP) .
+[42] Zhipeng Wang, Orestis Alpos, Alireza Kavousi, Sze Yiu Chau, Duc V. Le, and
+Christian Cachin. 2022. DSKE: Digital Signature with Key Extraction. Cryptology
+ePrint Archive, Paper 2022/1753. https://eprint.iacr.org/2022/1753
+[43] Zhipeng Wang, Marko Cirkovic, Duc V. Le, William Knottenbelt, and Christian
+Cachin. 2023. Pay Less for Your Privacy: Towards Cost-Effective On-Chain
+Mixers. In5th Conference on Advances in Financial Technologies (AFT 2023) (Leibniz
+International Proceedings in Informatics (LIPIcs), Vol. 282) , Joseph Bonneau and
+S. Matthew Weinberg (Eds.). Schloss Dagstuhl Leibniz-Zentrum fr Informatik,
+Dagstuhl, Germany, 16:116:25. https://doi.org/10.4230/LIPIcs.AFT.2023.16
+13
+Conference acronym XX, June 0305, 2018, Woodstock, NY Trovato et al.
+A Detailed Construction for Unlinkable
+Weighted Voting
+This section contains the detailed construction of the unlinkable
+weighted voting protocol. The detailed description of this protocol
+is in Figure 7 and Figure 8. In both protocols for candidates and
+voters, we assume there exists a helper function, GetStage()that
+allows participants to learn the current phase of the voting protocol.
+B Tagging Scheme Construction
+Tagging Scheme From Pseudorandom Function. We construct a
+tagging scheme from a One-way Pseudorandom function. Figure 9
+provides the detailed construction.
+Definition 11 (Security of Tagging Scheme).A tagging
+scheme, TAG, is said to be one-way if for any PPT adversary A,
+Pr[OneWayTAG,A(1)] negl()
+It is pseudorandom if, for any PPT adversary A,
+|Pr[PR0
+TAG,A(1)= 1]Pr[PR1
+TAG,A(1)= 1]| negl()
+In addition, we require the function to be collision resistant on
+its entire inpput space, i.e., it is infeasible for any PPT adversary
+to find two 2-bit strings (,)and (,)such that (,) =
+(,). Looking ahead, our tagging scheme will be instantiated
+in the random oracle model, and hence the collision resistance
+required for our applications would immediately follow.
+C Proofs
+C.1 Proof of Theorem 1
+Theorem 1. Given the security of zk-SNARK instance, , the
+Merkle tree, MT, and the tagging scheme, TAG as defined in Section 3,
+then DTLfixed for fixed input data satisfies correctness, no one-more
+redemption, theft prevention, non-slanderability, and unlinkability.
+We prove this theorem by proving this series of lemmas.
+Lemma 1. Assume that zk-SNARK, , the underlying Merkle tree,
+MT are correct and the tagging scheme, TAG is deterministic, then
+DTLfixed is correct.
+Proof. It can be verified by inspection that the scheme DTLfixed
+is correct by relying on the correctness of the each of three ingredi-
+ents, i.e., namely zk-SNARK, Merkle tree, and tagging scheme.
+
+Lemma 2 (DTLfixed: No One-more Redeeming).Assuming that
+the zk-SNARK, , is simulation extractable, for the tagging scheme
+and the hash function used in MT are modeled as the random oracle,
+then the construction in Figure 3 satisfies no double redeeming as
+defined in Definition 7.
+Proof. (Sketch) Suppose there exists a PPT adversary Asuch
+that Pr
+h
+ExpOneMoreRedeemA(1)
+i
+is non-negligible. This means
+that if we sample pp Setup(1)and provide Awith pp,
+Awill output in PPT the lists {(tag,,)}[+1],(cpk)
+=1
+such that Verify(st,tag,,)succeeds for all [ +1],
+where st = Accumulate((cpk)
+=1), and for all [ +1],
+tag tag. Since the proofs are simulation extractable, there
+is a PPT extractor we can run on the transcript of Ato obtain
+{(,csk,path)}[+1]such that
+MT.Verify(,cpk
+,st,path)
+cpk
+ = TAG.TagKGen(csk)
+tag = TAG.TagEval(csk)
+Since MT is a random oracle, with all but negligible probability,
+cpk
+ = cpk for all [+1]. Since for all [+1], tag 
+tag, this means that for all [+1], csk csk. However,
+since cpk = TAG.TagKGen(csk)for all [+1], this means
+that we have been able to come up with some csk,csksuch that
+TagKGen(csk)= TagKGen(csk), as there are only at most cpk.
+This violates the collision resistance of the tagging scheme, giving
+us a contradiction. Therefore, the construction in the construction
+in Figure 3 satisfies no double redeeming as defined in Definition 7.
+
+Lemma 3 (DTLfixed: Theft prevention).Assume that zk-SNARK,
+, is simulation extractable, for the tagging scheme and the hash
+function used in MT are modeled as the random oracle then the
+construction in Figure 3 provides theft prevention as defined in Defi-
+nition 8.
+Proof. (Sketch) Suppose there exists a PPT adversary Asuch
+that Pr
+h
+ExpTheftA(1)
+i
+is non-negligible. This means that if we
+sample pp Setup(1)and provide Awith pp and oracle ac-
+cess to CreateOand RedeemO, Awill output in PPT the list
+(cpk)
+=1 and tag,, such that Verify(st,tag,, )succeeds,
+every cpk (cpk)
+=1 corresponds to a call to CreateO, and
+tag, do not correspond to a call to RedeemOwith st, where
+st = Accumulate((cpk)
+=1). Since the proof is simulation ex-
+tractable, there is a PPT extractor we can run on the transcript
+of Ato obtain (,csk,path)such that
+MT.Verify(,cpk
+,st,path)
+cpk
+ = TAG.TagKGen(csk)
+tag = TAG.TagEval(csk)
+Since MT is a random oracle, with all but negligible probability,
+cpk
+ = cpk. Note that cpk corresponds to a call to CreateO
+and using A, we are able to extract a csk such that tag =
+TAG.TagEval(csk). We now show how we can use Ato break
+the one-wayness of the tagging scheme. We receiveppTAG,tag,cpk
+from the challenger for the one-wayness experiment for the tagging
+scheme. We sample the rest ofpp honestly and providepp to A. We
+then simulate the responses to the oracle calls made byA. We guess
+which of the oracle calls to CreateOwill eventually correspond
+to the response returned by Aand on that call, return the cpk we
+received from the challenger for the one-wayness experiment for
+the tagging scheme. In all other instances, we honestly simulate
+CreateO. Next, we get to how we simulateRedeemO. If cpk cpk,
+we can honestly simulate RedeemO. However, if cpk = cpk, since
+we do not have csk, we do not have the witness to generate the
+proof. So, we use simulated proofs instead. Since tag and cpk are
+consistent, i.e., generated honestly by the challenger for the one-
+wayness experiment for the tagging scheme, the simulated proof
+14
+DTL: Data Tumbling Layer
+A Composable Unlinkability for Smart Contracts Conference acronym XX, June 0305, 2018, Woodstock, NY
+Blockchain,L
+Voter CDTL CConf
+Registration:addrvoterCDTL
+Register(VotePower):
+1 : UponGetStage()=Registration
+2 : cpk,cskDTLarb.Create(VotePower)
+3 : Parse(,,VotePower)csk
+4 : Setcsk=(,)
+5 : ComputecpkTAG.TagKGen(csk)
+6 : SettxDeposit=(cpk,VotePower)and storecsk
+7 : InvokeDTL.AcceptRegistration(txregister)
+AcceptRegistration(txregister)
+1 : RequireGetStage()=Registration
+2 : Parse(cpk,VotePower)txDeposit
+3 : Computecpk=COM(VotePower,cpk)
+4 : AppendcpktoAccHistory
+5 : ObtainstDTLarb.Accumulate(AccHistory)
+6 : AppendsttoAccList
+txregister
+Unlinkable Confidential Vote:CDTLCConf
+vote(csk,ek):
+1 : UponGetStage()=Voting
+2 : ObtainAccHistoryfromDTL
+3 : Obtain(tag,)DTLarb.Redeem(AccHistory,csk)
+4 : ObtainstDTLarb.Accumulate(AccHistory)
+5 : Settxwithdraw=(st,tag,,ek)
+6 : Invokevote.AcceptVote(txvote)
+AcceptVote(txvote):
+1 : RequireGetStage()=Voting
+2 : Parse(st,tag,,ek)txwithdraw
+3 : Require:
+- stAccList
+- tagTagList
+- DTLarb.Verify(st,tag,,)=1
+4 : AppendtagtoTagList
+5 : Parse(zk,)
+6 : Conf.Fund(ek,)
+txvote
+Fund(ekrecv,)
+Figure 7: Unlinkable Weighted Voting Using DTLarb (highlighted in gray): Protocol for Voter.
+Blockchain,L
+Candidate, CConf
+Reveal:addrCConf
+Reveal(dk):
+1 : UponGetStage()=Reveal
+2 : Get=Enc(ek,bal)fromConf
+3 : ObtainbalDec(dk,)
+4 : stmt= (bal,ek,)
+5 : wit= (bal,dk)
+6 : Obtainreveal.Prove(prvKreveal,stmt,wit)
+7 : Settxreveal= (ek,bal,reveal)
+8 : Invokevote.AcceptReveal(txreveal)
+AcceptReveal(txreveal):
+1 : RequireGetStage()=Reveal
+2 : Parse(ek,bal,reveal)=txreveal
+3 : GetofekfromCConf
+4 : stmt= (bal,ek,)
+5 : Require:.Verify(vrfyKreveal,stmt)
+6 : Store:(ek,bal)
+txreveal
+Figure 8: Unlinkable Weighted Voting Using DTLarb: Protocol for Candidate.
+is indistinguishable owing to the zero-knowledge property of the
+zk-SNARK. Since tag, do not correspond to a call toRedeemO, the
+proof returned by Awill not be one of the simulated proofs we
+provided with all but non-negligible probability. Hence, our extrac-
+tion will succeed. Finally, we simply forward back the extractedcsk.
+Since Ais PPT and succeeds with non-negligible probability, so do
+we. This violates the one-wayness of the tagging scheme, giving
+us a contradiction. Therefore, the construction in the construction
+in Figure 3 provides theft prevention as defined in Definition 8. 
+Lemma 4 (DTLfixed: Non-slanderability). Assume that the func-
+tion for the tagging scheme and the hash function used in MT are
+modeled as the random oracle zk-SNARK, , is simulation extractable,
+then DTLfixed satisfies the non-slanderability property defined in Def-
+inition 9.
+Proof. (Sketch) Suppose there exists a PPT adversary Asuch
+that Pr
+h
+ExpNSlanderA(1)
+i
+is non-negligible. This means that if
+15
+Conference acronym XX, June 0305, 2018, Woodstock, NY Trovato et al.
+TagSetup(1)
+ : {0,1} {0,1} {0,1} be a pseudorandom function
+TagKGen(csk)
+Parse: (, ) csk
+cpk (, )
+return cpk
+TagEval(csk)
+Parse: (, ) csk
+tag (,0)
+return tag
+Figure 9: Construction of the Tagging Scheme used in DML.
+OneWayTAG,A(1)
+ppTAG TagSetup(1)
+csk
+$
+ K
+cpk TagKGen(csk)
+tag TagEval(csk)
+cskA( ppTAG,tag,cpk)
+return TagEval(csk)= tag
+PR
+TAG,A(1)
+ppTAG TagSetup(1)
+csk
+$
+ K
+(tag,cpk) Ch,csk ()
+A( ppTAG,tag,cpk)
+return 
+Ch,csk ()
+tag
+$
+ T
+cpk
+$
+ P
+if = 0 :
+cpk := TagKGen(csk)
+tag := TagEval(csk)
+return (tag,cpk)
+Figure 10: Definition of Oneway and Pseudorandom Experi-
+ments for the tagging scheme.
+we sample pp Setup(1)and provide Awith pp and oracle
+access to CreateOand RedeemO, Awill output in PPT cpk,cpk
+and tag,,such that cpk corresponds to a call to CreateO,
+tag = tag where (tag,) RedeemO((cpk,cpk),1,),
+Verify(st,tag,,)succeeds, and tag,do not correspond
+to a call to RedeemOwith st, where st = Accumulate(cpk,cpk).
+Since the proof is simulation extractable, there is a PPT extractor
+we can run on the transcript of Ato obtain (,csk,path)such that
+MT.Verify(,cpk
+,st,path)
+cpk
+ = TAG.TagKGen(csk)
+tag= TAG.TagEval(csk)
+Since MT is a random oracle, with all but negligible probability,
+cpk
+ = cpk or cpk
+ = cpk. Note that cpk corresponds to a call
+to CreateOand using A, we are able to extract a csk such that
+tag = tag= TAG.TagEval(csk). We now show how we can use
+Ato break the one-wayness of the tagging scheme. We receive
+ppTAG,tag,cpk from the challenger for the one-wayness experi-
+ment for the tagging scheme. We sample the rest of pp honestly
+and provide pp to A. We then simulate the responses to the oracle
+calls made by A. We guess which of the oracle calls to CreateO
+will eventually correspond to the response returned by Aand on
+that call, return thecpk we received from the challenger for the one-
+wayness experiment for the tagging scheme. In all other instances,
+we honestly simulate CreateO. Next, we get to how we simulate
+RedeemO. If cpk cpk, we can honestly simulate RedeemO. How-
+ever, if cpk = cpk, since we do not have csk, we do not have the
+witness to generate the proof. So, we use simulated proofs instead.
+Since tag and cpk are consistent, i.e., generated honestly by the chal-
+lenger for the one-wayness experiment for the tagging scheme, the
+simulated proof is indistinguishable owing to the zero-knowledge
+property of the zk-SNARK. Since tag,do not correspond to a
+call to RedeemOand tag = tag, the proof returned by Awill
+not be one of the simulated proofs we provided with all but non-
+negligible probability. Hence, our extraction will succeed. Finally,
+we simply forward back the extracted csk. Since Ais PPT and
+succeeds with non-negligible probability, so do we. This violates
+the one-wayness of the tagging scheme, giving us a contradiction.
+Therefore, the construction in the construction in Figure 3 satisfies
+the non-slanderability property as defined in Definition 9. 
+Lemma 5 (DTLfixed: Unlinkability). Assume that the function
+ in the tagging scheme is modeled as a random oracle, zk-SNARK,
+, is simulation extractable and zero-knowledge, and MTis instan-
+tiated with a random oracle, then construction in Figure 3 provides
+unlinkability as defined in Definition 10.
+Proof. (Sketch) We show that for any PPT adversary A,
+Pr
+h
+ExpUnlinkA(1)
+i
+is negligible via a series of hybrids. In our
+first hybrid, 0, we deterministically set = 0 in ExpUnlinkA(1),
+and in our last hybrid, 5, we deterministically set = 1 in
+ExpUnlinkA(1). We will show that 0 5. In hybrid 1, we
+switch from providing honestly generated proofs to providing sim-
+ulated proofs. Since the tags are consistent, the simulated proofs
+are indistinguishable owing to the zero-knowledge property of
+the zk-SNARK, and hence 0 1. Next, in 2, we switch the
+tags with random strings. Owing to the pseudorandomness of the
+tagging scheme, 1 2. Since none of the output now depends
+on , in 3, we switch = 0 to = 1 and 2 3. Next, in 4,
+we switch the tags back from random strings to honestly gener-
+ated tags. Owing to the pseudorandomness of the tagging scheme,
+3 4. Finally, in 5, we switch the simulated proofs back to
+honestly generated proofs. ince the tags are consistent, the sim-
+ulated proofs are indistinguishable owing to the zero-knowledge
+property of the zk-SNARK, and hence 4 5. This completes
+the hybrid argument and the proof of the lemma. Therefore, the
+construction in the construction in Figure 3 provides unlinkability
+as defined in Definition 10. 
+C.2 Proofs for Theorem 2
+Theorem 2. Given the security of zk-SNARK instance, , the
+Merkle tree, MT, the tagging scheme, TAG the commitment scheme,
+COM and the IND-CPA encryption scheme, E as defined in Section 3,
+then DTLarb for arbitrary input data satisfies correctness, no one-
+more redemption, theft prevention, non-slanderability, and unlink-
+ability.
+We prove this theorem by proving the following lemmas.
+16
+DTL: Data Tumbling Layer
+A Composable Unlinkability for Smart Contracts Conference acronym XX, June 0305, 2018, Woodstock, NY
+Lemma 6. Assume that zk-SNARK, , the underlying Merkle tree,
+MT, E, Com are correct and the tagging scheme, TAG is deterministic,
+then DTLarb is correct.
+Proof. It can be verified by inspection that the scheme DTLarb
+is correct by relying on the correctness of the each of underlying
+primitives, i.e., namely zk-SNARK, Merkle tree, tagging scheme,
+encryption, and commitment scheme. 
+Lemma 7 (DTLarb: No One-more Redeeming).Assuming that the
+zk-SNARK, , is simulation extractable, for tagging scheme and
+the hash function used in MT are modeled as the random oracle, then
+the construction in Figure 4 satisfies no double redeeming as defined
+in Definition 7.
+Proof. The proof of this lemma is similar to that of Lemma
+2 with the only difference being the binding of the commitment
+scheme. 
+Lemma 8 (DTLarb: Theft prevention).Assume that zkSNARK,
+, is simulation extractable, and the tagging scheme, TAG, is one-way,
+then the construction in Figure 4 provides theft prevention as defined
+in Definition 8.
+Proof. The proof of this lemma is similar to that of Lemma
+3. 
+Lemma 9 (DTLarb: Non-slanderability). Assume that the func-
+tion for the tagging scheme and the hash function used in MT are
+modeled as the random oracle, zk-SNARK, , is simulation extractable,
+then DTLarb satisfies the non-slanderability property defined in Defi-
+nition 9.
+Proof. The proof of this lemma is similar to that of Lemma
+4. 
+Lemma 10 (DTLfixed: Unlinkability). Assume that the function 
+for the tagging scheme and the hash function used in MT are modeled
+as the random oracle, zk-SNARK, , is simulation extractable and
+zero-knowledge, Com is hiding and biding, E is IND-CPA, then the
+construction in Figure 4 provides unlinkability as defined in Defini-
+tion 10.
+Proof. (Sketch) The main difference between the two construc-
+tions is the use of commitment and encryption schemes. The hiding
+property of COM ensures that the adversary gains no information
+from the challenged public keys, thereby rendering it unable to
+distinguish which public key corresponds to which data.
+We show that for any PPT adversary A, Pr
+h
+ExpUnlinkA(1)
+i
+is negligible via a series of hybrids. In our first hybrid,0, we deter-
+ministically set = 0 in ExpUnlinkA(1), and in our last hybrid,5,
+we deterministically set = 1 in ExpUnlinkA(1). We will show
+that 0 5. In hybrid1, we switch from providing honestly gen-
+erated proof and ciphertext pair to providing simulated proof and an
+encryption of 0. Since the tags are consistent, the simulated proofs
+are indistinguishable owing to the zero-knowledge property of the
+zk-SNARK and the encryption of0 is indistinguishable owing to the
+IND-CPA security of the encryption scheme, and hence 0 1.
+Next, in 2, we switch the tags with random strings. Owing to the
+pseudo-randomness of the tagging scheme, 1 2. Since none of
+the output now depends on , in 3, we switch = 0 to = 1 and
+2 3. Next, in 4, we switch the tags back from random strings
+to honestly generated tags. Owing to the pseudorandomness of the
+tagging scheme, 3 4. Finally, in 5, we switch the simulated
+proof and the random string back to honestly generated proof and
+the ciphertext. Since the tags are consistent, the simulated proofs
+are indistinguishable owing to the zero-knowledge property of the
+zk-SNARK and the ciphertext is indistinguishable owing to the
+IND-CPA security of the encryption scheme, and hence 4 5.
+This completes the hybrid argument and the proof of the lemma.
+Therefore, the construction in the construction in Figure 4 provides
+unlinkability as defined in Definition 10. 
+On the Non-Blackbox Use of Cryptographic Primitives and
+Random Oracles. We remark that while a non-black-box use of a
+hash function that is modeled as a random oracle within a crypto-
+graphic protocol is not considered standard in theoretical cryptogra-
+phy (see Section 1.4 of [4] for one example) particularly considering
+impossibility or lower bound results in the literature [29], it is not
+uncommon to utilize concrete and practical hash functions (e.g.,
+SHA256) in a non-black-box manner (say in a zero-knowledge cryp-
+tographic protocol). For instance, towards achieving a practical
+solution while at the same time having a theoretical justification,
+many prior works relied on the non-black-box usage of practical
+hash functions, e.g., [3] and [39]. We refer the reader to [24] for a
+discussion studying the gap between black-box and non-black-box
+constructions, particularly in the contexts of zero-knowledge and
+MPC protocols.
+17

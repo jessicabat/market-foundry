@@ -1,0 +1,951 @@
+Decentralized Convergence to Equilibrium Prices in Trading Networks
+Edwin Lock1, Benjamin Patrick Evans2, Eleonora Kreacic2, Sujay Bhatt3, Alec Koppel3,
+Sumitra Ganesh3, Paul W. Goldberg1
+1Department of Computer Science
+University of Oxford
+Parks Road
+Oxford, OX1 3QD, UK
+2JPMorgan AI Research
+London, UK
+3JPMorgan AI Research
+New York, USA
+{edwin.lock, paul.goldberg}@cs.ox.ac.uk
+{benjamin.x.evans, eleonora.kreacic, sumitra.ganesh}@jpmorgan.com,
+{sujay.bhatt, alec.koppel}@jpmchase.com
+Abstract
+We propose a decentralized market model in which agents
+can negotiate bilateral contracts. This builds on a similar, but
+centralized, model of trading networks introduced by Hat-
+field et al. in 2013. Prior work has established that fully-
+substitutable preferences guarantee the existence of compet-
+itive equilibria which can be centrally computed. Our mo-
+tivation comes from the fact that prices in markets such as
+over-the-counter markets and used car markets arise fromde-
+centralized negotiation among agents, which has left open
+an important question as to whether equilibrium prices can
+emerge from agent-to-agent bilateral negotiations. We design
+a best response dynamic intended to capture such negotia-
+tions between market participants. We assume fully substi-
+tutable preferences for market participants. In this setting,
+we provide proofs of convergence for sparse markets (cov-
+ering many real world markets of interest), and experimen-
+tal results for more general cases, demonstrating that prices
+indeed reach equilibrium, quickly, via bilateral negotiations.
+Our best response dynamic, and its convergence behavior,
+forms an important first step in understanding how decentral-
+ized markets reach, and retain, equilibrium.
+Extended version https://arxiv.org/abs/2412.13972
+1 Introduction
+Price discovery is a central feature of modern markets. In
+many real-world markets, prices arise from a decentralized
+process governed by negotiations between market partici-
+pants. By contrast, market outcomes are classically stud-
+ied from the perspective of static optimality criteria such
+as competitive equilibrium or stability, or viewed through
+the lens of centralized market procedures (such as auctions
+and clearing houses). In particular, this does not address the
+question of when, and how, desirable market outcomes can
+arise from decentralized market processes.
+This paper introduces a best response market dynamic that
+Copyright 2025, Association for the Advancement of Artificial
+Intelligence (www.aaai.org). All rights reserved.
+captures uncoordinated negotiations between neighbors in a
+network of market participants. We work in a general model
+of trading introduced by Hatfield et al. (2013), in which
+a network of heterogeneous agents can engage in bilateral
+trades for indivisible goods or services. Agents can act as
+buyer, sellers, or as traders involved in some trades as a
+buyer and in other trades as a seller. Our model allows for cy-
+cles of trades, and for horizontal as well as vertical (Os-
+trovsky 2008) network structures. The model also embeds
+well-known settings such as labor markets (Kelso and Craw-
+ford 1982), and general exchange economies with hetero-
+geneous indivisible goods (Gul and Stacchetti 1999; Yang
+2000), capturing a broad range of market configurations.
+Like Hatfield et al., we focus primarily on agents with fully-
+substitutable (FS) preferences. Our central point of depar-
+ture from Hatfield et al. (2013) is that each agent maintains
+an offer for each of their trades, so each trade has a buying
+and selling offer. In our market dynamic, agents take turns to
+update their offers in a manner that maximizes their utility.
+The dynamic ends in equilibrium if there is no agent who
+wishes to modify her offers any further (because her current
+offers already maximize her utility); at this point the buyer
+and seller of each trade agree to execute this trade iff their
+two offers coincide.
+Trading networks have received increased attention in recent
+years (Morstyn, Teytelboym, and McCulloch 2018; Hat-
+field et al. 2019; Osogami, Wasserkrug, and Shamash 2023).
+Prior work has focused on establishing the existence of
+competitive equilibrium prices and stable outcomes in mar-
+kets of increasing generality under the condition that agents
+have substitutes preferences (see, e.g., Kelso and Crawford
+1982; Gul and Stacchetti 1999; Jagadeesan and Teytelboym
+2021; Baldwin et al. 2023b). In the model of Hatfield et al.
+(2013), the authors show that competitive equilibra are guar-
+anteed to exist if agents have fully-substitutable preferences.
+Moreover, an equilibrium is efficiently computable via an
+ascending-price algorithm. This algorithm can be run, e.g.,
+by a central exchange to centrally compute prices if it has
+The Thirty-Ninth AAAI Conference on Artificial Intelligence (AAAI-25)
+14002
+access to all agents preferences.
+But in many real world markets, such as over-the-counter
+financial markets and peer-to-peer markets, prices are not
+computed centrally, and preferences are not public. In-
+stead, prices arise from uncoordinated bilateral negotiations
+of agents with their neighbors in a trading network. Such
+decentralized processes have been studied in the context
+of specialized two-sided markets; e.g., the labor markets
+(Chen, Fujishige, and Yang 2016a,b) and two-sided markets
+of buyers and sellers with unit demand for identical items
+(Assadi et al. 2017). While the decentralized market dynam-
+ics proposed in these works converge to competitive equilib-
+rium, they are not immediately generalizable to markets on
+more general networks. Moreover, to the best of our knowl-
+edge, no similar results are known for market topologies be-
+yond two-sided markets.
+This leaves open the important research questions of for-
+mulating a decentralized market dynamic that captures the
+notion of negotiations between neighboring agents in gen-
+eral trading networks, and understanding the dynamics
+(non-)convergence to an equilibrium.
+Main Contributions. Extensive experiments suggest that
+our proposed market dynamic converges to equilibrium for
+any market with fully substitutable agents (FSM). Section 3
+develops theoretical results to support this observation. Our
+main technical contribution is a reduction from markets with
+arbitrarily many agents to 2-agent markets (Proposition 9).
+This reduction guarantees that FSMs with m-sparse net-
+works converge (almost surely) to equilibrium iff FSMs with
+two agents and m trades converge (almost surely).1
+As we show that 2-agent FSMs with one or two trades con-
+verge (Proposition 5), our reduction thus implies that mar-
+kets with tree topologies and 2-sparse FSMs reach equilib-
+rium under our market dynamic. We conjecture, based on
+our experimental evidence, that m-sparse FSMs converge
+for any m >2. Surprisingly, we see that full substitutability
+is not required to guarantee convergence for markets with
+tree topologies; agents can have arbitrary quasilinear prefer-
+ences (Theorem 10). By contrast, we give a counterexample
+of a two-agent market with a non-fully-substitutable agent
+for which the dynamic does not terminate.
+Section 4 complements our theoretical results with multi-
+agent simulations to develop a better quantitative under-
+standing of convergence in our market dynamic. 2 Specifi-
+cally, we demonstrate the convergence, and speed of con-
+vergence, in markets with tree topologies, and move be-
+yond the theoretical results to also demonstrate convergence
+in general (graph-based) markets. We explore numerous
+market configurations, including various market sizes and
+agent compositions, to analyze convergence and equilibrium
+1A network is m-sparse if every induced subgraph of the net-
+work can be divided into two or more disjoint components by re-
+moving at most m edges. See Definition 8 for details.
+2For the code and implementation details, we re-
+fer to the extended version of this paper, available at
+https://arxiv.org/abs/2412.13972.
+properties. Our experiments demonstrate that equilibrium is
+reached much faster than the identified bounds. The experi-
+ments also highlight natural and desirable properties of our
+market dynamic, such as a general increase in welfare and
+satisfaction as we reach equilibrium, and the increase in util-
+ity as competition reduces (and vice versa). We also show
+how shocks propagate through the market, with knock-on
+effects before converging to a new equilibria, with the con-
+vergence speed governed by the severity of the shock.
+The remainder of the paper is presented as follows. Section 2
+proposes the model, Section 3 provides theoretical proofs,
+and Section 4 analyzes the simulation results. Conclusions
+and next steps are presented in Section 5.
+2 Model
+A market M = (I, , v) consists of a finite set I of agents,
+a set of possible bilateral trades and agent valuations
+v = (vi)iI. The trades can represent any goods or ser-
+vices (such as the sale of a batch of coffee beans, an insur-
+ance contract, or a spectrum license), and are typically het-
+erogeneous. Each trade has a single buyer b() I and a
+single, distinct, seller s() I. Subsets of are bundles. 
+can contain multiple trades with the same buyer and seller,
+and an agent can be a buyer for some trades and a seller for
+others. So defines a directed multi-graph on vertices I in
+which every trade is an arc. Example 1 illustrates our model.
+Example 1. The coffee supply chain consists of coffee
+farms, coffee roasters, coffee shops and supermarkets, form-
+ing the different types of agents. Roasters source raw beans
+from farms and process them to various varieties of blends,
+whilst coffee shops and supermarkets can source beans both
+from the roasters (processed blends) or farms (raw), repre-
+senting the goods. A coffee shop/supermarket reaches out
+to farms and roasters in its network in order to obtain their
+asking price, and subsequently provides a set of buying of-
+fers (the trades). Figure 1 shows a concrete example. Notice
+the heterogeneous nature of goods the roaster trades: it acts
+as a buyer of raw product and a seller of various blends, as
+well as the heterogeneity of the supermarket and coffee shop
+which have different supplier networks and (private) prefer-
+ences.
+For any agent i I and bundle of trades, i denotes
+the trades in that involve agent i; and i and i re-
+spectively denote the agents selling and buying trades in
+i. For each agent i and trade , let i
+ = 1 if i is the buyer
+of , i
+ = 1 if i is the seller, and i
+ = 0 otherwise.
+Each agent i maintains an integer offer i
+ for each of her
+trades i. The offer b()
+ is an offer by the buyer b()
+to buy, while s()
+ is an offer by the seller s() to sell. For
+any agent i and trade i, we write the offer of the other
+agentits counterpartas i
+ . Each agent interprets her
+counterparts offers as prices p Zi for trades i.
+2.1 Preferences
+As in Hatfield et al. (2013), agents have heterogeneous and
+private preferences. An agents privatevaluation function vi
+14003
+Figure 1: An illustration of a market with two producers
+(coffee farms), one intermediary (a roaster), and two buyers
+(coffee shop and supermarket).
+maps every possible bundle i of her trades to an inte-
+ger value, and the empty bundle to 0.3 The utility ui(, p)
+an agent has for bundle at prices p Zi is the agents
+value for plus the income from selling trades i minus
+the spending on buying trades i:4
+ui(, p) := vi() 
+X
+
+i
+p. (1)
+This gives rise to an agents demand Di consisting of the
+bundle i that maximizes her utility at prices p:5
+Di(p) := argmaxi ui(, p). (2)
+If an agent i is indifferent between multiple bundles atp, we
+assume a consistent tie-breaking rule so that her demanded
+bundle is unique. In our experiments, we do this by perturb-
+ing vi to achieve unique demand at any integer prices.
+We focus on agents with fully-substitutable demands. An
+agents demand is fully-substitutable if reducing the prices
+of some buying trades (weakly) decreases her demand for
+the remaining buying trades and (weakly) increases her de-
+mand of selling trades; and, conversely, raising the prices
+of some selling trades (weakly) decreases her demand for
+the remaining selling trades and (weakly) increases her de-
+mand of buying trades. For agents with only buying trades,
+or only selling trades, this definition coincides with the stan-
+dard definition of substitutes introduced by Kelso and Craw-
+ford (1982) in the context of labor markets, also prevalent in
+the auction literature (Ausubel 2006; Baldwin et al. 2023a).
+Definition 2. The demand of agent i is fully-substitutable if
+the uniquely demanded bundles , at any prices p, p 
+Zi satisfy:
+3Values for certain bundles can be negative, e.g. when they rep-
+resent production costs for a seller or intermediary agent, as illus-
+trated in Example 1.
+4Heterogeneous preferences and quasilinear utilities are stan-
+dard in the literature on substitutes markets and auctions (Hatfield
+et al. 2013; Kelso and Crawford 1982; Ausubel 2006).
+5If an agent i is indifferent between multiple bundles at p, we
+assume a consistent tie-breaking rule so that her demanded bundle
+is unique.
+(i) i 
+i and { 
+i | p = p
+} i when
+p = p
+ for i and p p
+ for i;
+(ii) i 
+i and { 
+i | p = p
+} i when
+p = p
+ for i and p p
+ for i.
+We give examples of fully-substitutable buyers, sellers, and
+traders in the context of Example 1. Hatfield et al. (2015,
+2019) provide further equivalent definitions of FS. We call a
+market with only fully-substitutable agents an FSM.
+Example 3. The roaster from Fig. 1 interested in sourc-
+ing raw beans from any one of the two producers, but not
+both, can express her valuation v as v() = 0 , v({1}) =
+v({2}) > 0 and v({1, 2}) = M, where 1 and 2 de-
+note the buying trades of the roaster and M is a sufficiently
+large negative number. Moreover, the roaster may have the
+technological constraint that she can only participate in a
+selling trade (e.g., ground coffee) if she also participates in
+the buying trade (e.g., coffee beans). She can implement this
+by assigning value M to any technologically infeasible
+bundle of trades, e.g., v({}) = M, where denotes any
+trade where the roaster acts as a seller.
+From the perspective of the coffee shop, a reduction in the
+price of any blend would reduce its demand for the remain-
+ing blends (cf. Definition 2).
+2.2 Market Dynamic
+In our market dynamic, agents negotiate with their neighbors
+by modifying their own offers. Initially, the offers for trades
+are arbitrary, and all agents are marked as unsatisfied. The
+dynamic then selects one agent i I at a time, uniformly at
+random, to update her offers by a discrete step size, N.6
+The agent i first observes her counterparts offers for its
+trades i, which she interprets as the current pricesp Zi
+of these trades. She then determines the bundle Di(p)
+she demands at these prices, so that maximizes her util-
+ity ui(, p). She then best responds by updating her offers
+as follows. As the agent agrees to the prices of all trades ,
+she sets her offers i
+ for to match her counterparts
+offers i
+ . For all trades i \ , which she does not
+demand, the agent sets her offer i
+ to be lower than i
+
+if is a buying trade, and higher than i
+ if is a selling
+trade. Setting her offers close to the trading partners offers
+leaves room for negotiations while indicating her demand.
+Once an agent has best responded, she is marked assatisfied
+and all agents faced with a modified offer from agent i are
+marked as unsatisfied.
+Definition 4. Suppose an agent i demands Di(p) at the
+prices p = i
+ corresponding to her counterparts offer for
+each i. Her best response (BR) sets her new offers to
+i
+ :=
+i
+ if ,
+i
+ i
+ else. (3)
+The state (U, ) of the market dynamic after each BR is
+given by the set U of unsatisfied agents and the current of-
+6Without loss of generality, we will assume = 1throughout.
+14004
+Figure 2: An example trade between two parties. Rather than
+trades having a single price, each trade has two offers, the
+buyers offer and the sellers offer. Offers are initially arbi-
+trary, and iteratively updated through best responses.
+Algorithm 1 Market dynamic.
+1: Initialize buying and selling offers for all trades.
+2: Let U = I be the set of unsatisfied agents.
+3: while U = do
+4: Sample an agent i U uniformly at random.
+5: Let p Zi with p = i
+ for all i be the
+offers facing agent i.
+6: Determine the unique bundle Di(p) demanded
+by agent i at prices p [cf. (2)].
+7: Update agent is offers to i
+ = p for and
+i
+ = p i
+ for i \ .
+8: Remove agent i from U.
+9: Add all agents j = i facing modified offers to U.
+10: return final offers .
+fers . The dynamic terminates once all agents are satisfied,
+in which case we say that the market has reached equilib-
+rium. Algorithm 1 describes the market dynamic in detail.
+At equilibrium, both agents i, jof each trade demand if
+i
+ = j
+, and both dont demand if i
+ = j
+.
+As soon as every agent in the market has been selected at
+least once, it is straightforward that the two offers of any
+trade differ by 0 or , and in particular satisfy b()
+
+s()
+ b()
+ + . We restrict our attention to this main
+phase of the market dynamic in our theoretical analysis.
+We note that fully-substitutable utility functions ui(, p) are
+M-concave for any fixed prices p (cf. Hatfield et al. (2015,
+Section 4.5)). So agents can compute their demand at any
+prices p in polynomial time (Murota 2003, Chapter 10) to
+determine their best response.
+3 The Emergence of Equilibria
+In extensive numerical experiments, we observe that FSMs
+always converge to equilibrium. We now present theoretical
+results towards a proof that FSMs converge almost surely. 7
+This qualitative result is complemented by our experiments
+in Section 4, which focus primarily on showing the con-
+vergence speed and additional welfare analysis. All formal
+statements and proofs can be found in the extended version.
+Let V be an upper bound on the absolute value of the agents
+valuation functions and initial offers.
+Any best response sequence for a market(I, , v) in a given
+state is fully determined by the sequence i1, i2, . . .of agents
+ik I who are best-responding. In markets with two agents,
+the best response sequence for any given market and state is
+unique up to the starting agent, as the agents best respond in
+alternation. If the market consists of a single trade, then we
+see that it converges after at most O(V ) best responses. For
+two-agent markets with two trades, we show that full substi-
+tutability for both agents guarantees convergence to equilib-
+rium after at most O(V 2) best responses. We note that the
+definition of FS (Definition 2) only applies in the presence
+of two or more trades.
+Proposition 5. Markets consisting of a single trade con-
+verge to equilibrium after O(V ) BRs. Two-agent FSMs with
+two trades converge to equilibrium after O(V 2) BRs.
+We prove the single-trade case by contradiction: suppose
+that the dynamic does not terminate. Then we observe that
+one agent always accepts her counterparts offer for the trade
+, while the other always rejects. So the two agents offers
+both increase, or both decrease, by after each round of best
+responses from both agents. But the buyer (seller) demands
+ instead of the trade if the price is high (low) enough, a con-
+tradiction. In the two-trade case, we generalize this approach
+and use full substitutability to reach the required contradic-
+tion. We refer to the extended version for the full proof of
+Proposition 5.
+By contrast, Example 6 presents a market with two trades
+between a substitutes buyer and a complements seller for
+which the market dynamic fails to terminate. This demon-
+strates that FS is a necessary condition in the maximal do-
+main sense, as the market dynamic can cycle if one or more
+agents are not fully-substitutable. We conjecture that two-
+agent FSMs converge for any number m of trades after at
+most f(m, V) = O(V m) best responses, but that this will
+require new proof techniques.
+Example 6. Consider a two-agent market with a buyer and
+a seller and valuations given by:
+ { } {} {, }
+buyer 0 8 9 
+seller 0 6 7 9
+The buyer has substitutes preferences, and the seller has
+complementary preferences that violate Definition 2. If the
+buyer makes initial offers b
+ = 4 and b
+ = 5 for the two
+trades, and the market dynamic starts with a best response
+7Recall that the randomness in the market arises from the choice
+of unsatisfied agent in each round of the market dynamic.
+14005
+from the seller, then the dynamic cycles after two best re-
+sponses from each agent. Assuming agents apply the lexi-
+cographic tie-breaking rule {} {} {, } to
+decide their demanded bundle between two or more utility-
+maximizing bundles, the offers made by the alternating
+buyer and seller are:
+b s b s b
+ 4 5 5 5 4
+ 5 6 5 5 5
+Conjecture 7. Two-agent FSMs with any number of trades
+converge to equilibrium.
+We next turn to markets with arbitrarily many agents. Our
+main theoretical result is to reduce the problem of conver-
+gence for markets with any number of agents to the case of
+two-agent markets. For this, we categorize markets by the
+sparsity of their topologies.
+Definition 8. A market is m-sparse if every subgraph of its
+underlying graph admits a cut of size at most m. (A cut of
+size m is a partition of a graphs vertices into two vertex sets
+with m crossing edges between the two sets.)
+The topology of a 1-sparse market is a forest. Moreover,
+markets with agents who are each involved in at most m
+trades are trivially m-sparse.
+In Proposition 9, we show that the convergence of two-agent
+markets with one trade implies that any 1-sparse market ad-
+mits a best response sequence after which the market termi-
+nates. Surprisingly, this result holds even if the agents are
+not fully-substitutable. For m-sparse markets with m 2,
+Example 6 motivates us to focus on the setting with full sub-
+stitutability. We establish that every FSM admits a best re-
+sponse sequence after which the dynamic terminates if and
+only if two-agent FSMs converge.
+Proposition 9.
+(i) Every market with a forest topology (even when agents
+are not FS), in any state, admits a terminating best re-
+sponse sequence iff two-agent markets with one trade
+converge.
+(ii) Every m-sparse FSM, in any state, admits a terminat-
+ing best response sequence iff two-agent FSMs with m
+trades converge.
+We prove Proposition 9 in two steps. Fix a market M =
+(I, , v) in state (U0, 0). We partition the set of agents I
+of the market into two non-empty subsets, J1 and J2, and
+let 1,2 be the trades between these agent sets. This is illus-
+trated in Fig. 3, in which 1,2 = {, , }. For notational
+convenience, define Jk := Jk mod 2 for k 1.
+In the first step, we describe a procedure to construct a
+best response sequence S = S1S2 . . .consisting of subse-
+quences Sk. Each Sk contains only agents from Jk, and all
+agents in Jk are satisfied after applying sequence S1 . . . Sk.
+Our second step is then to prove that S is finite and the mar-
+ket terminates after applyingS. We now sketch out each step
+in more detail; the full proof is given in the extended version.
+The subsequences Sk are constructed recursively. Let
+(Uk1, k1) be the state of the market after applying se-
+quence S1 . . . Sk1. If all agents in the market are sat-
+isfied after this sequence, we are done and define S =
+S1 . . . , Sk1. Otherwise, to find Sk, we restrict the market
+M in state (Uk1, k1) to agents Jk and modify the val-
+uations of the agents in Jk who share a trade with agents
+outside Jk. The modified valuations endow agents with the
+opportunity to execute their trades in 1,2 at prices set to
+their counterparts offers, even though these are no longer
+included in the restricted market. This valuation transforma-
+tion was first described in Hatfield et al. (2015), and pre-
+serves full substitutability. Intuitively, this means that the
+agents Jk best respond identically in the original and re-
+stricted markets. By induction, the restricted market admits
+a terminating best response sequence Sk. As all agents in
+the restricted market are satisfied after Sk, all agents in Jk
+are also satisfied after applying Sk to the original market in
+state (Uk1, k1). Figure 3 (b) shows the restricted market
+in which the three agents of Jk involved in the grayed-out
+trades 1,2 have valuations that endogenise these trades.
+In order to show that S is finite, we consider the market fM
+obtained by merging agent sets J1 and J2 into two agents,
+1 and 2. The trades of fM consist of 1,2 with endpoints
+changed in the natural way to agents 1 and 2, and the initial
+market state is modified similarly. Moreover, the valuation
+of merged agentk is defined such that she demands the same
+trades 1,2 as the agents Jk in the original market do, when-
+ever the counterparts offers for these trades are the same in
+both markets, preserving FS (Hatfield et al. 2015). AsfM has
+two agents, it admits a unique best response sequence start-
+ing with agent 1. We show that because all agents Jk in the
+original market are satisfied after sequence S1 . . . , Sk, the
+offers k for trades 1,2 after this sequence are the same as
+the offers after the kth best response in the merged market.
+This implies that the length of the best response sequence
+for fM is the number of subsequences of S. As two-agent
+markets converge by assumption,S must thus converge after
+finitely many best responses, concluding the proof sketch.
+Our market dynamic selects unsatisfied agents uniformly at
+random, so it will eventually select a terminating best re-
+sponse sequence if one exists. So Propositions 5 and 9 im-
+ply that 1-sparse markets (even with non-FS agents) and 2-
+sparse FSMs converge almost surely. Similarly, under the
+assumption that Conjecture 7 holds, every FSM converges
+almost surely.
+Theorem 10.
+(i) Every 1-sparse market converges almost surely to equi-
+librium, even when agents are not FS.
+(ii) Every 2-sparse FSM converges almost surely to equi-
+librium.
+(iii) Every FSM converges almost surely to equilibrium if
+Conjecture 7 holds.
+14006
+J1 J2
+
+(a) A 3-sparse market
+J1
+
+(b) The market restricted to J1
+1 2
+
+(c) The market after merging J1 and J2.
+Figure 3: Illustrating the proof of Proposition 9.
+4 Experiments
+In the previous section, we proved theoretical convergence
+guarantees for 1-sparse and 2-sparse FSMs, and conjectured
+that all FSMs converge. We now explore the market dy-
+namic computationally, analyzing paths and time to conver-
+gence under various market settings. Our primary objective
+for running experiments is to support the theoretical claims
+of the previous section and study the rate of convergence to
+equilibrium. Additionally, we analyze the resulting welfare
+based on agent composition, and the impact of exogenous
+shocks on the resulting equilibria and convergence.
+Experiment Configuration. We assume one kind of good,
+and that sellers and buyers have unit supply/demand for this
+good, i.e., they want to buy/sell at most one item of this
+good8. Each buyer and sellers value ci C for an item
+of this good is drawn uniformly at random from a prede-
+termined set of integers, C = {1, . . . ,100}. For the seller,
+the value can be understood as the production cost, and
+for a buyer, their perceived fundamental value of the good.
+The valuation function of a buyer i is given by vi() = 0 ,
+vi() = ci if |i| = 1 and vi() = otherwise. For
+sellers, we havevi() = 0, vi() = ci if |i| = 1 and
+vi() = otherwise. Intermediaries cannot sell more
+than they buy, and have no value for retaining items, so their
+valuation is vi() = 0 if i contains the same number of
+buying and selling trades, and vi() = otherwise. En-
+vironments are configured in Phantom (Ardon et al. 2023).
+Market Topologies. We analyse several FSM topologies,
+ranging from bipartite networks of buyers and sellers to gen-
+eral networks with buyers, sellers, and intermediaries.
+BS: Bipartite networks consisting of buyers and sellers.
+Buyers only trade with sellers and vice versa.
+BIS: Networks with buyers, sellers, and intermediaries.
+Buyers and sellers only trade through intermediaries, and
+intermediaries do not trade with other intermediaries.
+General: Networks with buyers, sellers, and intermedi-
+aries. Buyers and sellers transact through intermediaries
+or directly. Additionally, intermediaries may trade with
+other intermediaries, and cycles are permitted.
+8Note that neither of these are requirements of the market set-
+ting, but allow for a clear evaluation.
+Examples of these topologies, and their construction pro-
+cesses, are described and visualized in the extended version.
+The BS topology models direct trade between buyers and
+sellers, e.g., direct-to-consumer or business-to-consumer
+markets. The other topologies, which include intermediaries,
+can model a number of more complex markets, such as used
+car markets with buyers and sellers interacting through deal-
+ers (Hatfield et al. 2013), energy markets with consumers
+and generators mediated through suppliers (Morstyn, Teytel-
+boym, and McCulloch 2018), or even general supply chains
+(Ostrovsky 2008).
+4.1 Experimental Results
+The convergence rates across the network structures with
+different market sizes (number of market participants N),
+and compositions (the proportion of buyers, sellers, and in-
+termediaries) are analyzed. Each configuration is run 100
+times on a standard personal computer 9, with the mean 
+standard deviation presented.
+BS Networks. For each buyer/seller pair i, jin a BS net-
+work, a potential trade between i and j is added with some
+probability r (here, r = 0.1).
+Convergence paths are visualized in Fig. 4a. Increasing the
+number of agents increases the time to convergence, as there
+is more room for bargaining/trade among the agents (e.g.,
+a buyer has access to more sellers, so has more negotiation
+opportunity). Importantly, in each case, we see convergence
+(the satisfied rate converges to 1). Convergence rates across
+N are visualized in the extended version, Fig. 9.
+Varying the proportion of buyers in the market (Fig. 5),
+we recover the expected economic welfare behavior that as
+the proportion of buyers increases (decreases), their welfare,
+measured by the average utility, decreases (increases), due to
+market competition, resulting in reduced consumer surplus
+(increased producer surplus).
+BIS Networks. Introducing intermediaries into the net-
+work alters the convergence rates as transactions must hap-
+pen through an intermediary. We explore different numbers
+of intermediaries, again, with a fixed connectivity rate of
+r = 0 .1, where for the possible pairs i, jat least one of i
+9Run with Python 3 on a 2022 Macbook Air M2 with 8GB
+RAM.
+14007
+0 500 1000 1500 2000 2500
+Timesteps
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0Convergence
+Buyers-Intermediaries-Sellers-R
+1-0-1-0.1
+5-0-5-0.1
+10-0-10-0.1
+25-0-25-0.1
+(a) BS
+0 1000 2000 3000 4000 5000
+Timesteps
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0Convergence
+Buyers-Intermediaries-Sellers-R
+25-1-25-0.1
+25-5-25-0.1
+25-10-25-0.1
+25-25-25-0.1 (b) BIS
+0 5000 10000 15000 20000 25000
+Timesteps
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+N-
+100-1.0
+100-1.5
+100-2.0
+100-2.5
+100-3.0
+Convergence (c) General
+Figure 4: Convergence paths by market topology. The x-axis shows the number of iterations (e.g., number of best response
+updates), and the y-axis shows the proportion of satisfied agents.
+0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9
+ProportionofBuyers
+0
+10
+20
+30
+40
+50
+Welfare
+(Meanu i)
+Sellers Buyers Overall
+Figure 5: Social welfare (mean ui) by agent composition in the BS network. Thex-axis varies the proportion of buyers, and the
+y-axis displays the resulting welfare.
+or j must be an intermediary (e.g., there is no direct connec-
+tion between buyers and sellers).
+Convergence rates across an increasing number of interme-
+diaries are visualized in Fig. 4b. In each case, the market
+converges to an equilibrium, as predicted by the theory. In-
+creasing the number of intermediaries increases the time to
+convergence, as there are more opportunities for trade. When
+the number of intermediaries is low, buyers/sellers have lit-
+tle room for negotiation, so convergence is more rapid. The
+more intermediaries in the market, the lower their utilities
+are due to the competition, which results in higher utilities
+for the buyers and sellers.
+General Networks. We now consider general trading net-
+works. For these experiments, we generate Erdos-Renyi net-
+works with connectivity rates r = 
+N , where N = 100 and
+ = {1, 1.5, 2, 2.5, 3}.
+Convergence rates across are visualized in Fig. 4c. De-
+spite featuring cycles, these trading networks still converge,
+at a rate approximately linear with (see Fig. 9 in extended
+version). While we do not yet have theoretical guarantees
+of convergence under this setting, these results help to show
+that experimentally these general topologies also converge,
+opening a promising line of future research building on The-
+orem 10. The welfare of the agents does not change drasti-
+cally across , but generally, as increases the proportion of
+intermediaries in the network increases, so the welfare for
+buyers/sellers increases, and the welfare for intermediaries
+decreases (see extended version).
+4.2 Shocks
+To understand how exogenous shocks impact the market,
+shocks are applied to an agents value ci, resampling to a
+new value in C. Shocks have a specific size s, which con-
+trols the variation from the original valuation, i.e., a shock
+size of 0.1 means the updated ci,t will be in the range
+[ci,t1 0.9, ci,t1 1.1] (clipped to the values inC). Shocks
+are applied to different proportions of agents in the network
+to analyze their propagation. Shocks only occur after the dy-
+namics have converged to understand how these perturba-
+tions affect an otherwise converged system.
+The results for the BS network are visualized in Fig. 6. We
+look at two key quantities: the proportion of additional (non-
+shocked) agents affected (Fig. 6a), e.g., due to knock-on ef-
+fects of one borrower updating their valuation, and the nor-
+malized time taken to reconverge (Fig. 6b).
+Propagation. When considering the propagation of shocks
+(Fig. 6a), a knock-on effect is observed in all cases, with
+14008
+0.0 0.2 0.4 0.6 0.8 1.0
+Proportion of agents shocked
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0Normalised knock on affect rate
+0.00
+0.25
+0.50
+0.75
+1.00
+1.25
+1.50
+1.75
+2.00
+Shock magnitude
+(a) Propagation
+0.0 0.2 0.4 0.6 0.8 1.0
+Proportion of agents shocked
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7Proportion extra timesteps to reconverge
+0.00
+0.25
+0.50
+0.75
+1.00
+1.25
+1.50
+1.75
+2.00
+Shock magnitude
+ (b) Reconvergence speed
+Figure 6: The impact of exogenous shocks in a BS network. Fig. 6a shows the propagation of shocks measured as the additional
+proportion of unsatisfied agents. Fig. 6b shows the normalized reconvergence speed (as a proportion of the original convergence
+speed). Each represents the mean impact for a shock size (darker color = larger magnitude). The filled region shows the effect
+range across these shock sizes.
+additional non-shocked agents becoming affected (i.e., be-
+coming unsatisfied and needing to update their prices). For
+example, when applying a shock to 25% of the agents,
+approximately 50%+ of the agents become impacted and
+must update their responses. Generally speaking, the larger
+the shock magnitude, the more propagation throughout the
+network is observed, agreeing with real world insights on
+shock propagations, for example in production networks
+(Huneeus 2018) and global trade-investments (Starnini,
+Boguna, and Serrano 2019), where the magnitude of the
+shock determines its impact on the overall system.
+Reconvergence. The additional time to converge (Fig. 6b)
+increases approximately linearly with the proportion of
+shocked agents and the shock magnitude, showing the dis-
+ruption effects. As expected by the theory, irrespective of the
+shock size, the dynamics eventually settle down and recon-
+verge to a new equilibrium. This reconvergence is signifi-
+cantly faster than the original convergence speed (Fig. 6b),
+essentially serving as a warm start to the convergence pro-
+cess, which is particularly true for small shock magnitudes.
+4.3 Results Summary
+These experimental results support and extend the theoret-
+ical guarantees in Section 3, by simulating the market dy-
+namic for various trading networks and establishing con-
+sistent convergence across market topologies. The best re-
+sponse sequences constructed in the proof of Proposition 9
+can be exponentially long. By contrast, we show experimen-
+tally that these markets converge rapidly. Additionally, we
+demonstrate that more complex network structures also still
+converge under the proposed market dynamic, opening a
+promising line of future analysis extending Proposition 9.
+The experimental analysis provided insights into the result-
+ing welfare and shock impacts across various market topolo-
+gies, expanding the understanding of such market processes.
+5 Discussion and Conclusion
+We formulate a decentralized market dynamic in a hetero-
+geneous network of trading agents. Our dynamic captures
+iterative negotiation among the agents, by allowing buy-
+ers (sellers) to refuse trades via making counteroffers that
+are slightly lower (higher) than the price being offered.
+We demonstrate theoretically and experimentally how prices
+converge to an equilibrium via an uncoordinated negotiation
+(from arbitrary initial prices), providing the first such analy-
+sis in general market settings.
+Theoretically, we develop a reduction that ensures conver-
+gence of many-agent markets iff two-agent markets con-
+verge. We apply this reduction to prove that our market
+dynamic reaches equilibrium for markets with tree topolo-
+gies, as well as 2-sparse FSMs. Experimentally, we provide
+empirical evidence and extensions to the convergence guar-
+antees and convergence process, demonstrating that fully-
+substitutable markets converge to an equilibrium and do so
+in a manner significantly faster than suggested by the proofs
+in our theoretical work. Additionally, we highlight several
+natural and desirable features of the market, e.g., market
+reactions to exogenous shocks and the welfare impact on
+agents based on market compositions.
+In addition to proving our Conjecture 7 about the conver-
+gence of two-agent markets with many trades, future work
+could address more sophisticated choices of counteroffers
+that may lead to faster convergence to equilibrium, e.g.,
+modifying the step size in the spirit of adaptive stochas-
+tic gradient based optimization algorithms (Kingma and Ba
+2015; Duchi, Hazan, and Singer 2011). Additionally, the
+agents in our market dynamic optimize their immediate util-
+ity, but future iterations could also model strategic traders
+(Vadori et al. 2024) who consider the long-term impact of
+their offers.
+14009
+Acknowledgments
+Goldberg and Lock were supported by a JP Morgan faculty
+fellowship and EPSRC grant EP/X040461/1.
+This paper was prepared for informational purposes in part
+by the Artificial Intelligence Research group of JPMorgan
+Chase & Co. and its affiliates (JP Morgan) and is not a
+product of the Research Department of JP Morgan. JP Mor-
+gan makes no representation and warranty whatsoever and
+disclaims all liability, for the completeness, accuracy or re-
+liability of the information contained herein. This document
+is not intended as investment research or investment advice,
+or a recommendation, offer or solicitation for the purchase
+or sale of any security, financial instrument, financial prod-
+uct or service, or to be used in any way for evaluating the
+merits of participating in any transaction, and shall not con-
+stitute a solicitation under any jurisdiction or to any person,
+if such solicitation under such jurisdiction or to such person
+would be unlawful.
+References
+Ardon, L.; Vann, J.; Garg, D.; Spooner, T.; and Ganesh, S.
+2023. Phantom-A RL-driven Multi-Agent Framework to
+Model Complex Systems. In Proceedings of the 2023 Inter-
+national Conference on Autonomous Agents and Multiagent
+Systems, 27422744.
+Assadi, S.; Khanna, S.; Li, Y .; and V ohra, R. 2017. Fast
+convergence in the double oral auction. ACM Transactions
+on Economics and Computation (TEAC), 5(4): 118.
+Ausubel, L. M. 2006. An Efficient Dynamic Auction for
+Heterogeneous Commodities. Am. Econ. Rev., 96(3): 602
+629.
+Baldwin, E.; Goldberg, P.; Klemperer, P.; and Lock, E.
+2023a. Solving Strong-Substitutes Product-Mix Auctions.
+Mathematics of Operations Research.
+Baldwin, E.; Jagadeesan, R.; Klemperer, P.; and Teytelboym,
+A. 2023b. The Equilibrium Existence Duality. Journal of
+Political Economy, 131(6): 14401476.
+Chen, B.; Fujishige, S.; and Yang, Z. 2016a. Random de-
+centralized market processes for stable job matchings with
+competitive salaries. Journal of Economic Theory, 165: 25
+36.
+Chen, B.; Fujishige, S.; and Yang, Z. 2016b. Random de-
+centralized market processes for stable job matchings with
+competitive salaries. Journal of Economic Theory, 165: 25
+36.
+Duchi, J.; Hazan, E.; and Singer, Y . 2011. Adaptive subgra-
+dient methods for online learning and stochastic optimiza-
+tion. Journal of Machine Learning Research, 12(7).
+Gul, F.; and Stacchetti, E. 1999. Walrasian equilibrium with
+gross substitutes. Journal of Economic theory, 87(1): 95
+124.
+Hatfield, J. W.; Kominers, S. D.; Nichifor, A.; Ostrovsky,
+M.; and Westkamp, A. 2013. Stability and competitive equi-
+librium in trading networks. Journal of Political Economy,
+121(5): 9661005.
+Hatfield, J. W.; Kominers, S. D.; Nichifor, A.; Ostrovsky,
+M.; and Westkamp, A. 2015. Full Substitutability in Trading
+Networks. In Proceedings of the Sixteenth ACM Conference
+on Economics and Computation, EC 15, 3940. New York,
+NY , USA: Association for Computing Machinery. ISBN
+9781450334105.
+Hatfield, J. W.; Kominers, S. D.; Nichifor, A.; Ostrovsky,
+M.; and Westkamp, A. 2019. Full substitutability. Theoreti-
+cal Economics, 14(4): 15351590.
+Huneeus, F. 2018. Production network dynamics and the
+propagation of shocks. Graduate thesis, Princeton Univer-
+sity, Princeton, NJ, 52.
+Jagadeesan, R.; and Teytelboym, A. 2021. Matching and
+money. In Proceedings of the 22nd ACM Conference on
+Economics and Computation, 634634.
+Kelso, A. S.; and Crawford, V . P. 1982. Job matching, coali-
+tion formation, and gross substitutes. Econometrica: Jour-
+nal of the Econometric Society, 14831504.
+Kingma, D. P.; and Ba, J. 2015. Adam: A Method for
+Stochastic Optimization. In Bengio, Y .; and LeCun, Y ., eds.,
+3rd International Conference on Learning Representations,
+ICLR 2015, San Diego, CA, USA, May 7-9, 2015, Confer-
+ence Track Proceedings.
+Morstyn, T.; Teytelboym, A.; and McCulloch, M. D. 2018.
+Bilateral contract networks for peer-to-peer energy trading.
+IEEE Transactions on Smart Grid, 10(2): 20262035.
+Murota, K. 2003. Discrete Convex Analysis: Monographs on
+Discrete Mathematics and Applications 10. USA: Society
+for Industrial and Applied Mathematics. ISBN 0898715407.
+Osogami, T.; Wasserkrug, S.; and Shamash, E. S. 2023.
+Learning Efficient Truthful Mechanisms for Trading Net-
+works. In Proceedings of the Thirty-Second International
+Joint Conference on Artificial Intelligence, IJCAI-23, 2862
+2869.
+Ostrovsky, M. 2008. Stability in supply chain networks.
+American Economic Review, 98(3): 897923.
+Starnini, M.; Boguna, M.; and Serrano, M. A. 2019. The in-
+terconnected wealth of nations: Shock propagation on global
+trade-investment multiplex networks. Scientific Reports,
+9(1): 13079.
+Vadori, N.; Ardon, L.; Ganesh, S.; Spooner, T.; Amrouni,
+S.; Vann, J.; Xu, M.; Zheng, Z.; Balch, T.; and Veloso,
+M. 2024. Towards multi-agent reinforcement learning-
+driven over-the-counter market simulations. Mathematical
+Finance, 34(2): 262347.
+Yang, Z. 2000. Equilibrium in an exchange economy with
+multiple indivisible commodities and money. Journal of
+Mathematical Economics, 33(3): 353365.
+14010

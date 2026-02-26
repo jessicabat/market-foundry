@@ -1,16 +1,4 @@
 """
-Module for running the market-foundry extraction framework.
-
-This module serves as the main entry point for processing input files through
-the extraction pipeline. It handles command-line argument parsing, document
-classification, and text vectorization using pre-trained models.
-
-Main functionality:
-- Parses command-line arguments for input file or folder paths
-- Loads files using the utility load_file function
-- Classifies documents using a trained TF-IDF + model pipeline
-- Outputs document type classifications for each file
-
 Usage:
     python run.py --file <file_path> or --folder <folder_path>
 
@@ -56,14 +44,6 @@ def main():
     print(texts[0][1][:1500])
     text_lookup = {file: text for file, text in texts}
     # print(text_lookup)
-    
-    # Load the trained document classification model from the models folder
-    # model_path = os.path.join(os.path.dirname(__file__), "models", "Document_Classifier.joblib")
-    # model = load_document_classification_model(model_path)
-        
-    # # Load the TF-IDF vectorizer from the models folder
-    # vectorizer_path = os.path.join(os.path.dirname(__file__), "models", "TFIDF_Vectorizer.joblib")
-    # vectorizer = load_tfidf_vectorizer(vectorizer_path)
         
     ref_dir = os.path.join(os.path.dirname(__file__), "..", "reference_docs_clean")
     knn = KNNClassifier(ref_dir)

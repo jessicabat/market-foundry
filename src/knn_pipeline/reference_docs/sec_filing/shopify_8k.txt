@@ -1,0 +1,97 @@
+UNITED STATES
+
+CURRENT REPORT
+Pursuant to Section 13 or 15(d) of the Securities Exchange Act of 1934
+
+Shopify Inc.
+
+Canada
+
+001-37400
+
+98-0486686
+
+Ottawa, Ontario
+
+USA 10011
+
+Check the appropriate box below if the Form 8-K is intended to simultaneously satisfy the filing obligation of the registrant under any of the following provisions:
+? Written communications pursuant to Rule 425 under the Securities Act (17 CFR 230.425)
+? Soliciting material pursuant to Rule 14a-12 under the Exchange Act (17 CFR 240.14a-12)
+? Pre-commencement communications pursuant to Rule 14d-2(b) under the Exchange Act (17 CFR 240.14d-2(b))
+? Pre-commencement communications pursuant to Rule 13e-4(c) under the Exchange Act (17 CFR 240.13e-4(c) Securities registered pursuant to Section 12(b) of the Act:
+
+Indicate by check mark whether the registrant is an emerging growth company as defined in Rule 405 of the Securities Act of 1933 (§230.405 of this chapter) or Rule 12b-2 of the Securities Exchange Act of 1934 (§240.12b-2 of this chapter).
+
+If an emerging growth company, indicate by check mark if the registrant has elected not to use the extended transition period for complying with any new or revised financial accounting standards provided pursuant to Section 13(a) of the Exchange Act. ?
+
+On November 4, 2025, Shopify Inc. (the "Company") issued a press release announcing its financial results for the quarter ended September 30, 2025. A copy of the press release is furnished as Exhibit 99.1 to this report.
+
+The information furnished with this Item 2.02, including Exhibit 99.1, shall not be deemed "filed" for the purposes of Section 18 of the Securities Exchange Act of 1934, as amended (the "Exchange Act"), or otherwise subject to the liabilities of that section, nor shall it be deemed incorporated by reference into any other filing under the Securities Act of 1933, as amended, or the Exchange Act, except as expressly set forth by specific reference in such a filing.
+
+99.1 Press release of financial results issued by Shopify Inc. on November 4, 2025
+
+SIGNATURES
+
+Pursuant to the requirements of the Securities Exchange Act of 1934, the registrant has duly caused this report to be signed on its behalf by the undersigned hereunto duly authorized.
+
+SHOPIFY INC.
+
+Internet, Everywhere - November 4, 2025 - Shopify Inc. (NASDAQ, TSX: SHOP) announced today financial results for the quarter ended September 30, 2025.
+Shopify achieved 32% revenue growth and 18% free cash flow margin, marking nine consecutive quarters of double-digit free cash flow margins.
+
+Harley Finkelstein, President of Shopify said, "We build. We ship. We grow. That's the model - and it's running at full speed. From entrepreneurs making their very first sale on Shopify every 26 seconds, to global icons like Estée Lauder, we're powering growth across the full spectrum of commerce. That scale fuels relentless momentum: GMV up 32%, revenue up 32%, free cash flow margin at 18%. Retail's busiest season is here, and, as always, Shopify merchants are built for it."
+
+"Our third quarter results show what's possible when merchant ambition and success meet Shopify's disciplined execution," said Jeff Hoffmeister, Chief Financial Officer of Shopify. "We're not just growing-we're delivering consistent growth and profitability, quarter after quarter. Q3 was a standout quarter with revenue growth and free cash flow margins both surpassing our robust Q2 performance."
+
+GMV
+92,013
+69,715
+MRR
+193
+175
+Revenue
+Gross profit
+Operating income
+507
+421
+26%
+18%
+19%
+
+See endnotes below for definitions of GMV and MRR and additional information on free cash flow and free cash flow margin, which are non-GAAP financial measures and are reconciled to the comparable GAAP measures in the non-GAAP reconciliation at the end of this press release.
+
+1
+
+2025 Outlook
+
+The outlook that follows supersedes all prior financial outlook statements made by Shopify, constitutes forward-looking information within the meaning of applicable securities laws, is based on a number of assumptions, and subject to a number of risks. Actual results could vary materially as a result of numerous factors, including certain risk factors, many of which are beyond Shopify's control. Please see "Forward-looking Statements" at the end of this press release.
+
+• Gross profit dollars to grow at a low-to-mid-twenties percentage rate on a year-over-year basis;
+
+Shopify's management team will hold a conference call to discuss our third-quarter results today, November 4, 2025, at 8:30 a.m. ET. The conference call will be webcast on the investor relations section of Shopify's website at www.shopifyinvestors.com/news-and-events. An archived replay of the webcast will be available following the conclusion of the call.
+
+Shopify's Form 10-Q for the quarter ended September 30, 2025, including the unaudited Condensed Consolidated Financial Statements and accompanying
+Notes, and Management's Discussion and Analysis, will be available on Shopify's website at www.shopify.com and will be filed on EDGAR at www.sec.gov and on SEDAR+ at www.sedarplus.ca.
+About Shopify
+
+Shopify is a leading global commerce company that provides essential internet infrastructure for commerce, offering trusted tools to start, scale, market, and run a retail business of any size. Shopify makes commerce better for everyone with a platform and services that are engineered for speed, customization, reliability, and security, while delivering a better shopping experience for consumers online, in store, and everywhere in between. Shopify powers millions of businesses in more than 175 countries and is trusted by brands such as Aldo, BarkBox, BevMo, Carrier, David's Bridal, JB Hi-Fi, Mejuri, Meta, SKIMS, Supreme, and many more.
+
+Director, Investor Relations Director, Communications
+
+Assets
+
+Current assets
+
+7
+
+This press release contains forward-looking statements and forward-looking information (collectively, "forward-looking statements"), including statements related to Shopify's financial outlook, such as expected revenue and expenses for the next fiscal quarter. These statements can be identified by words such as "will" and "expect" and are based on Shopify's current projections and expectations about future events and financial results. Known and unknown risks may cause actual results to differ materially from those described in the forward-looking statements. These risks include, but are not limited to, the Company's ability to maintain expected growth and manage expenses, the impact of changes in economic conditions and consumer spending in key markets such as the United States, Europe, and globally, the impact of measures that affect international trade, including tariffs, our reliance on third party cloud providers to deliver services, a cyberattack or security breach, and serious errors or defects in software or hardware. Other factors and risks that may cause actual results to differ materially from those set out in the forward-looking statements are set out in Shopify's Annual Report on Form 10-K under the heading "Risk Factors" and other filings made with US and Canadian securities regulators, available at www.sec.gov and www.sedarplus.ca. Undue reliance should not be placed on the forward- looking statements in this press release, which are based on information available to management on the date hereof and represent management's beliefs regarding future events, projection and financial trends, which, by their nature, are inherently uncertain. The forward- looking statements are provided to give additional information about management's expectations and beliefs and may not be appropriate for other purposes. Shopify undertakes no duty to publicly update or revise any forward-looking statements, except as may be required by law.
+
+Endnotes:
+
+Gross Merchandise Volume, or GMV, represents the total dollar value of orders facilitated through the Shopify platform including certain apps and channels for which a revenue-sharing arrangement is in place in the period, net of refunds, and inclusive of shipping and handling, duty, and value-added taxes.
+
+Monthly Recurring Revenue, or MRR, is the aggregate value of all subscription plans, excluding variable platform fees, in effect on the last day of the period, assuming merchants maintain their subscription the following month and is used by management as a directional indicator of subscription solutions revenue going forward.
+
+Free cash flow and free cash flow margin are non-GAAP financial measures which are reconciled in the non-GAAP reconciliation at the end of this press release. Shopify believes free cash flow and free cash flow margin provide useful
+information to help investors and others understand our operating results and the performance of our business in the same manner as management. Shopify does not reconcile forward-looking non-GAAP free cash flow margin as certain financial information, the probable significance of which cannot be determined, is not available and cannot be reasonably estimated. Free cash flow is a non-GAAP financial measure calculated as cash flow from operations less capital expenditures.

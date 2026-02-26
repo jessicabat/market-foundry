@@ -1,0 +1,71 @@
+Block, Inc. Third Quarter 2025 Earnings Call - Prepared Remarks Matt Ross, Head of Investor Relations
+Hi, everyone.
+
+Thanks for joining our third quarter 2025 earnings call. We have Jack and Amrita with us today along with Owen Jennings our Business Lead and Nick Molnar, Sales and Marketing Lead for Block.
+
+We will begin this call with some short remarks before opening the call directly to your questions. During Q&A, we will take questions from conference call participants.
+
+We would also like to remind everyone that we will be making forward-looking statements on this call. All statements other than statements of historical fact could be considered to be forward-looking. These forward-looking statements include discussions of our outlook, strategy and guidance as well as our long-term targets and goals. These statements are subject to risks and uncertainties, including changes in macroeconomic conditions. Actual results could differ materially from those contemplated by our forward-looking statements. Reported results should not be considered an indication of future performance.
+
+Please take a look at our filings with the SEC for a discussion of the factors that could cause our results to differ. Also, note that the forward-looking statements, including earnings guidance for 2025, discussed on this call are based on information available to us and assumptions we believe are reasonable as of today's date. We disclaim any obligation to update any
+forward-looking statements, except as required by law. Further, any discussion during this call of our lending and banking products refer to products that are offered through Square Financial Services or our bank partners.
+
+Within these remarks, we will also discuss metrics related to our investment framework, including Rule of 40. With Rule of 40, we are evaluating the sum of our gross profit growth and Adjusted Operating Income margin.
+
+Also, we will discuss certain non-GAAP financial measures during this call. Reconciliations to the most directly comparable GAAP financial measures are provided in the Shareholder Letter, and our Historical Financial Information spreadsheet on our Investor Relations website. These non-GAAP measures are not intended to be a substitute for our GAAP results.
+
+Finally, this call in its entirety is being audio webcast on our Investor Relations website. An audio replay of this call and the transcript for Jack and Amrita's opening remarks will be available on our website shortly.
+
+Thank you all for joining. My intention for these calls going forward is to bring in more voices from across the company to share more perspectives on what we're building and why.
+
+This quarter you'll hear from Owen and Nick, who are joining us for the Q&A today. Owen is our business lead and he'll be able to share more on our product velocity and what's coming next on our roadmap. Nick leads sales and marketing across the company. He and his team are responsible for the momentum we've seen in our go to market motions and he'll be able to share more on what's ahead.
+
+I hope you'll read my letter on where Square is headed and how we're delivering for our sellers. And with that, I'll turn it over to Amrita.
+
+Thanks, Jack.
+
+We had another strong quarter, delivering for our customers and exceeding expectations across gross profit and Adjusted Operating Income. Gross profit grew 18% year over year to $2.66 billion, accelerating from 14% growth last quarter driven by Cash App. Each of our profitability metrics grew on a year over year basis. Adjusted Operating Income was $480 million, showing strong profitability even in a quarter where we leaned into investments to drive long term growth.
+
+Cash App's 24% year over year gross profit growth in the third quarter accelerated from 16% in the second quarter. Our focus on re-accelerating actives growth and increasing network density is working, as we reached 58 million monthly actives in September. This growth was driven by improvements in experiences across the app, including onboarding, referrals, and core payment flows, reducing friction while boosting engagement and retention. We've also seen success in our go to market campaigns focused on increasing brand awareness and re-engaging actives who use Cash App infrequently.
+
+Our strategies to deepen engagement continue to show up in our numbers: Cash App's gross profit per monthly transacting active grew 25% year over year to $94. Primary banking actives grew 18% year over year to 8.3 million, up from 8.0 million in the second quarter. And new products like post-purchase Buy Now Pay Later on Cash App Card are continuing to scale, reaching $3 billion in annualized originations in early October.
+
+Last quarter, we shifted the origination of the majority of Borrow loans over to our bank, SFS. This quarter, we expanded Cash App Borrow to eligible actives in new states, and expanded in existing states through underwriting improvements, growing originations 134% year over year while delivering stable risk loss and strong annualized net margins of 24%.
+
+We are bringing the successful Square Releases format to Cash App, with our first Cash App Releases on November 13th set to showcase our roadmap and share more about the future of AI in Cash App and how we're driving growth across our banking products.
+
+Turning to Square, gross profit grew 9% year over year in the third quarter, and GPV grew 12%, with an acceleration of growth in both the US and Internationally. Our product and go to market strategies are working as we continued to gain profitable market share in our target verticals like Food & Beverage, with larger sellers, and outside the US.
+
+In Jack's shareholder letter this quarter we outlined our strategy to power the neighborhood by being the best platform for sellers to grow and run their business. We are focused on three key opportunities: The first is connecting sellers and consumers at scale in a way that we believe only Block can. At Square Releases, we introduced Neighborhoods on Cash App to connect our sellers with Cash App's massive network of 58 million monthly actives. Neighborhoods provides sellers the power of an enterprise grade mobile app and the ability to offer customizable local rewards tied to free marketing and discovery tools, all with a 1% processing rate for all in-app orders.
+
+Second, we are delivering world class AI tools to sellers so they can put more of their operations and finances on autopilot. We've launched Square AI, a business partner built right into the tools sellers use everyday, which is empowering our sellers to get insights about their business in minutes that would have previously taken hours. At Square Releases we announced AI-driven Order Guide to help sellers better manage procurement, and Voice Ordering to automate incoming phone orders during peak demand times.
+
+Third, we're focused on making selling easier with software solutions and commerce tools for our sellers. We believe we are the only company that designs the hardware, operating system, software, commerce capabilities and financial tools for sellers. This vertical integration is an advantage for us, letting us move faster, and serve more customers in a differentiated way. At Square Releases, we announced a number of new products including multichannel menu management, unified third party delivery app management, and improved kiosks enabling 30% faster order times for our sellers.
+
+These product strategies are positioning us well as we scale our go to market efforts to serve every seller that wants to work with us. We've seen an inflection in new volume added or NVA, our proxy for volume growth from new customers. Sales-driven NVA is up 28% YTD, as our field sales and partnerships continue to expand. We've also seen accelerated growth in NVA from our self-onboard marketing channel. Marketing drives the significant majority of our self onboard volume and we are seeing strong NVA growth and very healthy 4 to 5 quarter payback periods. We expect to deliver our strongest NVA performance ever in 2025 through expanding field sales, partner programs, and targeted marketing.
+
+In the third quarter we saw notable strength upmarket, with GPV from sellers above half of a million dollars in volume growing 20% year over year, reflecting our strongest growth rate for
+
+these sellers since the first quarter of 2023. In our international markets, GPV grew 26% year over year as we're seeing particular strength in our telesales channel.
+
+As we mentioned last quarter, our decision to increase operational flexibility at a processing partner modestly increased processing costs. This was an approximately 2.6 percentage point headwind to Square gross profit in the third quarter which we expect to lap in 2Q26.
+
+In Proto, our bitcoin mining business, we generated our first revenue, seeding what has the potential to become our next major ecosystem. We monetize Proto's innovation in hardware and software through hardware sales across ASICs, mining hashboards and full mining rigs that provide many of the key advanced components to mine bitcoin. In the third quarter, we sold our first rigs to our first customer and while it is only a modest contributor to the second half of this year, we are actively pursuing a robust pipeline for 2026 and beyond.
+
+From a profitability standpoint, Adjusted EBITDA was $833 million and Adjusted Operating Income was $480 million in the third quarter. Adjusted Operating Income margins were 18% in the quarter. Product development costs remained flat year over year, while our growth initiatives across sales and marketing spend directly contributed to our growth in both Cash App and Square. Transaction, loan and risk loss expense grew 89% year over year as we invested in scaling our lending products, most notably Borrow and the recent launch of post purchase BNPL. We continued to see healthy trends as we scaled post purchase BNPL, and Borrow losses continued to trend below our 3% target.
+
+So far this year through the end of September, we have repurchased approximately $1.5 billion of stock, and we intend to continue returning capital to shareholders as we generate cash.
+We're excited to share more about our capital allocation priorities at our upcoming Investor Day.
+
+Turning to guidance, we are increasing our full year guidance for both the Q3 beat and our raised Q4 expectations. For the fourth quarter of 2025, we expect to accelerate gross profit growth again, with gross profit growing over 19% year over year to $2.755 billion. We expect to expand Adjusted Operating Income margins year over year to 20% and deliver $560 million in Adjusted Operating Income. Taken together we expect to be approaching rule of 40 as we head into 2026.
+
+Our full year guidance reflects our Q3 outperformance and our increased expectations for the fourth quarter. We expect to deliver $10.243 billion in gross profit for the full year, reflecting more than 15% year over year growth, consistent with the initial outlook for 2025 that we provided a year ago. We expect Adjusted Operating Income of $2.056B, growing nearly 28% year over year despite meaningful investments in sales and marketing, and scaling Borrow and other lending products.
+
+Finally, to help in your modeling for Q4 and the coming years, we want to provide some details on tax rate and interest expense. We expect our 2025 and long-term tax rate to be in the
+mid-20% range, relatively consistent with where we've landed in the first three quarters of the
+
+year. We expect net interest expense of $45M in the fourth quarter, reflecting our recent debt raise and the latest benchmark rates. These figures are also good representations of our long term expectations across both line items.
+
+We typically provide preliminary forward year guidance during this earnings call, but with investor day coming up, we are excited to go much deeper on our outlook for both 2026 and our long-term financial performance in a few weeks.
+
+Throughout 2025, our gross profit growth has accelerated and we've expanded our margins. Most importantly we've improved our velocity to deliver more for our customers faster. Ultimately these strong results reflect our focus on building for our customers, and we're incredibly excited to welcome you in person and virtually to our Investor Day on November 19 where we'll share so much more. With that, I'll turn the call back to the operator for Q&A.
