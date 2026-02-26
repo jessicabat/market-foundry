@@ -13,21 +13,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# MODEL = "Qwen/Qwen2.5-1.5B-Instruct"
-
-# tokenizer = AutoTokenizer.from_pretrained(MODEL)
-# model = AutoModelForCausalLM.from_pretrained(
-#     MODEL,
-#     torch_dtype=torch.float32,
-#     device_map="auto"
-# )
-
-# MODEL = "lfm2-8b-a1b"
-# client = OpenAI(
-#     api_key=os.getenv("LM_STUDIO_API_KEY"),
-#     base_url=os.getenv("LM_STUDIO_NETWORK_URL")
-# )
-
 BASE_YAML_TEMPLATE = {
     "model": {
         "category": "Qwen",
@@ -56,7 +41,7 @@ def safe_json_parse(text):
         json_response = json.loads(text)
         return json_response
     except:
-        print("Failed to parse Extracted Topics as JSON")
+        print("The format of the extracted topics is not valid JSON. Attempting to recover valid JSON from the text...")
 
     # Attempt to extract FIRST valid JSON object
     brace_stack = 0
@@ -237,53 +222,60 @@ def generate_yaml_configs(document_type, topic_map):
             {{
             "file_name": "string.yaml",
             "instruction_focus": "short semantic focus",
-            "entities": ["entity1","entity2"],
-            "relations": ["relation1","relation2"]
+            "entity_types": ["entity1","entity2"],
+            "relation_types": ["relation1","relation2"]
             }}
         ]
         }}
 
         RULES (CRITICAL):
 
-        - Generate EXACTLY 3 YAML files.
-        - Each YAML must focus on ONE main topic from the topic map.
-        - file_name MUST be unique:
-        {document_type}_focus_1.yaml
-        {document_type}_focus_2.yaml
-        {document_type}_focus_3.yaml
+        - Generate EXACTLY 1 YAML file.
+        - The YAML must cover ALL main topics from the topic map.
 
-        ENTITY GENERATION PROCESS (FOLLOW STRICTLY):
+        ONTOLOGY DISCIPLINE RULES:
 
-        Step 1:
-        Identify the CORE concept of the topic.
+        - Entity types MUST represent stable real-world classes.
+        - Entity types must be literal ontological categories (e.g., "Company", "Product", "Technology", "Stock", "Index", "Financial Metric", "Event").
+        - Do NOT create abstract interpretive categories (e.g., "Corporate Strategy", "Market Reaction", "Stock Performance", "Technical Capability", "Investment Entity").
+        - Do NOT convert roles or behaviors into entity types.
+        - Do NOT encode outcomes, sentiments, reactions, or states as entity types.
+        - Entity types must be reusable across many documents in the same domain.
 
-        Step 2:
-        List related BUSINESS OBJECTS discussed under this concept.
-        Examples of object types:
-        - financial metrics
-        - business operations
-        - costs
-        - forecasts
-        - stakeholders
-        - investments
-        - risks
+        RELATION DISCIPLINE RULES:
 
-        Step 3:
-        Convert those objects into canonical nouns.
+        - Relation types must describe observable relationships stated in text.
+        - Do NOT generate interpretive or inferred causal relations unless explicitly stated in text.
+        - Do NOT create meta-level reporting relations (e.g., "claims", "states", "asserts") unless speech attribution is a core topic.
+        - Prefer concrete semantic relations (e.g., "acquires", "partners_with", "drops_by", "uses", "competes_with").
+        - Merge semantically similar relations into one reusable category.
 
-        Step 4:
-        Return 12–18 DISTINCT entities.
+        SCOPE CONTROL RULES:
 
-        IMPORTANT:
-        - Entities must be DIFFERENT concepts, not paraphrases.
-        - Do NOT repeat the topic words directly.
-        - Expand outward from the topic into related domain concepts.
+        - Avoid fabricating economic interpretation (e.g., "market sentiment shift", "pricing power erosion") unless explicitly described.
+        - Avoid encoding analysis, inference, or narrative framing.
+        - Focus strictly on extractable factual structure.
+        
+        DOMAIN ADAPTATION RULE:
+
+        - Entity and relation types must reflect the primary domain of the document.
+        - Do not reuse finance-oriented types unless the document is about finance.
+        - Infer the domain from the topic map before generating types.
+
+        TYPE COUNT RULES:
+
+        - Create 10–15 entity types maximum.
+        - Create 10–15 relation types maximum.
+        - Types must be reusable across multiple triples.
+        - Avoid narrow variants of the same concept.
+
+        file_name MUST be:
+        {document_type}.yaml
 
         Return ONLY valid JSON.
         """
         }
     ]
-
 
     inputs = tokenizer.apply_chat_template(
         messages,

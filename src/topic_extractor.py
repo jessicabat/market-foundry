@@ -28,11 +28,9 @@ def load_model_openai():
     
     MODEL = model_info.get("model_name_or_path", "")
     
-    # MODEL = "gemma-3n-e2b-it"
-    
     client = OpenAI(
         api_key=os.getenv("LM_STUDIO_API_KEY"),
-        base_url=os.getenv("LM_STUDIO_NETWORK_URL")
+        base_url=os.getenv("LM_STUDIO_LOCAL_URL"),
     )
     return MODEL, client
 
@@ -92,7 +90,7 @@ def extract_topics_openai(document):
             }
         ],
         temperature=0.2,
-        max_tokens=2048,
+        max_tokens=1024,
     )
 
     content = response.choices[0].message.content.strip()
@@ -115,47 +113,57 @@ def extract_topics_openai(document):
 
 def extract_topics(document):
     tokenizer, model = load_model_hf()
-    messages = [
-        {
-            "role": "system",
-            "content": "You output ONLY valid JSON. No explanation. No markdown."
-        },
-        {
-            "role": "user",
-            "content": f"""
-                        Analyze the document and identify ALL major topics discussed.
+    messages=[
+            {
+                "role": "system",
+                "content": """
+                You are a strict JSON generator.
+                
+                You must output ONLY valid JSON.
+                If any non-JSON text is generated, the program will crash.
+                
+                You MUST ensure that:
+                - EVERY [ has a matching ]
+                - EVERY { has a matching }
+                - The JSON must be syntactically valid and parseable.
+                If it is not valid JSON, regenerate it completely.
 
-                        For each major topic, identify related subtopics or supporting ideas.
+                Do not summarize.
+                Do not explain.
+                Do not format.
+                Do not use markdown.
+                Do not use headings.
+                Do not use bullet points.
 
-                        OUTPUT REQUIREMENTS:
+                TASK:
+                Analyze the document and identify ALL major topics discussed.
 
-                        Return ONLY valid JSON.
-                        Return ONLY a flat dictionary.
+                For each major topic, identify related subtopics.
 
-                        FORMAT:
-                        {{
-                        "Main Topics": ["Topic 1", "Topic 2", ...],
-                        "Topic 1": ["Subtopic A", "Subtopic B", ...],
-                        "Topic 2": ["Subtopic C", "Subtopic D", ...],
-                        ...
-                        }}
+                OUTPUT FORMAT (flat dictionary only):
 
-                        RULES:
-                        - Topics should represent major themes in the document
-                        - Subtopics should represent supporting ideas, drivers, risks, or related concepts
-                        - Do NOT restrict to financial metrics only
-                        - Do NOT create wrapper keys like "Topics" or "Subtopics"
-                        - Do NOT create nested dictionaries
-                        - Use natural, human-readable topic names
-                        - Prefer broader parent topics over highly similar ones.
+                {
+                "Main Topics": ["Topic 1", "Topic 2"],
+                "Topic 1": ["Subtopic A", "Subtopic B"],
+                "Topic 2": ["Subtopic C"]
+                }
 
-                        Focus on capturing the full semantic coverage of the document.
-
-                        Document:
-                        {document}
-                        """
-        }
-    ]
+                RULES:
+                - Topics must represent major themes
+                - Subtopics must represent supporting ideas
+                - No nested dictionaries
+                - No wrapper keys
+                - Use natural topic names
+                """
+            },
+            {
+                "role": "user",
+                "content": f"""
+                Document:
+                {document}
+                """
+            }
+        ]
         
     inputs = tokenizer.apply_chat_template(
         messages,

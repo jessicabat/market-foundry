@@ -72,7 +72,9 @@ def main():
     output_classifications(classifications)
     
     # Extract topics from the documents using the topic_extractor module
-    # extract_topics_and_run_oneke(cleaned_texts, classifications, text_lookup)
+    extract_topics_and_run_oneke(cleaned_texts, classifications, text_lookup)
+    
+    
     
     # # Section documents based on their classifications
     # sectioned_documents = section_documents(texts)
