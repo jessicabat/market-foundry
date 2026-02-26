@@ -62,7 +62,7 @@ deduced_schema_code_instruction = PromptTemplate(
 # ==================================================================== #
 
 EXTRACT_INSTRUCTION = """
-**Instruction**: You are an agent skilled in information extarction. {instruction}
+**Instruction**: You are an agent skilled in information extraction. {instruction}
 {examples}
 **Text**: {text}
 {additional_info}
@@ -103,7 +103,7 @@ SUMMARIZE_INSTRUCTION = """
 **Result List**: {answer_list}
 
 **Output Schema**: {schema}
-Now summarize all the information from the Result List. Filter or merge the redundant information. The final answer MUST follow the ouput schema strictly. If there are attributes in the output schema that are not mentioned in the Result List, please set them to null.
+Now summarize all the information from the Result List. Filter or merge the redundant information. The final answer MUST follow the ouput schema strictly.
 """
 summarize_instruction = PromptTemplate(
     input_variables=["instruction", "examples", "answer_list", "schema"],
@@ -120,7 +120,7 @@ REFLECT_INSTRUCTION = """**Instruction**: You are an agent skilled in reflection
 
 **Reflection Reference**: {examples}
 
-Now please review each element in the extraction result. Identify and improve any potential issues in the result based on the reflection. NOTE: If the original result is correct, no modifications are needed!
+Now please review each element in the extraction result. Identify and improve any potential issues in the result based on the reflection. NOTE: If the original result is correct, no modifications are needed! If there are any structural issues in the original result, fix them according to the output schema.
 
 **Task**: {instruction}
 
@@ -144,7 +144,7 @@ SUMMARIZE_INSTRUCTION = """
 **Result List**: {answer_list}
 {additional_info}
 **Output Schema**: {schema}
-Now summarize the information from the Result List.
+Now summarize the information from the Result List. Filter or merge the redundant information. The final answer MUST follow the ouput schema strictly.
 """
 summarize_instruction = PromptTemplate(
     input_variables=["instruction", "answer_list", "additional_info", "schema"],

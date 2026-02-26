@@ -10,29 +10,38 @@ extraction:
   task: Triple # task type, chosen from Base, NER, RE, EE.
   constraint: [
   [
-    "company", "subsidiary", "parent company", "board of directors",
-    "executive officer", "chief executive officer", "chief financial officer",
-    "auditor", "underwriter", "investor", "shareholder",
-    "common stock", "preferred stock", "warrants", "convertible notes",
-    "senior notes", "debt facility", "credit agreement",
-    "revenue", "net income", "operating income", "gross profit",
-    "cash and cash equivalents", "total assets", "total liabilities",
-    "shareholders’ equity", "earnings per share",
-    "acquisition", "merger", "purchase agreement", "offering",
-    "litigation", "risk factors", "material weakness",
-    "form 10-k", "form 10-q", "form 8-k", "registration statement"
+    "Company",
+    "Subsidiary",
+    "Executive",
+    "Board Member",
+    "Auditor",
+    "Underwriter",
+    "Investor",
+    "Shareholder",
+    "Financial Instrument",
+    "Debt Instrument",
+    "Equity Instrument",
+    "Financial Metric",
+    "Regulatory Filing",
+    "Legal Proceeding",
+    "Agreement"
   ],
   [
-    "reported", "recorded", "recognized",
-    "increased", "decreased", "increased by", "decreased by",
-    "totaled", "amounted to", "generated", "incurred",
-    "entered into", "issued", "sold", "acquired",
-    "appointed", "serves as", "resigned",
-    "is listed on", "is incorporated in",
-    "matures on", "bears interest at",
-    "filed", "was filed on", "declared effective",
-    "is subject to", "identified", "closed on",
-    "consists of", "includes", "represents"
+    "reports",
+    "recognizes",
+    "increases",
+    "decreases",
+    "amounts_to",
+    "incurs",
+    "issues",
+    "sells",
+    "acquires",
+    "appoints",
+    "resigns",
+    "files",
+    "enters_into",
+    "is_subject_to",
+    "matures_on"
   ]
 ]
   use_file: false # whether to use a file for the input text. Default set to false.
@@ -40,9 +49,3 @@ extraction:
   mode: customized # extraction mode, chosen from quick, detailed, customized. Default set to quick. See src/config.yaml for more details.
   update_case: false # whether to update the case repository. Default set to false.
   show_trajectory: false # whether to display the extracted intermediate steps
-
-# construct: # (Optional) If you want to construct a Knowledge Graph, you need to set the construct field, or you must delete this field.
-#   database: Neo4j # database type, now only support Neo4j.
-#   url:  # your database URL，Neo4j's default port is 7687.
-#   username:  # your database username.
-#   password:  # your database password.

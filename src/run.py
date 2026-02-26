@@ -21,7 +21,9 @@ Example:
 
 import os
 import argparse
+import tempfile
 from annotated_types import doc
+from matplotlib import text
 from utils import *
 from models import *
 from utils.document_classification import *
@@ -50,7 +52,7 @@ def main():
         
     # Load the trained document classification model from the models folder
     model_path = os.path.join(os.path.dirname(__file__), "models", "Document_Classifier.joblib")
-    model = load_document_classification_model(model_path)
+    model = load_tfidf_model(model_path)
         
     # Load the TF-IDF vectorizer from the models folder
     vectorizer_path = os.path.join(os.path.dirname(__file__), "models", "TFIDF_Vectorizer.joblib")
@@ -60,17 +62,25 @@ def main():
     texts = extract_text(loaded_files)
     text_lookup = {file: text for file, text in texts}
         
+    # Cleaen each text and add to cleaned_texts list
+    cleaned_texts = clean_texts(texts)
+        
     # Classify documents
-    classifications = classify_document_types(model, vectorizer, texts)
+    classifications = classify_document_types(model, vectorizer, cleaned_texts)
         
     # Output the classifications
     output_classifications(classifications)
     
-    # Section documents based on their classifications
-    sectioned_documents = section_documents(texts)
+    # Extract topics from the documents using the topic_extractor module
+    extract_topics_and_run_oneke(cleaned_texts, classifications, text_lookup)
     
-    # Run OneKE pipeline for knowledge extraction on the sectioned documents
-    run_oneke_pipeline(sectioned_documents, text_lookup, classifications)
+    
+    
+    # # Section documents based on their classifications
+    # sectioned_documents = section_documents(texts)
+    
+    # # Run OneKE pipeline for knowledge extraction on the sectioned documents
+    # run_oneke_pipeline(sectioned_documents, text_lookup, classifications)
     
 if __name__ == "__main__":
     main()

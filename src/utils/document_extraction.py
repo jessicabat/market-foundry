@@ -12,6 +12,7 @@ from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2t
 import time
 from utils import *
 from utils.document_classification import get_basename
+import topic_extractor, yaml_generator
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -31,49 +32,73 @@ CLASS_TO_CONFIG = {
     "Press Release": "press_release.yaml",
 }
 
-def run_oneke_from_text(file_path, text, document_type, section_name=None):
-    
-    output_base = os.path.join(REPO_ROOT, "new_outputs", get_basename(file_path))
-    os.makedirs(output_base, exist_ok=True)
-    case_dir = os.path.join(output_base, f"{document_type}_{section_name or 'full'}")
+# Extract topics from the documents using the topic_extractor module
+def extract_topics_and_run_oneke(texts, classifications, text_lookup):
+    for file, text in texts:
+        try:
+            with tempfile.TemporaryDirectory() as temp_dir:
 
-    
+                topics = topic_extractor.extract_topics(text)
+                
+                topic_configs = yaml_generator.generate_yaml_configs(
+                    get_basename(file),
+                    classifications[file],
+                    topics
+                )
+                
+                yaml_generator.write_yaml_files(
+                    topic_configs,
+                    output_dir=temp_dir,
+                    input_file_path=file
+                )
+
+                for temp_file in os.listdir(temp_dir):
+                    run_oneke_from_text(
+                        file_path=os.path.join(temp_dir, temp_file),
+                        text=text_lookup[file],
+                        document_type=classifications[file],
+                        base_config_dir=temp_dir,
+                    )
+            
+                # If you later run another pipeline stage that needs the YAMLs,
+                # run it HERE inside the with-block.
+        except Exception as e:
+                print(f"Error writing YAML files for {file}: {e}")
+                print(f"Running OneKE using default config for {classifications[file]} due to YAML generation failure.\n")
+                run_oneke_from_text(file, text_lookup[file], classifications[file])
+                continue
+
+def run_oneke_from_text(file_path, text, document_type, section_name=None, base_config_dir=None):
     start_time = time.time()
     base_config_name = CLASS_TO_CONFIG.get(document_type)
     if base_config_name is None:
         return
 
-    base_config_path = os.path.join(CONFIG_DIR, base_config_name)
+    if base_config_dir:
+        base_config_path = file_path
+    else:
+        base_config_path = os.path.join(CONFIG_DIR, base_config_name)
+    extraction_config_path = os.path.join(REPO_ROOT, "src", "utils", "extraction_config.yaml")
 
     # Load base config
     with open(base_config_path, "r") as f:
         config = yaml.safe_load(f)
-        
-    # --- SCHEMA CONFIG HERE ---
     
-    # Supports:
-    # - Open Source: LLaMA, Qwen, MiniCPM, ChatGLM
-    # - Closed Source: ChatGPT, DeepSeek, LocalServer
+    # Load reference config for extraction
+    with open(extraction_config_path) as f:
+        content = os.path.expandvars(f.read())
+    reference_config = yaml.safe_load(content)
     
-    config['model']['category'] = "Qwen" 
-    config['model']['model_name_or_path'] = "Qwen/Qwen2.5-1.5B-Instruct"
-    # config['model']['api_key'] = os.getenv("LM_STUDIO_API_KEY") 
-    # config['model']['base_url'] = os.getenv("LM_STUDIO_LOCAL_URL") 
-    # config['model']['base_url'] = os.getenv("LM_STUDIO_NETWORK_URL") 
+    # Merge reference config into temp config
+    for key in reference_config:
+        if key in config and isinstance(config[key], dict):
+            config[key].update(reference_config[key])
+        else:
+            config[key] = reference_config[key]
+            
+    # Update text in temp config
+    config['extraction']['text'] = text
     
-    config["extraction"]["text"] = text
-    config['extraction']["update_case"] = False # Controls whether to update the case repository with new extraction results.
-    config['extraction']["show_trajectory"] = True #False # Controls whether to display the intermediate steps of extraction.
-
-    config["extraction"]["case_dir"] = f"/tmp/oneke_{document_type}_{section_name}"
-    
-    # config['construct']['database'] = "Neo4j"
-    # config['construct']['url'] = os.getenv("NEO4J_URL")
-    # config['construct']['username'] = os.getenv("NEO4J_USERNAME")
-    # config['construct']['password'] = os.getenv("NEO4J_PASSWORD")
-    
-    # --- END SCHEMA CONFIG ---
-
     # Write temp config
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".yaml", delete=False
