@@ -38,7 +38,9 @@
       <img src="images/logo.png" alt="MarketFoundry logo" class="logo hero-logo">
       <p class="hero-tagline">From documents to intelligence — built your way.</p>
       <p class="hero-subtitle">
-        Turn earnings calls, strategy decks, and internal memos into queryable causal graphs
+        An open-source, API-first knowledge extraction engine that 
+        converts earnings calls, SEC filings, press releases, and research reports 
+        into queryable knowledge graphs.
       </p>
       <p class="hero-hook">
         Financial analysts dedicate hours reading reports to understand the causal relationships 
@@ -62,32 +64,27 @@
       <div class="problem-text">
         <h3>The Challenge</h3>
         <p>
-          Financial decision-making relies heavily on <strong>unstructured text data</strong>—
-          earnings call transcripts, strategy memos, press releases—yet this qualitative 
-          information is just as critical as numerical data. Causal claims like "higher pricing 
-          drove 15% revenue lift" or "omnichannel expansion accelerated branded TPV growth" 
-          contain the <em>why</em> behind the numbers.
-        </p>
-        <p>
-          Analysts dedicate countless hours manually reading through hundreds of pages across 
-          PDFs, Word documents, and HTML to piece together causal relationships. This manual 
-          process doesn't scale, and valuable insights remain scattered across document silos.
-        </p>
-        <h3>Our Solution</h3>
-        <p class="overview-summary">
-          We built a document-aware pipeline with <strong>custom extraction configurations</strong> 
-          for every financial document type. Each document—whether an earnings call, strategy deck, 
-          or internal memo—gets intelligently classified, sectioned, and routed to specialized schemas 
-          that capture the most accurate causal relationships. The result: a unified knowledge graph 
-          treating your unstructured text as rigorously as numerical data.
+          Traditional analysts spend hours manually reading through filings, transcripts, and 
+          reports to piece together what's driving revenue, risk, and growth. It's slow, it doesn't scale, 
+          and it keeps valuable context out of the tools that actually make decisions.
+          The firms building the next generation of financial analytics know that unstructured text can't 
+          stay unstructured. They're building RAG systems, analyst dashboards, and data pipelines — but 
+          without structured extraction upstream, documents still go in as raw text and insight still has 
+          to come out through manual effort.
+          Market Foundry changes that. Open-source and API-first, we give data-driven teams the extraction 
+          layer their pipelines are missing — so the narrative behind the numbers becomes just as queryable 
+          as the numbers themselves.
         </p>
 
-        <!-- <p>
-          Instead of reading 100+ pages to answer "What drove Q3's margin expansion?", query 
-          a unified knowledge graph built from all your documents. Our system synthesizes evidence 
-          from 50+ sources with complete citations and causal chains, treating unstructured text 
-          as a first-class data source alongside your quantitative metrics.
-        </p> -->
+        <h3>Our Solution: <i>Document-aware extraction, built for modern financial pipelines</i></h3>
+        <p class="overview-summary">
+          Market Foundry classifies each document, sections it intelligently, and routes it to specialized 
+          schemas that extract entities, relationships, and where present, causal structure. The result is 
+          a unified knowledge graph your existing tools can actually work with. Same RAG system, sharper 
+          retrieval. Same dashboard, richer context. Built open-source so you can integrate it, extend it, 
+          and make it your own.
+        </p>
+
       </div>
       <div class="problem-visual">
         <!-- TODO: Add before/after diagram -->
@@ -113,11 +110,56 @@
       </p>
       
       <div class="architecture-diagram">
-        <!-- TODO: Add architecture diagram image -->
-        <!-- <img src="assets/architecture.png" alt="MarketFoundry Architecture"> -->
-        <div class="visual-placeholder architecture-placeholder">
-          <p>📊 Architecture Diagram</p>
-          <p class="visual-caption">Pipeline: Upload → Classify → Section → Extract → Graph</p>
+        <div class="architecture-flow" aria-label="MarketFoundry pipeline architecture">
+          <div class="flow-track">
+            <div class="flow-stage">
+              <div class="flow-index">1</div>
+              <div class="flow-card">
+                <h4>Document Ingestion</h4>
+                <p>Multi-format financial documents normalized into structured text.</p>
+              </div>
+            </div>
+
+            <div class="flow-stage">
+              <div class="flow-index">2</div>
+              <div class="flow-card">
+                <h4>Document Classification</h4>
+                <p>Ensemble model routes each document to the appropriate extraction schema.</p>
+              </div>
+            </div>
+
+            <div class="flow-stage flow-stage-accent">
+              <div class="flow-index">3</div>
+              <div class="flow-card">
+                <h4>Dynamic Sectioning &amp; YAML Generation</h4>
+                <p>LLMs extract topics and auto-generate section-specific templates.</p>
+              </div>
+            </div>
+
+            <div class="flow-stage flow-stage-accent">
+              <div class="flow-index">4</div>
+              <div class="flow-card">
+                <h4>Schema-Guided Extraction</h4>
+                <p>OneKE + Qwen2.5-7B produce structured triples with citations.</p>
+              </div>
+            </div>
+
+            <div class="flow-stage">
+              <div class="flow-index">5</div>
+              <div class="flow-card">
+                <h4>Knowledge Graph Construction</h4>
+                <p>Cross-document triples are unified in Neo4j with provenance metadata.</p>
+              </div>
+            </div>
+
+            <div class="flow-stage">
+              <div class="flow-index">6</div>
+              <div class="flow-card">
+                <h4>Query, RAG, Analytics</h4>
+                <p>Query directly, plug into RAG workflows, or feed analytics pipelines.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -125,37 +167,37 @@
         <div class="step">
           <div class="step-number">1</div>
           <h3>Document Ingestion</h3>
-          <p>Upload PDF, DOCX, HTML, or TXT files. Our system handles any financial document format.</p>
-          <code>python src/run.py --file your_docs/</code>
+          <p>Upload PDF, DOCX, HTML, or JSON files. Market Foundry handles any financial document format; earnings calls, SEC filings, press releases, research reports, and news articles.</p>
         </div>
         
         <div class="step">
           <div class="step-number">2</div>
           <h3>Document Classification</h3>
-          <p>ML model automatically detects document types: Earnings Calls, Strategy Decks, Internal Memos, SEC Filings, Technical Reports, etc.</p>
+          <p>An ensemble ML model automatically detects document type and routes it to the appropriate extraction schema. No manual configuration needed.</p>
         </div>
         
         <div class="step">
           <div class="step-number">3</div>
           <h3>Intelligent Sectioning</h3>
-          <p>Each document type is sectioned differently. We're relying on LLMs to capture as valuable information as possible from each document. </p>
+          <p>LLMs extract topics dynamically and auto-generate YAML templates tailored to each section, preserving the context that generic text chunking would lose.</p>
+        </div>
         
         <div class="step">
           <div class="step-number">4</div>
           <h3>Schema Routing</h3>
-          <!-- <p>Zero-shot topic classification routes each section to specialized YAML schemas (ml_model_performance.yaml, revenue_drivers.yaml, etc.).</p> -->
+          <p>Each section is matched to a specialized extraction schema based on its topic, ensuring the right relationships get captured for the right content.</p>
         </div>
         
         <div class="step">
           <div class="step-number">5</div>
-          <h3>Causal Extraction</h3>
-          <p>OneKE + Qwen2.5-7B extracts structured causal triples (subject, predicate, object) with confidence scores and source citations.</p>
+          <h3>Extraction</h3>
+          <p>OneKE + Qwen2.5-7B extracts structured triples; subject, predicate, object, with source citations so every insight is traceable back to its document.</p>
         </div>
         
         <div class="step">
           <div class="step-number">6</div>
           <h3>Knowledge Graph</h3>
-          <p>All triples are stored in Neo4j, creating a unified causal graph you can query to gain a better understanding of the causal relationships.</p>
+          <p>All triples are stored in Neo4j, creating a unified graph across your entire document corpus. Query it directly, plug it into your RAG system, or pipe it into your analytics stack.</p>
         </div>
       </div>
 
@@ -274,7 +316,13 @@
         <div class="video-placeholder">
           <div class="visual-placeholder">
             <p>🎥 Demo Video</p>
-            <p class="visual-caption">Coming Soon: Upload → Extract → Query walkthrough</p>
+            <p class="visual-caption">
+              We're finalizing a full walkthrough demo. 
+              Check back before March 13 or come find us at the 
+              <a href="https://www.eventbrite.com/e/hdsi-2026-senior-capstone-showcase-tickets-1977302085766?aff=oddtdtcreator" target="_blank">
+                HDSI Capstone Showcase</a> 
+               on March 13 at the Price Center East Ballroom, UC San Diego.
+            </p>
           </div>
           <!-- Uncomment when video is ready:
           <video controls width="100%">
@@ -287,6 +335,8 @@
         <div class="demo-quickstart">
           <h3>Try It Yourself</h3>
           <div class="code-block">
+            <button class="copy-code-btn" type="button" aria-label="Copy quickstart commands" data-copy="git clone https://github.com/jessicabat/market-foundry
+cd market-foundry">Copy</button>
             <code>
 # Clone the repository<br>
 git clone https://github.com/jessicabat/market-foundry<br>
@@ -318,43 +368,27 @@ python src/build_graph.py --input-dir your_docs/<br> -->
       
       <div class="team-grid">
         <div class="team-member">
-          <!-- TODO: Add team member photo -->
-          <div class="member-photo-placeholder">
-            <span>👤</span>
-          </div>
-          <h3>Team Member 1</h3>
-          <p class="member-role"></p>
-          <p class="member-bio">
-            ...
-          </p>
+          <img src="images/matthew_headshot.png" alt="Matthew Wong headshot" class="member-photo">
+          <h3>Matthew Wong</h3>
           <div class="member-links">
-            <a href="#" target="_blank">GitHub</a>
-            <a href="#" target="_blank">LinkedIn</a>
+            <a href="https://github.com/mathyoutw" target="_blank">GitHub</a>
+            <a href="https://www.linkedin.com/in/mathyoutw/" target="_blank">LinkedIn</a>
           </div>
         </div>
 
         <!-- TODO: Add more team members -->
         <div class="team-member">
-          <div class="member-photo-placeholder">
-            <span>👤</span>
-          </div>
-          <h3>Team Member 2</h3>
-          <p class="member-role">Role</p>
-          <p class="member-bio">
-              ...
-          </p>
+          <img src="images/jessica_headshot.jpeg" alt="Jessica Batbayar headshot" class="member-photo">
+          <h3>Jessica Batbayar</h3>
           <div class="member-links">
-            <a href="#" target="_blank">GitHub</a>
-            <a href="#" target="_blank">LinkedIn</a>
+            <a href="https://github.com/jessicabat" target="_blank">GitHub</a>
+            <a href="https://www.linkedin.com/in/jessica-batbayar/" target="_blank">LinkedIn</a>
           </div>
         </div>
 
         <div class="team-member">
           <img src="images/marija_headshot.JPG" alt="Marija Vukic headshot" class="member-photo">
           <h3>Marija Vukic</h3>
-          <p class="member-bio">
-              ...
-          </p>
           <div class="member-links">
             <a href="https://github.com/marija-vukic" target="_blank">GitHub</a>
             <a href="https://www.linkedin.com/in/marija-vukic/" target="_blank">LinkedIn</a>

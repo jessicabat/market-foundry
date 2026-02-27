@@ -317,9 +317,80 @@ body {
   margin-bottom: 3rem;
 }
 
-.architecture-placeholder {
-  padding: 5rem 2rem;
-  font-size: 1.5rem;
+.architecture-flow {
+  background: linear-gradient(145deg, #f7f9fb 0%, #ffffff 100%);
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 14px;
+  padding: 1.25rem;
+  overflow-x: auto;
+}
+
+.flow-track {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(220px, 1fr));
+  gap: 1.5rem;
+  min-width: 1320px;
+}
+
+.flow-stage {
+  position: relative;
+}
+
+.flow-stage:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: calc(100% + 0.25rem);
+  width: 1rem;
+  height: 2px;
+  background: rgba(15, 185, 177, 0.6);
+}
+
+.flow-index {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #dfe5ea;
+  color: var(--midnight-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 auto 0.75rem;
+}
+
+.flow-card {
+  background: #ffffff;
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  border-radius: 12px;
+  padding: 1rem;
+  min-height: 190px;
+}
+
+.flow-card h4 {
+  font-size: 1.2rem;
+  color: var(--midnight-blue);
+  margin-bottom: 0.65rem;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.flow-card p {
+  font-size: 1.02rem;
+  color: var(--graphite);
+  line-height: 1.45;
+  text-align: center;
+}
+
+.flow-stage-accent .flow-index {
+  background: linear-gradient(135deg, #d96b18 0%, #ff9d3a 100%);
+  color: #fff;
+}
+
+.flow-stage-accent .flow-card {
+  border-color: rgba(15, 185, 177, 0.65);
+  box-shadow: 0 8px 20px rgba(15, 185, 177, 0.15);
 }
 
 .pipeline-steps {
@@ -553,12 +624,39 @@ body {
 }
 
 .code-block {
+  position: relative;
   background: #111827;
   color: #E6E8EB;
   padding: 1.5rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
   overflow-x: auto;
+}
+
+.copy-code-btn {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.copy-code-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.copy-code-btn.copied {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: var(--midnight-blue);
 }
 
 .code-block code {
@@ -795,6 +893,15 @@ footer {
 
   .section-title {
     font-size: 2rem;
+  }
+
+  .flow-track {
+    min-width: 1140px;
+    gap: 1rem;
+  }
+
+  .flow-card {
+    min-height: 170px;
   }
 
   .footer-content {
