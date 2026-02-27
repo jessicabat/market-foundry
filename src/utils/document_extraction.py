@@ -23,6 +23,12 @@ REPO_ROOT = os.path.abspath(
 
 CONFIG_DIR = os.path.join(REPO_ROOT, "Configs")
 ONEKE_RUN = os.path.join(REPO_ROOT, "OneKE", "src", "run.py")
+extraction_config_path = os.path.join(REPO_ROOT, "src", "utils", "extraction_config.yaml")
+
+# Load reference config for OneKE extraction
+with open(extraction_config_path) as f:
+        content = os.path.expandvars(f.read())
+reference_config = yaml.safe_load(content)
 
 CLASS_TO_CONFIG = {
     "Earnings Call Transcript": "earnings_call.yaml",
@@ -32,19 +38,29 @@ CLASS_TO_CONFIG = {
     "Press Release": "press_release.yaml",
 }
 
+
+
 # Extract topics from the documents using the topic_extractor module
 def extract_topics_and_run_oneke(texts, classifications, text_lookup):
     for file, text in texts:
         try:
             with tempfile.TemporaryDirectory() as temp_dir:
-
-                topics = topic_extractor.extract_topics(text)
                 
-                topic_configs = yaml_generator.generate_yaml_configs(
-                    get_basename(file),
-                    classifications[file],
-                    topics
-                )
+                if reference_config.get("model", {}).get("category", "LocalServer") == "LocalServer":
+                    topics = topic_extractor.extract_topics_openai(text)
+                    topic_configs = yaml_generator.generate_yaml_configs_openai(
+                        get_basename(file),
+                        classifications[file],
+                        topics
+                    )
+                else:
+                    topics = topic_extractor.extract_topics(text)
+                
+                    topic_configs = yaml_generator.generate_yaml_configs(
+                        get_basename(file),
+                        classifications[file],
+                        topics
+                    )
                 
                 yaml_generator.write_yaml_files(
                     topic_configs,
@@ -78,16 +94,10 @@ def run_oneke_from_text(file_path, text, document_type, section_name=None, base_
         base_config_path = file_path
     else:
         base_config_path = os.path.join(CONFIG_DIR, base_config_name)
-    extraction_config_path = os.path.join(REPO_ROOT, "src", "utils", "extraction_config.yaml")
 
     # Load base config
     with open(base_config_path, "r") as f:
         config = yaml.safe_load(f)
-    
-    # Load reference config for extraction
-    with open(extraction_config_path) as f:
-        content = os.path.expandvars(f.read())
-    reference_config = yaml.safe_load(content)
     
     # Merge reference config into temp config
     for key in reference_config:

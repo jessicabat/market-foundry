@@ -51,7 +51,10 @@ def _clean_text(text: str) -> str:
 def get_embedder():
     global _embedder
     if _embedder is None:
-        _embedder = SentenceTransformer(MODEL_NAME)
+        _embedder = SentenceTransformer(
+            MODEL_NAME,
+            tokenizer_kwargs={'clean_up_tokenization_spaces': True}
+            )
     return _embedder
 
 class KNNClassifier:

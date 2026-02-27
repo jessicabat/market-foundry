@@ -4,6 +4,8 @@ src/utils/.ipynb_checkpoints/
 src/utils/__pycache__/
 .DS_Store
 __pycache__/
+__pycache__
+.ipynb_checkpoints/
 .env
 .venv
 .ipynb_checkpoints

@@ -1,13 +1,14 @@
-FROM zjunlp/oneke:v4
-
-# Install git, jupyter, and Python dependencies
-RUN apt-get update && apt-get install -y git jupyter \
-    && pip install --no-cache-dir neo4j nltk \
-    && python -m nltk.downloader punkt punkt_tab -d /usr/local/share/nltk_data \
-    && ln -s $(which jupyter-notebook) /usr/local/bin/start-notebook.sh
-
-# Ensure NLTK looks in the right place
-ENV NLTK_DATA=/usr/local/share/nltk_data
+FROM continuumio/miniconda3:24.1.2-0
 
 WORKDIR /app
-CMD ["/bin/bash"]
+
+# Copy environment file first (better caching)
+COPY environment.yml .
+
+# Create environment, initialize conda for bash, and auto-activate environment
+RUN conda env create -f environment.yml && \
+  conda init bash && \
+  echo "conda activate market-foundry" >> ~/.bashrc
+
+# Start interactive shell with env activated
+CMD ["/bin/bash", "--login"]
