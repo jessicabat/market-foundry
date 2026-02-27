@@ -51,3 +51,25 @@ window.addEventListener('scroll', () => {
     }
   });
 });
+
+// Copy quickstart commands
+document.querySelectorAll('.copy-code-btn').forEach(button => {
+  button.addEventListener('click', async () => {
+    const text = button.dataset.copy || '';
+    if (!text) return;
+
+    const originalLabel = button.textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      button.textContent = 'Copied';
+      button.classList.add('copied');
+    } catch (err) {
+      button.textContent = 'Failed';
+    }
+
+    setTimeout(() => {
+      button.textContent = originalLabel;
+      button.classList.remove('copied');
+    }, 1200);
+  });
+});
