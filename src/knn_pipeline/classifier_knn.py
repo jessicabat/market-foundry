@@ -3,6 +3,7 @@ import os
 import re
 import pickle
 import numpy as np
+from collections import defaultdict
 from sentence_transformers import SentenceTransformer
 from pathlib import Path
 from typing import Optional, Tuple
@@ -40,10 +41,6 @@ def read_text_robust(path: str | Path, max_bytes: Optional[int] = None) -> Tuple
     return data.decode("utf-8", errors="replace"), "utf-8(replace)"
 
 def _clean_text(text: str) -> str:
-    """
-    Internal cleaner to ensure Apples-to-Apples comparison.
-    Strips weird binary characters and standardizes spacing.
-    """
     if not text: return ""
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     text = re.sub(r'[^\x20-\x7E\n\t]', '', text)
@@ -137,6 +134,8 @@ class KNNClassifier:
         similarities = np.dot(self.embeddings, query_vec)
         k = min(5, len(self.labels))
         top_k_idx = np.argsort(similarities)[-k:]
+
+        weighted_votes = defaultdict(float)
 
         for i in top_k_idx:
             label = self.labels[i]
