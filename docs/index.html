@@ -11,7 +11,10 @@
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="nav-container">
-      <a href="#overview" class="nav-logo">MarketFoundry</a>
+      <a href="#overview" class="nav-logo">
+        <img src="images/logo.png" alt="MarketFoundry logo" class="nav-logo-image">
+        <span class="nav-logo-text">Market Foundry</span>
+      </a>
       <ul class="nav-menu">
         <li><a href="#overview" class="nav-link">Overview</a></li>
         <li><a href="#problem" class="nav-link">Problem</a></li>
@@ -32,10 +35,8 @@
   <!-- Hero / Overview Section -->
   <section id="overview" class="hero">
     <div class="hero-content">
-      <!-- TODO: Add logo image here -->
-      <!-- <img src="assets/marketfoundry-logo.png" alt="MarketFoundry Logo" class="logo"> -->
-      <h1 class="hero-title">MarketFoundry</h1>
-      <p class="hero-tagline">Extract causal knowledge from financial documents</p>
+      <img src="images/logo.png" alt="MarketFoundry logo" class="logo hero-logo">
+      <p class="hero-tagline">From documents to intelligence — built your way.</p>
       <p class="hero-subtitle">
         Turn earnings calls, strategy decks, and internal memos into queryable causal graphs
       </p>
@@ -349,26 +350,23 @@ python src/build_graph.py --input-dir your_docs/<br> -->
         </div>
 
         <div class="team-member">
-          <div class="member-photo-placeholder">
-            <span>👤</span>
-          </div>
-          <h3>Team Member 3</h3>
-          <p class="member-role">Role</p>
+          <img src="images/marija_headshot.JPG" alt="Marija Vukic headshot" class="member-photo">
+          <h3>Marija Vukic</h3>
           <p class="member-bio">
               ...
           </p>
           <div class="member-links">
-            <a href="#" target="_blank">GitHub</a>
-            <a href="#" target="_blank">LinkedIn</a>
+            <a href="https://github.com/marija-vukic" target="_blank">GitHub</a>
+            <a href="https://www.linkedin.com/in/marija-vukic/" target="_blank">LinkedIn</a>
           </div>
         </div>
       </div>
 
       <div class="course-info">
-        <h3>UCSD DSC Capstone</h3>
+        <h3><a href="https://dsc-capstone.org/showcase-26/" target="_blank">UCSD DSC Capstone</a></h3>
         <p><strong>Domain:</strong> NLP & IR</p>
-        <p><strong>Mentor:</strong> Biwei Huang</p>
-        <p><strong>Course:</strong> Data Science Capstone Project</p>
+        <p><strong>Mentor:</strong> <a href="https://biweihuang.com/" target="_blank">Biwei Huang</a></p>
+        <p><strong>Course:</strong> <a href="https://dsc-capstone.org/" target="_blank">Data Science Capstone Project</a></p>
       </div>
     </div>
   </section>
@@ -402,7 +400,7 @@ python src/build_graph.py --input-dir your_docs/<br> -->
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 MarketFoundry, turn documents into intelligence — built your way</p>
+        <p>&copy; 2026 MarketFoundry | From documents to intelligence — built your way.</p>
       </div>
     </div>
   </footer>
