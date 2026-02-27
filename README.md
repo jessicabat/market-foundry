@@ -124,11 +124,11 @@ OneKE by default supports the following model APIs:
 
 > **Note:** The chosen **LocalServer** must have an OpenAI-compatible API for seamless integration with OneKE. We used **LM Studio** in our experiments, but you can use any LocalServer that meets this requirement.
 
-In addition to the default APIs, OneKE also supports the following model categories from Hugging Face:
-1. **LLaMA**  
-2. **Qwen**  
-3. **ChatGLM**  
-4. **MiniCPM**  
+In addition to the default API's, OneKE also supports the following model categories from Hugging Face:
+1. **LLaMA**
+2. **Qwen**	
+3. **ChatGLM**
+4. **MiniCPM**
 5. **DeepSeek-R1**
 
 > **Note:** OneKE’s own model does *not* support triple extraction, so we did not include it in the list of supported models for our use case. However, you can still use it for other tasks OneKE supports, such as Named Entity Recognition (NER), Relation Extraction (RE), and Event Extraction (EE).
@@ -140,9 +140,9 @@ In `src/utils/extraction_config.yaml`, you can specify any Hugging Face model fr
 ```yaml
 model:
   category: LocalServer
-  model_name_or_path: "qwen/qwen3-4b-2507"
-  api_key: ""
-  base_url: ${LM_STUDIO_URL}
+  model_name_or_path: "qwen/qwen3-4b-2507"  # API identifier for your LocalServer model
+  api_key: ""  # API key may be required for authentication, depending on your setup
+  base_url: ${LM_STUDIO_URL} # For a LocalServer config we use an LM Studio server on our local network
 ```
 
 For safety, we recommend using environment variables to store sensitive information such as API keys and database credentials. You can set these in your terminal or include them in a `.env` file (ensure it is added to `.gitignore` to prevent accidental commits).
@@ -152,9 +152,9 @@ For safety, we recommend using environment variables to store sensitive informat
 ```yaml
 model:
   category: Qwen
-  model_name_or_path: "Qwen/Qwen3-4B-Instruct-2507"
-  api_key: ""
-  base_url: ""
+  model_name_or_path: "Qwen/Qwen3-4B-Instruct-2507"  # Use the Hugging Face model identifier (username/model-name)
+  api_key: "" # API key is not required for Hugging Face models, but you can include it if your model requires authentication
+  base_url: "" # Not required for Hugging Face models, but you can include it if your model requires a custom endpoint
 ```
 
 ---
@@ -195,5 +195,4 @@ python src/run.py --folder <path_to_folder>
 ---
 
 ## Final Thoughts  
-
 This pipeline provides a reproducible framework for transforming unstructured financial documents into structured knowledge graphs. Its modular design allows flexible model selection, deployment configuration, and database integration across environments.
