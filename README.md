@@ -27,7 +27,7 @@ Document (`.pdf`, `.txt`, `.docx`, `.html`, `.json`) → Document Classification
 
 Our project focuses on transforming unstructured financial documents into a structured knowledge graph using **Neo4j**. We use **OneKE**, an open-source framework, to extract entities and relationships from these documents through a pipeline that includes classification, sectioning, and semantic understanding.
 
-We designed the system to process selected financial papers through OneKE, producing a structured knowledge graph stored in Neo4j.
+The system processes financial documents through OneKE and constructs a structured knowledge graph in Neo4j.
 
 To reproduce our results, users can choose between:  
 -   A `conda` environment setup  
@@ -57,17 +57,14 @@ By default, the environment is named `market-foundry`. You can customize this na
 
 #### Docker Setup  
 
-Go to the root directory of the repo and execute the following commands to pull our image and launch a container:
-
-> ⚠️ **Note:** The GitHub image includes two versions—**Windows-compatible (`amd64`)** and **Mac-compatible (`arm64`)**. To select the correct version, ensure your tag is either:  
-> - `:latest` for `arm64` (macOS)  
-> - `:amd64` for `amd64` (Windows)
+Navigate to the root directory of the repo and execute the following commands to build our image and launch a container:
 
 ```bash
-docker pull ghcr.io/mathyoutw/causal-nlp-extraction:<tag>
-docker run -it \
-  -v <path_to_causal-nlp-extraction>:/app/causal-nlp-extraction \
-  causal-nlp-extraction
+docker build -t market-foundry .
+# For Mac/Linux
+docker run -v $(pwd):/app market-foundry
+# For Windows Powershell
+docker run -v {PWD}:/app market-foundry
 ```
 
 #### For Users with an NVIDIA GPU  
@@ -75,10 +72,7 @@ docker run -it \
 To enable GPU acceleration, use the NVIDIA runtime:
 
 ```bash
-docker pull ghcr.io/mathyoutw/causal-nlp-extraction:<tag>
-docker run -it --gpus all \
-  -v <path_to_causal-nlp-extraction>:/app/causal-nlp-extraction \
-  causal-nlp-extraction
+docker run --gpus all -v $(pwd):/app market-foundry
 ```
 
 #### Neo4j Database Setup  
@@ -104,7 +98,7 @@ construct: # Required for knowledge graph construction
   database: Neo4j  
   url: neo4j+s://<database-id>.databases.neo4j.io  
   username: neo4j  
-  password: "<database_password>"
+  password: <database_password>
 ```
 
 #### Neo4j Local Example (On-Device)  
@@ -114,7 +108,7 @@ construct: # Required for knowledge graph construction
   database: Neo4j  
   url: bolt://localhost:7687  # Default port is 7687  
   username: neo4j  
-  password: "<database_password>"
+  password: <database_password>
 ```
 
 ---
@@ -134,7 +128,7 @@ In addition to the default API's, OneKE also supports the following model catego
 2. **Qwen**	
 3. **ChatGLM**
 4. **MiniCPM**
-6. **DeepSeek-R1**  (Category will depend on distilled version)
+5. **DeepSeek-R1**
 
 > **Note**: OneKE's own model does *not* support Triple Extraction, so we did not include it in the list of supported models for our case. However, you can still use it for the other tasks OneKE supports such as: Named Entity Recognition (NER), Relation Extraction (RE) and Event Extraction (EE).
 
@@ -146,7 +140,7 @@ In `src/utils/extraction_config.yaml`, you can specify any Hugging Face model fr
 model:
   category: LocalServer
   model_name_or_path: "qwen/qwen3-4b-2507"  # API identifier for your LocalServer model
-  api_key: ${LM_STUDIO_API_KEY}  # API key may be required for authentication, depending on your setup
+  api_key: ""  # API key may be required for authentication, depending on your setup
   base_url: ${LM_STUDIO_URL} # For a LocalServer config we use an LM Studio server on our local network
 ```
 
@@ -158,13 +152,13 @@ For safety, we recommend using environment variables to store sensitive informat
 model:
   category: Qwen
   model_name_or_path: "Qwen/Qwen3-4B-Instruct-2507"  # Use the Hugging Face model identifier (username/model-name)
-  api_key: "" # Not required for Hugging Face models, but you can include it if your model requires authentication
+  api_key: "" # API key is not required for Hugging Face models, but you can include it if your model requires authentication
   base_url: "" # Not required for Hugging Face models, but you can include it if your model requires a custom endpoint
 ```
 
 ## Running Market Foundry Pipeline  
 
-After activating your environment or launching the Docker container, navigate to the root directory of the project and run the pipeline via `run.py` in the `src` folder.
+After activating your environment or launching the Docker container, run the pipeline using `src/run.py`.
 
 We used **Qwen3-4B-Instruct-2507** from Hugging Face — an open-source, instruction-tuned model ideal for financial document understanding. This model excels at interpreting complex text and extracting relevant entities and relationships.
 
@@ -206,4 +200,4 @@ Once authenticated, you’re ready to run the pipeline.
 ---
 
 ## Final Thoughts  
-This workflow enables seamless transformation of unstructured financial documents into a rich, interconnected knowledge graph—powered by open-source tools, accessible models, and modular configuration. Whether using conda or Docker, users can replicate our pipeline with minimal friction and full control over model selection, environment setup, and database integration.
+This pipeline provides a reproducible framework for transforming unstructured financial documents into structured knowledge graphs. Its modular design allows flexible model selection, deployment configuration, and database integration across environments.
