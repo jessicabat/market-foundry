@@ -2,8 +2,8 @@
 # - Open Source: LLaMA, Qwen, MiniCPM, ChatGLM
 # - Closed Source: ChatGPT, DeepSeek, LocalServer
 model:
-  category: "Qwen"
-  model_name_or_path: "Qwen/Qwen2.5-1.5B-Instruct"
+  category: "LocalServer"
+  model_name_or_path: "qwen/qwen3-4b-2507"
   api_key: ""
   # base_url: ${LM_STUDIO_LOCAL_URL}
 
