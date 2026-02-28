@@ -36,7 +36,7 @@ class ReflectionAgent:
             result_trails = []
             result_trails.append(data.result_list)
             extract_func = getattr(self.extractor, extract_func)
-            temperature = [0.3, 0.5]
+            temperature = [0.1, 0.3]
             for index in range(len(temperature)):
                 self.module.llm.set_hyperparameter(temperature=temperature[index])
                 data = extract_func(data)

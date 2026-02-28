@@ -30,7 +30,6 @@ SYSTEM_PROMPT = """You are an expert financial information extraction system.
     - quantitative attributes (has_revenue, has_net_income, has_margin, valued_at)
 
     STRICT GROUNDING RULES:
-
     - Do NOT infer causation unless explicitly stated.
     - Do NOT infer competitive implications unless explicitly stated.
     - Do NOT interpret sentiment or market reaction beyond explicit price movement.
@@ -39,20 +38,17 @@ SYSTEM_PROMPT = """You are an expert financial information extraction system.
     - Avoid promotional or forward-looking narrative unless tied to a concrete measurable action.
 
     SPEECH AND REPORTING RULES:
-
     - Exclude generic reporting verbs (e.g., "said", "stated", "announced") unless:
     - the communication itself is the key fact (e.g., earnings announcement, SEC filing, guidance issuance).
     - For earnings calls or filings, extract the financial fact — not the speech act.
 
     QUANTITATIVE DISCIPLINE:
-
     - Preserve numeric values exactly as written.
     - Extract percentages, dollar amounts, dates, time periods, and quantities as explicit entities.
     - Prefer atomic quantitative triples (e.g., revenue → was → $3.2 billion).
     - Do NOT embed long narrative phrases in tails.
 
     ENTITY REQUIREMENTS:
-
     HEADS and TAILS must:
     - Be concrete real-world entities.
     - Be nouns or noun phrases.
@@ -60,13 +56,11 @@ SYSTEM_PROMPT = """You are an expert financial information extraction system.
     - Not represent abstract interpretations, behaviors, or conditions.
 
     RELATION REQUIREMENTS:
-
     - Must be atomic verbs or short verb phrases.
     - Must reflect explicit textual wording.
     - Must not encode interpretation or analysis.
 
     TYPE DISCIPLINE:
-
     - head_type and tail_type must be stable reusable categories such as:
     Company, Stock, Financial Metric, Revenue, Net Income, Asset, Liability,
     Portfolio, Index, Product, Service, Filing, Regulatory Body, Agreement,
@@ -76,19 +70,28 @@ SYSTEM_PROMPT = """You are an expert financial information extraction system.
     - Do NOT encode states or interpretations as types.
 
     OUTPUT FORMAT (STRICT):
-
     {
-    "triple_list": [
-        {
-        "head": "",
-        "head_type": "",
-        "relation": "",
-        "relation_type": "",
-        "tail": "",
-        "tail_type": ""
-        }
-    ]
+        "triple_list": [
+            {
+            "head": "",
+            "head_type": "",
+            "relation": "",
+            "relation_type": "",
+            "tail": "",
+            "tail_type": ""
+            }
+        ]
     }
+    
+    SCHEMA ENFORCEMENT RULES (MANDATORY):
+    - The output must contain exactly one top-level key: "triple_list".
+    - Each object must contain exactly these six keys:
+    "head", "head_type", "relation", "relation_type", "tail", "tail_type".
+    - No additional keys are allowed.
+    - Do NOT output a JSON schema definition.
+    - Do NOT describe the format.
+    - Do NOT wrap the JSON in markdown.
+    - Output must begin with "{" and end with "}".
 
     Output ONLY valid JSON.
     Do NOT output explanations.
@@ -344,9 +347,9 @@ class LocalServer(BaseEngine):
         self.name = model_name_or_path.split('/')[-1]
         self.model = model_name_or_path
         self.base_url = base_url
-        self.temperature = 0.2
-        self.top_p = 0.9
-        self.max_tokens = 1024
+        self.temperature = 0.1
+        self.top_p = 1.0
+        self.max_tokens = 512
         self.api_key = api_key if api_key != "" else "EMPTY_API_KEY"
         self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
 
