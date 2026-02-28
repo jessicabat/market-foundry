@@ -38,18 +38,20 @@ CLASS_TO_CONFIG = {
     "Press Release": "press_release.yaml",
 }
 
-
-
 # Extract topics from the documents using the topic_extractor module
 def extract_topics_and_run_oneke(texts, classifications, text_lookup):
+    total_files = len(texts)
+    index = 1
     for file, text in texts:
+        file_name = os.path.splitext(file)[0]
         try:
             with tempfile.TemporaryDirectory() as temp_dir:
                 
                 if reference_config.get("model", {}).get("category", "LocalServer") == "LocalServer":
                     topics = topic_extractor.extract_topics_openai(text)
+                    
                     topic_configs = yaml_generator.generate_yaml_configs_openai(
-                        get_basename(file),
+                        file_name,
                         classifications[file],
                         topics
                     )
@@ -57,7 +59,7 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
                     topics = topic_extractor.extract_topics(text)
                 
                     topic_configs = yaml_generator.generate_yaml_configs(
-                        get_basename(file),
+                        file_name,
                         classifications[file],
                         topics
                     )
@@ -79,10 +81,12 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
                 # If you later run another pipeline stage that needs the YAMLs,
                 # run it HERE inside the with-block.
         except Exception as e:
-                print(f"Error writing YAML files for {file}: {e}")
-                print(f"Running OneKE using default config for {classifications[file]} due to YAML generation failure.\n")
-                run_oneke_from_text(file, text_lookup[file], classifications[file])
-                continue
+            print(f"Error writing YAML files for {file}")
+            print(f"Running OneKE using default config for {classifications[file]} due to YAML generation failure.\n")
+            run_oneke_from_text(file, text_lookup[file], classifications[file])
+        finally:
+            print(f"Completed processing {index} of {total_files} files.\n")
+            index += 1
 
 def run_oneke_from_text(file_path, text, document_type, section_name=None, base_config_dir=None):
     start_time = time.time()
@@ -131,9 +135,9 @@ def run_oneke_from_text(file_path, text, document_type, section_name=None, base_
         if os.path.exists(temp_config_path):
             os.remove(temp_config_path)
     if section_name:
-        print(f"Processed {get_basename(file_path)} - Section: {section_name} in {time.time() - start_time:.2f} seconds.\n")
+        print(f"Processed {get_basename(file_path)} - Section: {section_name} in {time.time() - start_time:.2f} seconds.")
     else:
-        print(f"Processed {get_basename(file_path)} in {time.time() - start_time:.2f} seconds.\n")
+        print(f"Processed {get_basename(file_path)} in {time.time() - start_time:.2f} seconds.")
             
 # Run OneKE for knowledge extraction on each section of each document
 def run_oneke_pipeline(sectioned_documents, text_lookup, classifications):

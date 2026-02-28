@@ -37,7 +37,7 @@ def safe_json_parse(text):
 
     # Try direct parse first
     try:
-        print("\nObserved Topics:\n", text)
+        print( text)
         json_response = json.loads(text)
         return json_response
     except:
@@ -289,8 +289,8 @@ def generate_yaml_configs(document_name, document_type, topic_map):
 
     outputs = model.generate(
         **inputs,
-        max_new_tokens=1200,
-        temperature=0.2
+        max_new_tokens=1024,
+        temperature=0.1
     )
 
     response = tokenizer.decode(
