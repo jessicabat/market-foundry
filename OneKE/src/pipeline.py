@@ -3,6 +3,7 @@ from models import *
 from utils import *
 from modules import *
 from construct import *
+import os
 
 
 class Pipeline:
@@ -118,6 +119,42 @@ class Pipeline:
             print("Extraction Trajectory: \n", json.dumps(data.get_result_trajectory(), indent=2))
         extraction_result = json.dumps(data.pred, indent=2)
         print("Extraction Result: \n", extraction_result)
+
+        # Write extraction result to file
+        output_path = "Results/extraction_result.json"
+        
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+        try:
+            # If file does not exist or is empty, initialize as JSON array
+            if not os.path.exists(output_path) or os.path.getsize(output_path) == 0:
+                with open(output_path, "w", encoding="utf-8") as f:
+                    f.write("[\n")
+                    f.write(extraction_result)
+                    f.write("\n]")
+            else:
+                # Append into existing JSON array properly
+                with open(output_path, "r+", encoding="utf-8") as f:
+                    content = f.read().strip()
+                    f.seek(0)
+                    f.truncate()
+
+                    # Remove closing bracket
+                    if content.endswith("]"):
+                        content = content[:-1].rstrip()
+
+                    # Add comma if needed
+                    if content.endswith("}"):
+                        content += ",\n"
+
+                    content += extraction_result + "\n]"
+
+                    f.write(content)
+
+            print(f"Extraction result written to {output_path}")
+        except Exception as e:
+            print(f"Failed to write extraction result to file: {e}")
 
         # construct KG
         if iskg:

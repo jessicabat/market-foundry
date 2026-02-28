@@ -191,7 +191,7 @@ def extract_topics(document):
         raise ValueError("Model returned empty response")
 
     # return json.loads(response)
-    print("\nObserved Topics:\n", response)
+    # print("\nObserved Topics:\n", response)
     try:
         response = response.strip()
 
