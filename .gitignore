@@ -7,4 +7,3 @@ __pycache__/
 .env
 .venv
 .ipynb_checkpoints
-src/knn_pipeline/reference_docs
