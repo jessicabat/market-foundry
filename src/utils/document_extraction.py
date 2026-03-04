@@ -43,7 +43,7 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
     total_files = len(texts)
     index = 1
     for file, text in texts:
-        file_name = os.path.splitext(file)[0]
+        file_name = get_basename(file).split(".")[0]  # Get filename without extension for YAML naming
         try:
             with tempfile.TemporaryDirectory() as temp_dir:
                 

@@ -122,10 +122,8 @@ class Pipeline:
 
         # Write extraction result to file
         output_path = "Results/extraction_result.json"
-        
         # Ensure directory exists
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
         try:
             # If file does not exist or is empty, initialize as JSON array
             if not os.path.exists(output_path) or os.path.getsize(output_path) == 0:
