@@ -109,60 +109,6 @@
         document type to extract the most valuable causal relationships.
       </p>
       
-      <div class="architecture-diagram">
-        <div class="architecture-flow" aria-label="MarketFoundry pipeline architecture">
-          <div class="flow-track">
-            <div class="flow-stage">
-              <div class="flow-index">1</div>
-              <div class="flow-card">
-                <h4>Document Ingestion</h4>
-                <p>Multi-format financial documents normalized into structured text.</p>
-              </div>
-            </div>
-
-            <div class="flow-stage">
-              <div class="flow-index">2</div>
-              <div class="flow-card">
-                <h4>Document Classification</h4>
-                <p>Ensemble model routes each document to the appropriate extraction schema.</p>
-              </div>
-            </div>
-
-            <div class="flow-stage flow-stage-accent">
-              <div class="flow-index">3</div>
-              <div class="flow-card">
-                <h4>Dynamic Sectioning &amp; YAML Generation</h4>
-                <p>LLMs extract topics and auto-generate section-specific templates.</p>
-              </div>
-            </div>
-
-            <div class="flow-stage flow-stage-accent">
-              <div class="flow-index">4</div>
-              <div class="flow-card">
-                <h4>Schema-Guided Extraction</h4>
-                <p>OneKE + Qwen2.5-7B produce structured triples with citations.</p>
-              </div>
-            </div>
-
-            <div class="flow-stage">
-              <div class="flow-index">5</div>
-              <div class="flow-card">
-                <h4>Knowledge Graph Construction</h4>
-                <p>Cross-document triples are unified in Neo4j with provenance metadata.</p>
-              </div>
-            </div>
-
-            <div class="flow-stage">
-              <div class="flow-index">6</div>
-              <div class="flow-card">
-                <h4>Query, RAG, Analytics</h4>
-                <p>Query directly, plug into RAG workflows, or feed analytics pipelines.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="pipeline-steps">
         <div class="step">
           <div class="step-number">1</div>
