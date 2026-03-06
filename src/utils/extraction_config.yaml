@@ -4,8 +4,8 @@
 model:
   category: "LocalServer"
   model_name_or_path: "qwen/qwen3-4b-2507"
-  api_key: "Local Server"
-  base_url: http://127.0.0.1:1234
+  api_key: ""
+  base_url: "http://127.0.0.1:1234/v1"
 
 extraction:
   update_case: false # Controls whether to update the case repository with new extraction results.
@@ -14,6 +14,6 @@ extraction:
 # For knowledge graph construction, comment out if not desired.
 construct:
   database: "Neo4j"
-  url: ${NEO4J_URL}
+  url: ${NEO4J_URI}
   username: ${NEO4J_USERNAME}
   password: ${NEO4J_PASSWORD}
