@@ -162,7 +162,7 @@ class MarketFoundryPipeline:
         If neo4j_* credentials are provided, triples are written to the
         user's own Neo4j instance. Otherwise, results are returned as JSON only.
         """
-        import tempfile, yaml, importlib, json as _json
+        import tempfile, yaml, importlib, json as _json, re
         from utils.document_classification import (
             load_file, extract_text, clean_texts,
             classify_document_types, output_classifications,
@@ -224,50 +224,36 @@ class MarketFoundryPipeline:
 
             sectioned_documents = section_documents(texts)
 
-            extract_topics_and_run_oneke(cleaned_texts, classifications, text_lookup)
-
-            # Read extracted triples — OneKE writes to Results/ relative to cwd
-            # Search both the repo root and cwd to handle either case
-            all_triples = []
-            for results_path in [
-                f"{self.repo_root}/Results/extraction_result.json",
-                os.path.join(os.getcwd(), "Results", "extraction_result.json"),
-                "/root/Results/extraction_result.json",
-                "/Results/extraction_result.json",
-            ]:
-                try:
-                    with open(results_path) as f:
-                        extraction_result = _json.load(f)
-                    all_triples = extraction_result.get("triple_list", [])
-                    print(f"Read {len(all_triples)} triples from {results_path}")
-                    break
-                except FileNotFoundError:
-                    continue
-                except Exception as e:
-                    print(f"Could not read extraction results from {results_path}: {e}")
-                    break
-            if not all_triples:
-                print("Warning: no triples found in any results path")
+            # extract_topics_and_run_oneke now returns accumulated triples from all YAML runs
+            all_triples = extract_topics_and_run_oneke(cleaned_texts, classifications, text_lookup) or []
+            print(f"Total triples collected across all YAML runs: {len(all_triples)}")
 
             # Filter out malformed entries — model sometimes outputs plain strings
             # like "description", "items", "title", "type" inside triple_list
             all_triples = [t for t in all_triples if isinstance(t, dict) and t.get("head") and t.get("tail")]
             print(f"Clean triple count after filtering: {len(all_triples)}")
 
-            # Optionally push triples to user's Neo4j
+            # Push triples to user's Neo4j
             neo4j_count = 0
             if neo4j_uri and neo4j_username and neo4j_password:
+                print(f"Connecting to Neo4j at {neo4j_uri} as {neo4j_username}...")
                 try:
                     from neo4j import GraphDatabase
                     driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_username, neo4j_password))
                     with driver.session() as session:
                         for triple in all_triples:
+                            rel = triple.get("relation_type") or triple.get("relation") or "RELATED_TO"
+                            rel_label = re.sub(r"[^a-zA-Z0-9_]", "_", rel).upper() or "RELATED_TO"
+                            cypher = (
+                                f"MERGE (h:Entity {{name: $head}}) "
+                                f"SET h.type = $head_type "
+                                f"MERGE (t:Entity {{name: $tail}}) "
+                                f"SET t.type = $tail_type "
+                                f"MERGE (h)-[r:{rel_label}]->(t) "
+                                f"SET r.relation = $relation"
+                            )
                             session.run(
-                                """
-                                MERGE (h:Entity {name: $head, type: $head_type})
-                                MERGE (t:Entity {name: $tail, type: $tail_type})
-                                MERGE (h)-[r:RELATION {type: $relation}]->(t)
-                                """,
+                                cypher,
                                 head=triple.get("head", ""),
                                 head_type=triple.get("head_type", ""),
                                 tail=triple.get("tail", ""),
@@ -278,6 +264,7 @@ class MarketFoundryPipeline:
                         record = result.single()
                         neo4j_count = record["cnt"] if record else 0
                     driver.close()
+                    print(f"Neo4j write complete: {neo4j_count} relationships in graph")
                 except Exception as e:
                     print(f"Neo4j write error: {e}")
 
