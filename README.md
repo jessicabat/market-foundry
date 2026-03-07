@@ -65,6 +65,7 @@ We organized our codebase into the following structure for clarity and modularit
   - `construct.py`: Script to construct the Neo4j graph from extracted triples (can be run separately if needed)
   - `extraction_results.json`: Extracted triples from the documents
 - `docs/`: Website documentation files
+- `evaluation_notebook.ipynb`: Notebook for evaluating the document classifier model
 - Setup Files:
   - `requirements.txt`: Python dependencies for the project
   - `environment.yml`: Conda environment configuration
