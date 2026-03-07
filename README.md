@@ -40,7 +40,7 @@ First, clone the repository and ensure that Docker Desktop or conda is installed
 ### Workflow Overview  
 ```mermaid
 flowchart LR
-    A["Document<br/>.pdf · .txt · .docx · .html · .json"] --> B["Document Classification"]
+    A["Document<br/>.pdf&nbsp;|&nbsp;.txt&nbsp;|&nbsp;.docx&nbsp;|&nbsp;.html&nbsp;|&nbsp;.json"] --> B["Document<br/>Classification"]
     B --> C["Dynamic Topic<br/>Extraction"]
     C --> D["Knowledge<br/>Extraction"]
     D --> E["Neo4j Graph<br/>Construction"]
