@@ -493,25 +493,35 @@ body {
   padding: 2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease;
+
+  display: flex;
+  flex-direction: column;
 }
 
 .example-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-}
-
-.example-card h3 {
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
-  color: #111827;
+  min-height: 2.8em;
 }
 
 .example-visual {
   margin-bottom: 1.5rem;
+  height: 220px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-graph {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .example-triples h4 {
   font-size: 1.1rem;
+  margin-top: auto;
   margin-bottom: 0.75rem;
   color: #2A2D34;
 }
