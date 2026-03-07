@@ -1,0 +1,8 @@
+# src/api/requirements.txt
+# Additional deps for the Modal API layer (on top of your existing environment.yml)
+
+modal>=0.73.0
+fastapi[standard]>=0.111.0
+python-multipart>=0.0.9
+uvicorn[standard]>=0.29.0
+neo4j>=5.20.0
