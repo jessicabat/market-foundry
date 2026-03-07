@@ -5,7 +5,7 @@ model:
   category: "Qwen"
   model_name_or_path: "Qwen/Qwen2.5-3B-Instruct"
   api_key: ""
-  # base_url: ${LM_STUDIO_LOCAL_URL}
+  base_url: ""
 
 extraction:
   update_case: false # Controls whether to update the case repository with new extraction results.

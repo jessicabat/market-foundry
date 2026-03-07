@@ -86,7 +86,6 @@ def _read_and_clear_triples():
 def extract_topics_and_run_oneke(texts, classifications, text_lookup):
     total_files = len(texts)
     index = 1
-    all_triples = []
     for file, text in texts:
         file_name = get_basename(file).split(".")[0]  # Get filename without extension for YAML naming
         try:
@@ -114,6 +113,8 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
                     output_dir=temp_dir,
                     input_file_path=file
                 )
+                
+                successful_topic_extractions += 1
 
                 for temp_file in os.listdir(temp_dir):
                     run_oneke_from_text(
@@ -131,9 +132,8 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
             run_oneke_from_text(file, text_lookup[file], classifications[file])
             all_triples.extend(_read_and_clear_triples())
         finally:
-            print(f"Completed processing {index} of {total_files} files.\n")
+            print(f"Completed processing {index} of {total_files} files.")
             index += 1
-    return all_triples
 
 def run_oneke_from_text(file_path, text, document_type, section_name=None, base_config_dir=None):
     start_time = time.time()

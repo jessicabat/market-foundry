@@ -120,7 +120,29 @@ REFLECT_INSTRUCTION = """**Instruction**: You are an agent skilled in reflection
 
 **Reflection Reference**: {examples}
 
-Now please review each element in the extraction result. Identify and improve any potential issues in the result based on the reflection. NOTE: If the original result is correct, no modifications are needed! If there are any structural issues in the original result, fix them according to the output schema.
+Now review each element in the extraction result and improve it if necessary while preserving the original meaning.
+
+IMPORTANT RULES:
+
+1. Do NOT change the relation_types. They must remain exactly as they appear in the original extraction result.
+
+2. Normalize entity names to avoid duplicates:
+   - If multiple variations of the same entity appear (e.g., "Nvidia", "Nvidia Corporation", "Nvidia (NVDA)"), normalize them to a single canonical form.
+   - Prefer the format: "Company Name (Ticker)" when a ticker symbol is available.
+   - Example: "Nvidia", "Nvidia Corporation", and "Nvidia (NVDA)" → "Nvidia (NVDA)".
+
+3. Ensure entity consistency across triples:
+   - If the same entity appears in multiple triples, use the exact same normalized name each time.
+
+4. Fix structural issues only if necessary:
+   - Ensure the output strictly follows the required JSON schema.
+   - Ensure each triple contains: head, head_type, relation, relation_type, tail, tail_type.
+
+5. Do NOT invent new information or relationships that were not present in the original extraction.
+
+6. If the original triple is already correct, do not modify it.
+
+Return the corrected result strictly in valid JSON format following the schema.
 
 **Task**: {instruction}
 
