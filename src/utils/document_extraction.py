@@ -113,11 +113,16 @@ def run_oneke_from_text(file_path, text, document_type, section_name=None, base_
     # Update text in temp config
     config['extraction']['text'] = text
     
+    # Strip construct block before passing to OneKE subprocess.
+    # We handle Neo4j writes ourselves after cleaning the triple list,
+    # because OneKE's convert.py crashes on malformed triples (plain strings in triple_list).
+    config_for_oneke = {k: v for k, v in config.items() if k != "construct"}
+
     # Write temp config
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".yaml", delete=False
     ) as tmp:
-        yaml.safe_dump(config, tmp)
+        yaml.safe_dump(config_for_oneke, tmp)
         temp_config_path = tmp.name
 
     # Run OneKE with safe cleanup

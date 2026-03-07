@@ -1,5 +1,4 @@
 from sympy import content
-
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from topic_extractor import load_model_hf, load_model_openai
 from openai import OpenAI
@@ -16,7 +15,7 @@ load_dotenv()
 BASE_YAML_TEMPLATE = {
     "model": {
         "category": "Qwen",
-        "model_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+        "model_name_or_path": "Qwen/Qwen2.5-1.5B-Instruct",
         "api_key": "",
         "base_url": "",
         "device": "auto"
