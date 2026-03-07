@@ -42,6 +42,7 @@ CLASS_TO_CONFIG = {
 def extract_topics_and_run_oneke(texts, classifications, text_lookup):
     total_files = len(texts)
     index = 1
+    successful_topic_extractions = 0
     for file, text in texts:
         file_name = get_basename(file).split(".")[0]  # Get filename without extension for YAML naming
         try:
@@ -69,6 +70,8 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
                     output_dir=temp_dir,
                     input_file_path=file
                 )
+                
+                successful_topic_extractions += 1
 
                 for temp_file in os.listdir(temp_dir):
                     run_oneke_from_text(
@@ -85,8 +88,9 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
             print(f"Running OneKE using default config for {classifications[file]} due to YAML generation failure.\n")
             run_oneke_from_text(file, text_lookup[file], classifications[file])
         finally:
-            print(f"Completed processing {index} of {total_files} files.\n")
+            print(f"Completed processing {index} of {total_files} files.")
             index += 1
+    print(f"Successful topic extractions: {successful_topic_extractions}/{total_files}\n")
 
 def run_oneke_from_text(file_path, text, document_type, section_name=None, base_config_dir=None):
     start_time = time.time()

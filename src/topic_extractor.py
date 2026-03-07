@@ -9,8 +9,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+with open(os.path.join(os.path.dirname(__file__), "utils", "extraction_config.yaml")) as f:
+        config = yaml.safe_load(f)
+        model_info = config.get("model", {})
+
+MODEL = model_info.get("model_name_or_path", "")
+# Expand environment variables if present in the config
+base_url = os.path.expandvars(str(model_info.get("base_url", "")))
+api_key = os.path.expandvars(str(model_info.get("api_key", "")))
+
 def load_model_hf():
-    MODEL = "Qwen/Qwen2.5-1.5B-Instruct"
     tokenizer = AutoTokenizer.from_pretrained(
         MODEL,
     )
@@ -18,19 +26,14 @@ def load_model_hf():
         MODEL,
         torch_dtype=torch.float16,
         device_map="auto",
+        trust_remote_code=True,
     )
     return tokenizer, model
     
 def load_model_openai():
-    with open(os.path.join(os.path.dirname(__file__), "utils", "extraction_config.yaml")) as f:
-        config = yaml.safe_load(f)
-    model_info = config.get("model", {})
-    
-    MODEL = model_info.get("model_name_or_path", "")
-    
     client = OpenAI(
-        api_key=os.getenv("LM_STUDIO_API_KEY"),
-        base_url=os.getenv("LM_STUDIO_LOCAL_URL"),
+        base_url=base_url,
+        api_key=api_key
     )
     return MODEL, client
 
