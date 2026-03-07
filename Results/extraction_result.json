@@ -3437,5 +3437,957 @@
       "tail_type": "Regulatory Filing"
     }
   ]
+},
+{
+  "triple_list": [
+    {
+      "head": "Nvidia (NVDA)",
+      "head_type": "Company",
+      "relation": "drops_by",
+      "relation_type": "price_change",
+      "tail": "6%",
+      "tail_type": "percentage"
+    },
+    {
+      "head": "Nvidia (NVDA)",
+      "head_type": "Company",
+      "relation": "loses_value_of",
+      "relation_type": "market_value",
+      "tail": "$243 billion",
+      "tail_type": "monetary value"
+    },
+    {
+      "head": "Nvidia (NVDA)",
+      "head_type": "Company",
+      "relation": "has_market_value",
+      "relation_type": "financial metric",
+      "tail": "over $5 trillion",
+      "tail_type": "market value"
+    },
+    {
+      "head": "Meta (META)",
+      "head_type": "Company",
+      "relation": "is_in_talks_to_spend",
+      "relation_type": "financial action",
+      "tail": "billions on Google's AI chips",
+      "tail_type": "financial metric"
+    },
+    {
+      "head": "Google (GOOGL)",
+      "head_type": "Company",
+      "relation": "offers",
+      "relation_type": "product provision",
+      "tail": "AI chips",
+      "tail_type": "technology platform"
+    },
+    {
+      "head": "Google (GOOGL)",
+      "head_type": "Company",
+      "relation": "operates_with",
+      "relation_type": "technology platform",
+      "tail": "tensor processing units",
+      "tail_type": "technology platform"
+    },
+    {
+      "head": "Meta (META)",
+      "head_type": "Company",
+      "relation": "may_use",
+      "relation_type": "technology deployment",
+      "tail": "Google's TPUs in data centers",
+      "tail_type": "technology platform"
+    },
+    {
+      "head": "Meta (META)",
+      "head_type": "Company",
+      "relation": "may_rent_from",
+      "relation_type": "financial arrangement",
+      "tail": "Google's cloud division",
+      "tail_type": "service provider"
+    },
+    {
+      "head": "Nvidia (NVDA)",
+      "head_type": "Company",
+      "relation": "claims_oversight_of",
+      "relation_type": "market leadership",
+      "tail": "every AI model",
+      "tail_type": "technology platform"
+    },
+    {
+      "head": "Nvidia (NVDA)",
+      "head_type": "Company",
+      "relation": "claims_oversight_of",
+      "relation_type": "market leadership",
+      "tail": "all computing environments",
+      "tail_type": "technology platform"
+    },
+    {
+      "head": "Nvidia (NVDA)",
+      "head_type": "Company",
+      "relation": "claims_oversight_of",
+      "relation_type": "market leadership",
+      "tail": "AI model performance",
+      "tail_type": "technology platform"
+    },
+    {
+      "head": "Google (GOOGL)",
+      "head_type": "Company",
+      "relation": "has_market_value",
+      "relation_type": "financial metric",
+      "tail": "up ~2%",
+      "tail_type": "percentage"
+    },
+    {
+      "head": "Advanced Micro Devices (AMD)",
+      "head_type": "Company",
+      "relation": "loses_value_of",
+      "relation_type": "market value",
+      "tail": "over 9%",
+      "tail_type": "percentage"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "Meta Platforms (META)",
+      "head_type": "Company",
+      "relation": "considers_deal_with",
+      "relation_type": "deal",
+      "tail": "Google (GOOGL)",
+      "tail_type": "Company"
+    },
+    {
+      "head": "Google (GOOGL)",
+      "head_type": "Company",
+      "relation": "plans_to_rent_from",
+      "relation_type": "financial arrangement",
+      "tail": "Meta Platforms (META)",
+      "tail_type": "Company"
+    },
+    {
+      "head": "Meta Platforms (META)",
+      "head_type": "Company",
+      "relation": "uses_in_data_centers",
+      "relation_type": "data center application",
+      "tail": "tensor processing units",
+      "tail_type": "Product"
+    },
+    {
+      "head": "NVIDIA Corporation (NVDA)",
+      "head_type": "Company",
+      "relation": "offers_tech_platform",
+      "relation_type": "technology offering",
+      "tail": "every AI model",
+      "tail_type": "Product"
+    },
+    {
+      "head": "NVIDIA Corporation (NVDA)",
+      "head_type": "Company",
+      "relation": "offers_tech_platform",
+      "relation_type": "technology offering",
+      "tail": "computing is done",
+      "tail_type": "computing environment"
+    },
+    {
+      "head": "NVIDIA Corporation (NVDA)",
+      "head_type": "Company",
+      "relation": "offers_tech_platform",
+      "relation_type": "technology offering",
+      "tail": "ASICs",
+      "tail_type": "Product"
+    },
+    {
+      "head": "NVIDIA Corporation (NVDA)",
+      "head_type": "Company",
+      "relation": "offers_tech_platform",
+      "relation_type": "technology offering",
+      "tail": "greater performance",
+      "tail_type": "performance attribute"
+    },
+    {
+      "head": "NVIDIA Corporation (NVDA)",
+      "head_type": "Company",
+      "relation": "offers_tech_platform",
+      "relation_type": "technology offering",
+      "tail": "versatility",
+      "tail_type": "performance attribute"
+    },
+    {
+      "head": "NVIDIA Corporation (NVDA)",
+      "head_type": "Company",
+      "relation": "offers_tech_platform",
+      "relation_type": "technology offering",
+      "tail": "fungibility",
+      "tail_type": "performance attribute"
+    },
+    {
+      "head": "Advanced Micro Devices (AMD)",
+      "head_type": "Company",
+      "relation": "faces_competition_from",
+      "relation_type": "market competition",
+      "tail": "Google's tensor processing units",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Advanced Micro Devices (AMD)",
+      "head_type": "Company",
+      "relation": "faces_competition_from",
+      "relation_type": "market competition",
+      "tail": "NVIDIA Corporation (NVDA)",
+      "tail_type": "Company"
+    },
+    {
+      "head": "Google (GOOGL)",
+      "head_type": "Company",
+      "relation": "has_product",
+      "relation_type": "product offering",
+      "tail": "tensor processing units",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Alphabet (GOOGL)",
+      "head_type": "Company",
+      "relation": "has_product",
+      "relation_type": "product offering",
+      "tail": "Gemini AI model",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Advanced Micro Devices (AMD)",
+      "head_type": "Company",
+      "relation": "saw_market_value_drop",
+      "relation_type": "financial movement",
+      "tail": "9%",
+      "tail_type": "percentage"
+    },
+    {
+      "head": "NVIDIA Corporation (NVDA)",
+      "head_type": "Company",
+      "relation": "saw_market_value_drop",
+      "relation_type": "financial movement",
+      "tail": "243 billion",
+      "tail_type": "monetary value"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "Nvidia (NVDA)",
+      "head_type": "Company",
+      "relation": "stock_drops_by",
+      "relation_type": "stock_drops_by",
+      "tail": "6%",
+      "tail_type": "Percentage"
+    },
+    {
+      "head": "Nvidia (NVDA)",
+      "head_type": "Company",
+      "relation": "stock_drops_by",
+      "relation_type": "stock_drops_by",
+      "tail": "$243 billion",
+      "tail_type": "MarketValue"
+    },
+    {
+      "head": "Google parent Alphabet (GOOGL)",
+      "head_type": "Company",
+      "relation": "stock_rises_by",
+      "relation_type": "stock_rises_by",
+      "tail": "2%",
+      "tail_type": "Percentage"
+    },
+    {
+      "head": "Advanced Micro Devices (AMD)",
+      "head_type": "Company",
+      "relation": "stock_drops_by",
+      "relation_type": "stock_drops_by",
+      "tail": "over 9%",
+      "tail_type": "Percentage"
+    },
+    {
+      "head": "Meta Platforms (META)",
+      "head_type": "Company",
+      "relation": "is_in_talks_to_spend",
+      "relation_type": "is_in_talks_to_spend",
+      "tail": "billions on Google's AI chips",
+      "tail_type": "FinancialMetric"
+    },
+    {
+      "head": "Meta Platforms (META)",
+      "head_type": "Company",
+      "relation": "plans_to_use",
+      "relation_type": "plans_to_use",
+      "tail": "Google's tensor processing units (TPUs)",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Nvidia (NVDA)",
+      "head_type": "Company",
+      "relation": "is_leader_in",
+      "relation_type": "has_market_position",
+      "tail": "the industry",
+      "tail_type": "MarketPosition"
+    },
+    {
+      "head": "Nvidia (NVDA)",
+      "head_type": "Company",
+      "relation": "competes_with",
+      "relation_type": "competes_with",
+      "tail": "Google's AI chips",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Nvidia (NVDA)",
+      "head_type": "Company",
+      "relation": "competes_with",
+      "relation_type": "competes_with",
+      "tail": "Advanced Micro Devices",
+      "tail_type": "Competitor"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "Eswar Prasad",
+      "head_type": "Economist",
+      "relation": "calls",
+      "relation_type": "naming",
+      "tail": "doom loop",
+      "tail_type": "economic concept"
+    },
+    {
+      "head": "doom loop",
+      "head_type": "economic concept",
+      "relation": "is_defined_as",
+      "relation_type": "definition",
+      "tail": "where massive geopolitical and economic forces feed off each other and send us careening into disorder",
+      "tail_type": "description"
+    },
+    {
+      "head": "Eswar Prasad's new book",
+      "head_type": "book",
+      "relation": "is_titled",
+      "relation_type": "title",
+      "tail": "The Doom Loop: Why the World Economic Order Is Spiraling into Disorder",
+      "tail_type": "book title"
+    },
+    {
+      "head": "The Doom Loop",
+      "head_type": "book",
+      "relation": "explains",
+      "relation_type": "content",
+      "tail": "why the world economic order is spiraling into disorder",
+      "tail_type": "economic phenomenon"
+    },
+    {
+      "head": "economic forces",
+      "head_type": "economic concept",
+      "relation": "feed_off",
+      "relation_type": "interaction",
+      "tail": "geopolitical forces",
+      "tail_type": "economic concept"
+    },
+    {
+      "head": "global economy",
+      "head_type": "economic system",
+      "relation": "experiences",
+      "relation_type": "economic condition",
+      "tail": "bad news",
+      "tail_type": "news sentiment"
+    },
+    {
+      "head": "Planet Money",
+      "head_type": "podcast",
+      "relation": "features",
+      "relation_type": "content",
+      "tail": "the doom loop",
+      "tail_type": "economic concept"
+    },
+    {
+      "head": "financial panics",
+      "head_type": "Market Event",
+      "relation": "is_part_of",
+      "relation_type": "component",
+      "tail": "doom loop",
+      "tail_type": "economic concept"
+    },
+    {
+      "head": "inflation",
+      "head_type": "Economic Indicator",
+      "relation": "is_part_of",
+      "relation_type": "component",
+      "tail": "doom loop",
+      "tail_type": "economic concept"
+    },
+    {
+      "head": "trade wars",
+      "head_type": "Market Event",
+      "relation": "is_part_of",
+      "relation_type": "component",
+      "tail": "doom loop",
+      "tail_type": "economic concept"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "public perception",
+      "head_type": "Public Perception",
+      "relation": "reflects",
+      "relation_type": "perception shaping",
+      "tail": "the global economy feeling like it's all bad news",
+      "tail_type": "Public Perception"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "trade wars",
+      "head_type": "Economic Disruption",
+      "relation": "is_triggered_by",
+      "relation_type": "interacts_with",
+      "tail": "geopolitical and economic forces",
+      "tail_type": "Geopolitical Event"
+    },
+    {
+      "head": "financial panics",
+      "head_type": "Economic Disruption",
+      "relation": "experiences_disruption",
+      "relation_type": "is_influenced_by",
+      "tail": "geopolitical and economic forces",
+      "tail_type": "Geopolitical Event"
+    },
+    {
+      "head": "inflation",
+      "head_type": "Economic Disruption",
+      "relation": "amplifies",
+      "relation_type": "shares_forces",
+      "tail": "geopolitical and economic forces",
+      "tail_type": "Geopolitical Event"
+    },
+    {
+      "head": "Eswar Prasad",
+      "head_type": "Economist",
+      "relation": "calls",
+      "relation_type": "shares_forces",
+      "tail": "doom loop",
+      "tail_type": "Economic System"
+    },
+    {
+      "head": "The Doom Loop",
+      "head_type": "Book",
+      "relation": "is_defined_as",
+      "relation_type": "leads_to",
+      "tail": "world economic order spiraling into disorder",
+      "tail_type": "Economic System"
+    },
+    {
+      "head": "Planet Money",
+      "head_type": "Podcast",
+      "relation": "discusses",
+      "relation_type": "participates_in",
+      "tail": "economic doom loop",
+      "tail_type": "Economic System"
+    },
+    {
+      "head": "Eswar Prasad's new book",
+      "head_type": "Book",
+      "relation": "is_titled",
+      "relation_type": "shares_forces",
+      "tail": "The Doom Loop: Why the World Economic Order Is Spiraling into Disorder",
+      "tail_type": "Book Title"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "stock portfolio optimization",
+      "head_type": "Investment",
+      "relation": "is_based_on",
+      "relation_type": "methodological foundation",
+      "tail": "machine learning techniques",
+      "tail_type": "OptimizationMethod"
+    },
+    {
+      "head": "stock portfolio optimization",
+      "head_type": "Investment",
+      "relation": "uses_method",
+      "relation_type": "technical approach",
+      "tail": "neural network models",
+      "tail_type": "OptimizationMethod"
+    },
+    {
+      "head": "stock portfolio optimization",
+      "head_type": "Investment",
+      "relation": "compares_with",
+      "relation_type": "performance evaluation",
+      "tail": "baseline index of S&P 500",
+      "tail_type": "Index"
+    },
+    {
+      "head": "dataset",
+      "head_type": "Asset",
+      "relation": "consists_of",
+      "relation_type": "data composition",
+      "tail": "daily information from Yahoo Finance",
+      "tail_type": "Asset"
+    },
+    {
+      "head": "dataset",
+      "head_type": "Asset",
+      "relation": "has_return",
+      "relation_type": "financial attribute",
+      "tail": "daily closing prices and volume",
+      "tail_type": "Return"
+    },
+    {
+      "head": "dataset",
+      "head_type": "Asset",
+      "relation": "has_risk",
+      "relation_type": "financial attribute",
+      "tail": "volatility of stock returns",
+      "tail_type": "Risk"
+    },
+    {
+      "head": "portfolio",
+      "head_type": "Portfolio",
+      "relation": "has_weight_distribution",
+      "relation_type": "portfolio structure",
+      "tail": "stock constituents with fixed quantities",
+      "tail_type": "Asset"
+    },
+    {
+      "head": "portfolio",
+      "head_type": "Portfolio",
+      "relation": "consists_of",
+      "relation_type": "composition",
+      "tail": "stocks with ticker symbols and quantities",
+      "tail_type": "Stock"
+    },
+    {
+      "head": "portfolio",
+      "head_type": "Portfolio",
+      "relation": "optimizes_for",
+      "relation_type": "objective function",
+      "tail": "maximizing return on investment",
+      "tail_type": "Return"
+    },
+    {
+      "head": "mean-variance optimization",
+      "head_type": "OptimizationMethod",
+      "relation": "is_based_on",
+      "relation_type": "theoretical foundation",
+      "tail": "Markowitz (1952)",
+      "tail_type": "Asset"
+    },
+    {
+      "head": "mean-variance optimization",
+      "head_type": "OptimizationMethod",
+      "relation": "uses_method",
+      "relation_type": "technical implementation",
+      "tail": "expectation of returns and covariance between stock returns",
+      "tail_type": "Risk"
+    },
+    {
+      "head": "mean-variance optimization",
+      "head_type": "OptimizationMethod",
+      "relation": "compares_with",
+      "relation_type": "performance evaluation",
+      "tail": "classical portfolio optimization models",
+      "tail_type": "OptimizationMethod"
+    },
+    {
+      "head": "student foundation investment committee portfolio",
+      "head_type": "Portfolio",
+      "relation": "is_targeted_by",
+      "relation_type": "project focus",
+      "tail": "this project",
+      "tail_type": "Investment"
+    },
+    {
+      "head": "student foundation investment committee portfolio",
+      "head_type": "Portfolio",
+      "relation": "has_weight_distribution",
+      "relation_type": "portfolio structure",
+      "tail": "fixed quantities of stocks over time",
+      "tail_type": "Asset"
+    },
+    {
+      "head": "student foundation investment committee portfolio",
+      "head_type": "Portfolio",
+      "relation": "has_return",
+      "relation_type": "financial attribute",
+      "tail": "a reasonable rate of return of +150%",
+      "tail_type": "Return"
+    },
+    {
+      "head": "LSTM neural network",
+      "head_type": "Neural Network Architecture",
+      "relation": "has component",
+      "relation_type": "has component",
+      "tail": "forget gate",
+      "tail_type": "neural network component"
+    },
+    {
+      "head": "LSTM neural network",
+      "head_type": "Neural Network Architecture",
+      "relation": "has component",
+      "relation_type": "has component",
+      "tail": "input gate",
+      "tail_type": "neural network component"
+    },
+    {
+      "head": "LSTM neural network",
+      "head_type": "Neural Network Architecture",
+      "relation": "has component",
+      "relation_type": "has component",
+      "tail": "cell state",
+      "tail_type": "neural network component"
+    },
+    {
+      "head": "LSTM neural network",
+      "head_type": "Neural Network Architecture",
+      "relation": "has component",
+      "relation_type": "has component",
+      "tail": "output gate",
+      "tail_type": "neural network component"
+    },
+    {
+      "head": "MVO-based Neural Network",
+      "head_type": "OptimizationMethod",
+      "relation": "achieves",
+      "relation_type": "performance_comparison",
+      "tail": "dominating performance over other models",
+      "tail_type": "Return"
+    },
+    {
+      "head": "MVO-based neural networks",
+      "head_type": "OptimizationMethod",
+      "relation": "performed similarly to",
+      "relation_type": "compares_with",
+      "tail": "the actual portfolio held by the school committee",
+      "tail_type": "Portfolio"
+    },
+    {
+      "head": "MVO-based neural networks",
+      "head_type": "OptimizationMethod",
+      "relation": "was outperformed by",
+      "relation_type": "compares_with",
+      "tail": "basic MVO",
+      "tail_type": "Portfolio"
+    },
+    {
+      "head": "performance gap",
+      "head_type": "Risk",
+      "relation": "is due to",
+      "relation_type": "causal relation",
+      "tail": "presence of an outlier company (Nvidia)",
+      "tail_type": "Asset"
+    },
+    {
+      "head": "MVO-based neural networks",
+      "head_type": "OptimizationMethod",
+      "relation": "will converge with",
+      "relation_type": "compares_with",
+      "tail": "S&P 500",
+      "tail_type": "Index"
+    },
+    {
+      "head": "MVO-based neural networks",
+      "head_type": "OptimizationMethod",
+      "relation": "will converge with",
+      "relation_type": "compares_with",
+      "tail": "actual portfolio",
+      "tail_type": "Portfolio"
+    },
+    {
+      "head": "project",
+      "head_type": "Investment",
+      "relation": "aims to provide",
+      "relation_type": "has_goal",
+      "tail": "optimal neural network structures and portfolio optimization algorithms",
+      "tail_type": "OptimizationMethod"
+    },
+    {
+      "head": "project",
+      "head_type": "Investment",
+      "relation": "will serve as",
+      "relation_type": "has_function",
+      "tail": "a complementary tool for portfolio management",
+      "tail_type": "Service"
+    },
+    {
+      "head": "project",
+      "head_type": "Investment",
+      "relation": "will provide",
+      "relation_type": "has_function",
+      "tail": "more information about portfolios",
+      "tail_type": "Information"
+    },
+    {
+      "head": "project",
+      "head_type": "Investment",
+      "relation": "will help",
+      "relation_type": "has_effect",
+      "tail": "traders make more educated decisions about asset management",
+      "tail_type": "Decision"
+    },
+    {
+      "head": "project",
+      "head_type": "Investment",
+      "relation": "will work in tandem with",
+      "relation_type": "uses_method",
+      "tail": "dedicated wealth management services and applications",
+      "tail_type": "Service"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "stock portfolio optimization",
+      "head_type": "Model",
+      "relation": "is_targeted_by",
+      "relation_type": "application",
+      "tail": "Student Foundation Investment Committee portfolio",
+      "tail_type": "Portfolio"
+    },
+    {
+      "head": "Student Foundation Investment Committee portfolio",
+      "head_type": "Portfolio",
+      "relation": "has_net_value",
+      "relation_type": "financial attribute",
+      "tail": "150%",
+      "tail_type": "ReturnOnInvestment"
+    },
+    {
+      "head": "stock portfolio optimization",
+      "head_type": "Model",
+      "relation": "uses",
+      "relation_type": "method",
+      "tail": "neural network models",
+      "tail_type": "Model"
+    },
+    {
+      "head": "neural network models",
+      "head_type": "Model",
+      "relation": "are_used_for",
+      "relation_type": "purpose",
+      "tail": "portfolio optimization",
+      "tail_type": "PerformanceMetric"
+    },
+    {
+      "head": "dataset",
+      "head_type": "Dataset",
+      "relation": "is_obtained_from",
+      "relation_type": "source",
+      "tail": "Yahoo Finance",
+      "tail_type": "Data Source"
+    },
+    {
+      "head": "dataset",
+      "head_type": "Dataset",
+      "relation": "contains",
+      "relation_type": "data attribute",
+      "tail": "daily information",
+      "tail_type": "PerformanceMetric"
+    },
+    {
+      "head": "dataset",
+      "head_type": "Dataset",
+      "relation": "has_time_period",
+      "relation_type": "time span",
+      "tail": "10 years",
+      "tail_type": "TimePeriod"
+    },
+    {
+      "head": "Student Foundation Investment Committee portfolio",
+      "head_type": "Portfolio",
+      "relation": "has_stock_ticker_data",
+      "relation_type": "data attribute",
+      "tail": "Symbol (Ticker)",
+      "tail_type": "Stock"
+    },
+    {
+      "head": "Student Foundation Investment Committee portfolio",
+      "head_type": "Portfolio",
+      "relation": "has_constant_quantity",
+      "relation_type": "quantitative condition",
+      "tail": "quantities decided by stock analysts",
+      "tail_type": "Stock"
+    },
+    {
+      "head": "Mean-variance Optimization",
+      "head_type": "Model",
+      "relation": "is_used_for",
+      "relation_type": "purpose",
+      "tail": "stock portfolio optimization",
+      "tail_type": "PerformanceMetric"
+    },
+    {
+      "head": "Mean-variance Optimization",
+      "head_type": "Model",
+      "relation": "minimizes",
+      "relation_type": "objective",
+      "tail": "volatility",
+      "tail_type": "PerformanceMetric"
+    },
+    {
+      "head": "Mean-variance Optimization",
+      "head_type": "Model",
+      "relation": "maximizes",
+      "relation_type": "objective",
+      "tail": "return on investment",
+      "tail_type": "ReturnOnInvestment"
+    },
+    {
+      "head": "project",
+      "head_type": "Model",
+      "relation": "evaluates_by",
+      "relation_type": "performance metric",
+      "tail": "return on investment",
+      "tail_type": "ReturnOnInvestment"
+    },
+    {
+      "head": "project results",
+      "head_type": "PerformanceMetric",
+      "relation": "is_compared_to",
+      "relation_type": "comparison",
+      "tail": "S&P 500",
+      "tail_type": "Index"
+    },
+    {
+      "head": "project results",
+      "head_type": "PerformanceMetric",
+      "relation": "outperforms",
+      "relation_type": "performance comparison",
+      "tail": "baseline index",
+      "tail_type": "Benchmark"
+    },
+    {
+      "head": "project results",
+      "head_type": "PerformanceMetric",
+      "relation": "achieves_return",
+      "relation_type": "financial outcome",
+      "tail": "150%",
+      "tail_type": "ReturnOnInvestment"
+    },
+    {
+      "head": "LSTM model",
+      "head_type": "Model",
+      "relation": "has_training_steps",
+      "relation_type": "process",
+      "tail": "Data Preprocessing, Model Training, Hyperparameter Tuning, Model Evaluation",
+      "tail_type": "sequence"
+    },
+    {
+      "head": "MVO-based neural networks",
+      "head_type": "Model",
+      "relation": "performed similarly to",
+      "relation_type": "performance comparison",
+      "tail": "the actual portfolio held by the school committee",
+      "tail_type": "Portfolio"
+    },
+    {
+      "head": "MVO-based neural networks",
+      "head_type": "Model",
+      "relation": "is outperformed by",
+      "relation_type": "performance comparison",
+      "tail": "basic MVO",
+      "tail_type": "Model"
+    },
+    {
+      "head": "performance gap",
+      "head_type": "PerformanceMetric",
+      "relation": "is due to",
+      "relation_type": "causal relation",
+      "tail": "presence of an outlier company (Nvidia)",
+      "tail_type": "Outlier"
+    },
+    {
+      "head": "MVO-based neural networks",
+      "head_type": "Model",
+      "relation": "exhibits_outlier",
+      "relation_type": "exhibits_outlier",
+      "tail": "Nvidia",
+      "tail_type": "Company"
+    },
+    {
+      "head": "MVO-based neural networks",
+      "head_type": "Model",
+      "relation": "achieves_return",
+      "relation_type": "achieves_return",
+      "tail": "S&P 500",
+      "tail_type": "Index"
+    },
+    {
+      "head": "MVO-based neural networks",
+      "head_type": "Model",
+      "relation": "is_benchmarked_against",
+      "relation_type": "is_benchmarked_against",
+      "tail": "actual portfolio",
+      "tail_type": "Portfolio"
+    },
+    {
+      "head": "MVO-based neural networks",
+      "head_type": "Model",
+      "relation": "converges with",
+      "relation_type": "performance comparison",
+      "tail": "S&P 500",
+      "tail_type": "Index"
+    },
+    {
+      "head": "MVO-based neural networks",
+      "head_type": "Model",
+      "relation": "converges with",
+      "relation_type": "performance comparison",
+      "tail": "actual portfolio",
+      "tail_type": "Portfolio"
+    },
+    {
+      "head": "the project",
+      "head_type": "Project",
+      "relation": "aims to",
+      "relation_type": "goal",
+      "tail": "shed light on optimal neural network structures and portfolio optimization algorithms",
+      "tail_type": "Research Objective"
+    },
+    {
+      "head": "the project",
+      "head_type": "Project",
+      "relation": "will serve as",
+      "relation_type": "functional purpose",
+      "tail": "a complementary tool for portfolio management in the real world",
+      "tail_type": "Application"
+    },
+    {
+      "head": "the project",
+      "head_type": "Project",
+      "relation": "will provide",
+      "relation_type": "service provision",
+      "tail": "more information about portfolios to traders",
+      "tail_type": "Information Service"
+    },
+    {
+      "head": "traders",
+      "head_type": "User Group",
+      "relation": "will be helped to make",
+      "relation_type": "decision support",
+      "tail": "more educated decisions about asset management",
+      "tail_type": "Decision Outcome"
+    },
+    {
+      "head": "the project",
+      "head_type": "Project",
+      "relation": "will work with",
+      "relation_type": "partnership",
+      "tail": "dedicated wealth management services and applications",
+      "tail_type": "Service"
+    }
+  ]
 }
 ]

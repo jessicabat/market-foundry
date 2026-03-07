@@ -27,9 +27,9 @@ def merge_market_foundry_triples(url, user, password, json_file_path):
                 "head": triple["head"],
                 "tail": triple["tail"],
                 "relation": triple["relation"],
-                "head_label": triple["head_type"].replace(" ", "_"),
-                "tail_label": triple["tail_type"].replace(" ", "_"),
-                "rel_type": triple["relation_type"].replace(" ", "_")
+                "head_label": triple["head_type"].replace(" ", "_").lower(),
+                "tail_label": triple["tail_type"].replace(" ", "_").lower(),
+                "rel_type": triple["relation_type"].replace(" ", "_").lower()
             })
 
     def _batch_merge(tx, batch):
