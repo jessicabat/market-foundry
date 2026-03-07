@@ -17,8 +17,9 @@ We gratefully acknowledge the **OneKE** repository and its authors for enabling 
 - [Workflow Overview](#workflow-overview)
 - [Directory Structure](#directory-structure)
 - [Setup Instructions](#setup-instructions)
+- [Customizations](#customizations)
 - [Running Market Foundry Pipeline](#running-market-foundry-pipeline)
-- [Example Output](#example-output)
+- [Pipeline Outputs](#pipeline-outputs)
 - [Final Thoughts](#final-thoughts)
 
 ---
@@ -39,10 +40,10 @@ First, clone the repository and ensure that Docker Desktop or conda is installed
 ### Workflow Overview  
 ```mermaid
 flowchart LR
-    A["📄 Document\n.pdf · .txt · .docx · .html · .json"] --> B["🔍 Document\nClassification"]
-    B --> C["📌 Dynamic Topic\nExtraction"]
-    C --> D["🧠 Knowledge\nExtraction"]
-    D --> E["🗃️ Neo4j Graph\nConstruction"]
+    A["Document<br/>.pdf · .txt · .docx · .html · .json"] --> B["Document Classification"]
+    B --> C["Dynamic Topic<br/>Extraction"]
+    C --> D["Knowledge<br/>Extraction"]
+    D --> E["Neo4j Graph<br/>Construction"]
 ```
 
 ---
