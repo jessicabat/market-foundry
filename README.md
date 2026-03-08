@@ -13,28 +13,91 @@ We gratefully acknowledge the **OneKE** repository and its authors for enabling 
 
 ---
 
-## Table of Contents  
-- [API vs Local: Which Should I Use?](#api-vs-local-which-should-i-use)
-- [API Documentation](#api-documentation)
-  - [How it works](#how-it-works)
-  - [Endpoints](#endpoints)
-  - [Usage](#usage)
-  - [Get a free Neo4j instance](#get-a-free-neo4j-instance)
-  - [Deploy your own API instance](#deploy-your-own-api-instance)
-- [Local Setup](#local-setup)
+## Table of Contents
   - [Introduction](#introduction)
   - [Workflow Overview](#workflow-overview)
   - [Directory Structure](#directory-structure)
-  - [Setup Instructions](#setup-instructions)
-  - [Customizations](#customizations)
-  - [Running Market Foundry Pipeline](#running-market-foundry-pipeline)
-  - [Pipeline Outputs](#pipeline-outputs)
+  - [API vs Local: Which Should I Use?](#api-vs-local-which-should-i-use)
+  - [API Documentation](#api-documentation)
+    - [How it works](#how-it-works)
+    - [Endpoints](#endpoints)
+    - [Usage](#usage)
+      - [1. Submit a job](#1-submit-a-job)
+      - [2. Poll for results](#2-poll-for-results)
+      - [3. Query your graph (optional)](#3-query-your-graph-optional)
+    - [Get a free Neo4j instance](#get-a-free-neo4j-instance)
+    - [Deploy your own API instance](#deploy-your-own-api-instance)
+  - [Local Setup](#local-setup)
+    - [Setup Instructions](#setup-instructions)
+      - [Two Options for Environment Setup](#two-options-for-environment-setup)
+        - [Conda Environment Setup](#conda-environment-setup)
+        - [Docker Setup](#docker-setup)
+        - [For Users with an NVIDIA GPU](#for-users-with-an-nvidia-gpu)
+        - [Neo4j Database Setup](#neo4j-database-setup)
+        - [Neo4j Aura Example (Remote)](#neo4j-aura-example-remote)
+        - [Neo4j Local Example (On-Device)](#neo4j-local-example-on-device)
+    - [Customizations](#customizations)
+      - [Model Selection](#model-selection)
+      - [Example Model Configuration Using LocalServer](#example-model-configuration-using-localserver)
+      - [Example Model Configuration Using Hugging Face](#example-model-configuration-using-hugging-face)
+    - [Running Market Foundry Pipeline Locally](#running-market-foundry-pipeline-locally)
+      - [Two Execution Methods](#two-execution-methods)
+    - [Pipeline Outputs](#pipeline-outputs)
   - [Final Thoughts](#final-thoughts)
 
-## Introduction  
-Unstructured financial text such as regulatory filings, earnings call transcripts, news articles, research reports, and internal analyses, contains critical context about real-world market events and decision drivers. However, this information is typically processed in isolation through summarization, sentiment scoring, or event tagging, leaving relationships across documents, time, and market actors disconnected. As a result, valuable narrative and causal context often remains inaccessible to the analytical tools and models that rely on structured data representations.
+---
+
+## Introduction
+
+Unstructured financial text such as regulatory filings, earnings call transcripts,news articles, research reports, and internal analyses contains critical context about real-world market events and decision drivers. However, this information is typically processed in isolation through summarization, sentiment scoring, or event tagging, leaving relationships across documents, time, and market actors disconnected. As a result, valuable narrative and causal context often remains inaccessible to the analytical tools and models that rely on structured data representations.
 
 Market Foundry addresses this by providing a reproducible, modular pipeline that classifies documents, extracts structured triples, and constructs a queryable knowledge graph in Neo4j. We use **OneKE**, an open-source framework, to drive entity and relationship extraction through a pipeline that includes document classification, dynamic topic extraction, and schema-guided semantic understanding.
+
+Market Foundry can be used in two ways:
+- **API** — send a document to our hosted endpoint and receive extracted triples
+  instantly, no setup required
+- **Local** — clone the repository and run the full pipeline on your own machine
+  with full control over models and configuration
+
+See [API vs Local: Which Should I Use?](#api-vs-local-which-should-i-use) to choose
+the right path for your use case.
+
+---
+
+## Workflow Overview  
+```mermaid
+flowchart LR
+    A["Document<br/>.pdf&nbsp;|&nbsp;.txt&nbsp;|&nbsp;.docx&nbsp;|&nbsp;.html&nbsp;|&nbsp;.json"] --> B["Document<br/>Classification"]
+    B --> C["Dynamic Topic<br/>Extraction"]
+    C --> D["Knowledge<br/>Extraction"]
+    D --> E["Neo4j Graph<br/>Construction"]
+```
+
+---
+
+## Directory Structure  
+We organized our codebase into the following structure for clarity and modularity:
+- OneKE codebase: `OneKE`: (cloned from the original repository, with modifications for our use case)
+- Main pipeline code: `src/`:  
+  - `run.py`: Main script to execute the pipeline  
+  - `topic_extractor.py`: Code related to dynamic topic extraction and classification
+  - `yaml_generator.py`: Code for generating YAML configuration files based on the topic extraction results
+  - `api/`: FastAPI application and Modal deployment configuration for the hosted API
+  - `utils/`: Utility functions and configuration files  
+    - `extraction_config.yaml`: Configuration for model selection, database connection, and extraction parameters
+  - `models/`: Code related to TFIDF model loading and inference
+  - `knn_pipeline/`: Code related to KNN-based retrieval
+- `Configs/`: Base configuration files for the project. If `topic_extractor.py` and `yaml_generator.py` fail these are the fallback configs that will be used for extraction.
+- `Papers/`: Financial documents for testing the pipeline (126 files across earnings call transcripts, SEC filings, press releases, research papers, and news articles)
+- `Results/`: Output results from running the pipeline
+  - `construct.py`: Script to construct the Neo4j graph from extracted triples (can be run separately if needed)
+  - `extraction_results.json`: Extracted triples from the documents
+- `docs/`: Website documentation files
+- `evaluation_notebook.ipynb`: Notebook for evaluating the document classifier model
+- Setup Files:
+  - `requirements.txt`: Python dependencies for the project
+  - `environment.yml`: Conda environment configuration
+  - `Dockerfile`: Docker configuration for containerized setup
 
 ---
 
@@ -96,9 +159,15 @@ MarketFoundry API (Modal GPU)
 
 ### Usage
 
+> **Document size:** The API is optimized for documents up to ~50 pages. Very large
+> documents (100+ pages) may exceed GPU memory limits and fail to process. Consider
+> splitting them into sections before submitting, or [deploy your own instance](#deploy-your-own-api-instance)
+> on Modal with a larger GPU (e.g. A100 80GB).
+
+
 #### 1. Submit a job
 
-**Without Neo4j (JSON output only):**
+**Without Neo4j (in-terminal JSON output only):**
 
 ```bash
 curl -X POST "https://marija-vukic--market-foundry-api-fastapi-app.modal.run/process" \
@@ -200,8 +269,6 @@ Free tier: 200k nodes, 400k relationships, $0/month.
 ---
 
 ### Deploy your own API instance
-
-### Deploy your own API instance
 ```bash
 git clone https://github.com/jessicabat/market-foundry
 cd market-foundry
@@ -226,43 +293,7 @@ First, clone the repository and ensure that Docker Desktop or conda is installed
 
 ---
 
-### Workflow Overview  
-```mermaid
-flowchart LR
-    A["Document<br/>.pdf&nbsp;|&nbsp;.txt&nbsp;|&nbsp;.docx&nbsp;|&nbsp;.html&nbsp;|&nbsp;.json"] --> B["Document<br/>Classification"]
-    B --> C["Dynamic Topic<br/>Extraction"]
-    C --> D["Knowledge<br/>Extraction"]
-    D --> E["Neo4j Graph<br/>Construction"]
-```
-
----
-
-### Directory Structure  
-We organized our codebase into the following structure for clarity and modularity:
-- OneKE codebase: `OneKE`: (cloned from the original repository, with modifications for our use case)
-- Main pipeline code: `src/`:  
-  - `run.py`: Main script to execute the pipeline  
-  - `topic_extractor.py`: Code related to dynamic topic extraction and classification
-  - `yaml_generator.py`: Code for generating YAML configuration files based on the topic extraction results
-  - `utils/`: Utility functions and configuration files  
-    - `extraction_config.yaml`: Configuration for model selection, database connection, and extraction parameters
-  - `models/`: Code related to TFIDF model loading and inference
-  - `knn_pipeline/`: Code related to KNN-based retrieval
-- `Configs/`: Base configuration files for the project. If `topic_extractor.py` and `yaml_generator.py` fail these are the fallback configs that will be used for extraction.
-- `Papers/`: Financial documents for testing the pipeline (126 files across earnings call transcripts, SEC filings, press releases, research papers, and news articles)
-- `Results/`: Output results from running the pipeline
-  - `construct.py`: Script to construct the Neo4j graph from extracted triples (can be run separately if needed)
-  - `extraction_results.json`: Extracted triples from the documents
-- `docs/`: Website documentation files
-- `evaluation_notebook.ipynb`: Notebook for evaluating the document classifier model
-- Setup Files:
-  - `requirements.txt`: Python dependencies for the project
-  - `environment.yml`: Conda environment configuration
-  - `Dockerfile`: Docker configuration for containerized setup
-
----
-
-## Setup Instructions  
+### Setup Instructions  
 
 Key dependencies are pinned below. The full list is in `requirements.txt` and `environment.yml`.
 
@@ -281,10 +312,10 @@ Key dependencies are pinned below. The full list is in `requirements.txt` and `e
 | `numpy` | 1.26.4 | Numerical operations |
 | `pandas` | 2.2.3 | Data handling |
 
-### Two Options for Environment Setup  
+#### Two Options for Environment Setup  
 We offer two methods to set up your environment: a **conda** environment or a **Docker** container.
 
-#### Conda Environment Setup  
+##### Conda Environment Setup  
 
 The `environment.yml` file defines all required dependencies. Use this option if you want an identical setup to our experimental environment.
 
@@ -297,7 +328,7 @@ conda activate <environment_name>
 
 By default, the environment is named `market-foundry`. You can customize this name in the `environment.yml` file if preferred.
 
-#### Docker Setup  
+##### Docker Setup  
 
 Navigate to the root directory of the repository and execute the following commands to build the image and launch a container:
 
@@ -309,7 +340,7 @@ docker run -v $(pwd):/app market-foundry
 docker run -v ${PWD}:/app market-foundry
 ```
 
-#### For Users with an NVIDIA GPU  
+##### For Users with an NVIDIA GPU  
 
 To enable GPU acceleration, use the NVIDIA runtime:
 
@@ -317,7 +348,7 @@ To enable GPU acceleration, use the NVIDIA runtime:
 docker run --gpus all -v $(pwd):/app market-foundry
 ```
 
-#### Neo4j Database Setup  
+##### Neo4j Database Setup  
 
 To build the knowledge graph, you must have a running instance of **Neo4j**. You can set up your Neo4j instance in two ways: via **Neo4j Aura (Remote)** or **Neo4j (Local)**.
 
@@ -333,7 +364,7 @@ In the `construct` section of the schema configuration found in `src/utils/extra
 
 Below are two example `construct` configuration blocks for connecting to a Neo4j database. Choose one based on your setup and replace the placeholder values with your actual credentials.
 
-#### Neo4j Aura Example (Remote)  
+##### Neo4j Aura Example (Remote)  
 
 ```yaml
 construct: # Required for knowledge graph construction  
@@ -343,7 +374,7 @@ construct: # Required for knowledge graph construction
   password: <database_password> # Your Neo4j Aura database password
 ```
 
-#### Neo4j Local Example (On-Device)  
+##### Neo4j Local Example (On-Device)  
 
 ```yaml
 construct: # Required for knowledge graph construction  
@@ -355,9 +386,9 @@ construct: # Required for knowledge graph construction
 
 ---
 
-## Customizations
+### Customizations
 
-### Model Selection  
+#### Model Selection  
 
 OneKE by default supports the following model APIs:
 1. **LocalServer** (e.g., LM Studio, Ollama, vLLM, Llama.cpp)  
@@ -377,7 +408,7 @@ In addition to the default APIs, OneKE also supports the following model categor
 
 In `src/utils/extraction_config.yaml`, you can specify any Hugging Face model from the supported categories listed above. Update the `category` and `model_name_or_path` fields in the `model` section of the configuration. If you choose an API-based model (e.g., LocalServer, OpenAI, DeepSeek), include the necessary authentication credentials (e.g., API key) and base URL if applicable.
 
-### Example Model Configuration Using LocalServer  
+#### Example Model Configuration Using LocalServer  
 
 ```yaml
 model:
@@ -389,7 +420,7 @@ model:
 
 For safety, we recommend using environment variables to store sensitive information such as API keys and database credentials. You can set these in your terminal or include them in a `.env` file (ensure it is added to `.gitignore` to prevent accidental commits).
 
-### Example Model Configuration Using Hugging Face  
+#### Example Model Configuration Using Hugging Face  
 
 ```yaml
 model:
@@ -401,7 +432,7 @@ model:
 
 ---
 
-## Running Market Foundry Pipeline  
+### Running Market Foundry Pipeline Locally
 
 After activating your environment or launching the Docker container, run the pipeline using `src/run.py`.
 
@@ -420,7 +451,7 @@ Once authenticated, you are ready to run the pipeline.
 
 > **Dataset:** Sample financial documents are provided in the Papers/ folder. You can also supply your own documents — the pipeline accepts .pdf, .txt, .docx, .html, and .json files.
 
-### Two Execution Methods  
+#### Two Execution Methods  
 
 1. **Run with a single file**  
 
@@ -438,7 +469,7 @@ python src/run.py --folder <path_to_folder>
 
 ---
 
-## Pipeline Outputs
+### Pipeline Outputs
 After running the pipeline, you will see outputs similar to the following in your terminal:
 
 ```json
