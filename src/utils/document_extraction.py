@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 import yaml
 import tempfile
 import subprocess
-import pandas as pd
 from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2txtLoader, BSHTMLLoader, JSONLoader
 import time
 from utils import *
@@ -106,12 +105,9 @@ def _purge_results_files():
                 print(f"[_purge_results_files] Could not delete {path}: {e}")
 
 def extract_topics_and_run_oneke(texts, classifications, text_lookup):
-    _purge_results_files()  # Always purge stale results before starting a new job
     total_files = len(texts)
-    all_triples = []
     successful_topic_extractions = 0
     index = 1
-    successful_topic_extractions = 0
     for file, text in texts:
         file_name = get_basename(file).split(".")[0]  # Get filename without extension for YAML naming
         try:
@@ -161,8 +157,10 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
         print(f"Successfully extracted topics for {successful_topic_extractions}/{total_files} files.")
         
 def extract_topics_and_run_oneke_modal(texts, classifications, text_lookup):
+    _purge_results_files()  # Always purge stale results before starting a new job
     total_files = len(texts)
     index = 1
+    all_triples = []
     successful_topic_extractions = 0
     for file, text in texts:
         file_name = get_basename(file).split(".")[0]  # Get filename without extension for YAML naming
