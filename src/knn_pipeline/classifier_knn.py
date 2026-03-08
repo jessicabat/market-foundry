@@ -11,6 +11,10 @@ from typing import Optional, Tuple
 MODEL_NAME = 'all-MiniLM-L12-v2'
 _embedder = None
 
+HEAD_SNIPPET_CHARS = 1400
+TAIL_SNIPPET_CHARS = 900
+MAX_SNIPPET_CHARS = 2600
+
 def read_text_robust(path: str | Path, max_bytes: Optional[int] = None) -> Tuple[str, str]:
     """Returns (text, encoding_used). Never raises UnicodeDecodeError."""
     p = Path(path)
@@ -48,6 +52,25 @@ def _clean_text(text: str) -> str:
     text = re.sub(r'\n\s*\n', '\n\n', text)
     return text.strip()
 
+def build_managed_snippet(
+    text: str,
+    head_chars: int = HEAD_SNIPPET_CHARS,
+    tail_chars: int = TAIL_SNIPPET_CHARS,
+    max_chars: int = MAX_SNIPPET_CHARS,
+) -> str:
+    clean_text = _clean_text(text)
+    if len(clean_text) <= max_chars:
+        return clean_text
+
+    head = clean_text[:head_chars].rstrip()
+    tail = clean_text[-tail_chars:].lstrip()
+
+    if not tail or head.endswith(tail[:120]):
+        return clean_text[:max_chars]
+
+    snippet = f"{head}\n\n[...]\n\n{tail}"
+    return snippet[: max_chars + len("\n\n[...]\n\n")]
+
 def get_embedder():
     global _embedder
     if _embedder is None:
@@ -62,6 +85,7 @@ class KNNClassifier:
         self.reference_dir = os.path.abspath(reference_dir) 
         self.embeddings = []
         self.labels = []
+        self.label_to_indices = defaultdict(list)
         self.cache_path = os.path.join(self.reference_dir, "embeddings_cache.pkl")
         
         # loading from cache first (INSTANT START)
@@ -77,9 +101,15 @@ class KNNClassifier:
                 data = pickle.load(f)
                 self.embeddings = data["embeddings"]
                 self.labels = data["labels"]
+            self._rebuild_label_index()
             return True
         except Exception:
             return False
+
+    def _rebuild_label_index(self):
+        self.label_to_indices = defaultdict(list)
+        for index, label in enumerate(self.labels):
+            self.label_to_indices[label].append(index)
 
     def _build_references(self):
         if not os.path.exists(self.reference_dir):
@@ -100,8 +130,7 @@ class KNNClassifier:
                 fpath = os.path.join(label_dir, fname)
                 try:
                     text, enc = read_text_robust(fpath, max_bytes=100000)
-                    text = _clean_text(text)
-                    text = text[:1000]
+                    text = build_managed_snippet(text)
                     if len(text) < 50: continue
 
                     vector = embedder.encode(text, normalize_embeddings=True)
@@ -114,6 +143,7 @@ class KNNClassifier:
 
         if self.embeddings:
             self.embeddings = np.array(self.embeddings)
+            self._rebuild_label_index()
             with open(self.cache_path, "wb") as f:
                 pickle.dump({"embeddings": self.embeddings, "labels": self.labels}, f)
             print(f"✅ Classifier ready with {count} reference examples. Cache saved.")
@@ -121,34 +151,41 @@ class KNNClassifier:
             print("⚠️ No reference documents found! Defaulting to INTERNAL_MEMO.")
 
 
-    def classify(self, text: str) -> Tuple[str, float]:
+    def _score_from_query_vectors(self, query_vectors, per_label_top_k: int = 3) -> list[dict[str, float]]:
         if len(self.embeddings) == 0:
-            return "INTERNAL_MEMO", 0.0
+            return [{} for _ in range(len(query_vectors))]
+
+        all_label_scores = []
+        similarities_matrix = np.matmul(query_vectors, self.embeddings.T)
+        for similarities in similarities_matrix:
+            label_scores = {}
+            for label, indices in self.label_to_indices.items():
+                per_label_scores = similarities[indices]
+                top_k = min(per_label_top_k, len(per_label_scores))
+                if top_k == 0:
+                    continue
+                top_scores = np.partition(per_label_scores, -top_k)[-top_k:]
+                label_scores[label] = float(np.mean(top_scores))
+            all_label_scores.append(label_scores)
+        return all_label_scores
+
+    def score_labels_batch(self, texts: list[str], per_label_top_k: int = 3) -> list[dict[str, float]]:
+        if len(self.embeddings) == 0:
+            return [{} for _ in texts]
 
         embedder = get_embedder()
-        clean_input = _clean_text(text[:1500])
-        query_vec = embedder.encode(clean_input[:1000], normalize_embeddings=True)
-        
-        # norm_query = np.linalg.norm(query_vec)
-        # norm_refs = np.linalg.norm(self.embeddings, axis=1)
-        # if norm_query == 0: return "INTERNAL_MEMO", 0.0
-        # similarities = np.dot(self.embeddings, query_vec) / (norm_refs * norm_query)
+        snippets = [build_managed_snippet(text) for text in texts]
+        query_vectors = embedder.encode(snippets, normalize_embeddings=True, batch_size=32)
+        return self._score_from_query_vectors(query_vectors, per_label_top_k=per_label_top_k)
 
-        similarities = np.dot(self.embeddings, query_vec)
-        k = min(5, len(self.labels))
-        top_k_idx = np.argsort(similarities)[-k:]
+    def score_labels(self, text: str, per_label_top_k: int = 3) -> dict[str, float]:
+        return self.score_labels_batch([text], per_label_top_k=per_label_top_k)[0]
 
-        weighted_votes = defaultdict(float)
 
-        for i in top_k_idx:
-            label = self.labels[i]
-            weighted_votes[label] += similarities[i]
+    def classify(self, text: str) -> Tuple[str, float]:
+        label_scores = self.score_labels(text)
+        if not label_scores:
+            return "INTERNAL_MEMO", 0.0
 
-        # label w/ highest accumulated similarity points
-        best_label = max(weighted_votes, key=weighted_votes.get)
-        winning_scores = [similarities[i] for i in top_k_idx if self.labels[i] == best_label]
-        best_score = float(np.mean(winning_scores))
-
-        return best_label, best_score
-        # best_idx = np.argmax(similarities)
-        # return self.labels[best_idx], float(similarities[best_idx])
+        best_label = max(label_scores, key=label_scores.get)
+        return best_label, float(label_scores[best_label])
