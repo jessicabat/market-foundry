@@ -120,8 +120,8 @@ We organized our codebase into the following structure for clarity and modularit
 
 ## API Documentation
 
-> **Live endpoint:** `https://marija-vukic--market-foundry-api-fastapi-app.modal.run`  
-> **Interactive docs:** `https://marija-vukic--market-foundry-api-fastapi-app.modal.run/docs`  
+> **Live endpoint:** [https://marija-vukic--market-foundry-api-fastapi-app.modal.run](https://marija-vukic--market-foundry-api-fastapi-app.modal.run)
+> **Interactive docs:** [https://marija-vukic--market-foundry-api-fastapi-app.modal.run/docs](https://marija-vukic--market-foundry-api-fastapi-app.modal.run/docs) 
 > **Stack:** [Modal (serverless GPU)](https://modal.com/) · [FastAPI](https://fastapi.tiangolo.com/) · [Neo4j AuraDB](https://neo4j.com/product/auradb/?utm_source=GSearch&utm_medium=PaidSearch&utm_campaign=Evergreen&utm_content=AMS-Search-SEMBrand-Evergreen-None-SEM-SEM-NonABM&utm_term=auradb&utm_adgroup=auradb&gad_source=1&gad_campaignid=20973570619&gbraid=0AAAAADk9OYpnCOJ-OgiU8zSLBhCOrvQSg&gclid=Cj0KCQiA2bTNBhDjARIsAK89wlE2Ob5BxFaXbsLzrUMnq2oCwMlcSvksWN-Dlg-rvH8EyS2Q9P0ys7QaAjWDEALw_wcB) 
 > **Cost:** $0 to start
 
