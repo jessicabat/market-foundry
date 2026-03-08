@@ -45,13 +45,17 @@
       <p class="hero-hook">
         Financial analysts dedicate hours reading reports to understand the causal relationships 
         driving revenue, risk, and growth. MarketFoundry treats unstructured text as a first-class 
-        data source, automatically building custom knowledge graphs that answer "Why did Q3 miss?" 
-        or "What caused churn?" with evidence from across your entire document corpus.
+        data source, automatically building connected knowledge graphs that answer "Which filing disclosure changes the valuation story?" 
+        or "What drove the revenue shortfall across these 40 documents?" with evidence traced back to every source.
       </p>
-        <p style="font-size:0.9rem; opacity:0.75; font-style:italic; margin-bottom:2rem; margin-top:-1rem;">
-        Built for data engineers, quantitative analysts, and fintech teams building
-        Retrieval-Augmented Generation (RAG) systems, analytics dashboards, and document intelligence pipelines.
+        <p style="font-size:0.95rem; opacity:0.82; margin-bottom:2rem; margin-top:-1rem; line-height:1.7;">
+        Built for data engineers, quantitative analysts, and fintech teams who are transforming how 
+        traditional finance interacts with its own data. Market Foundry bridges the gap between 
+        the documents living in Virtual Data Rooms (VDRs), regulatory filings, and internal reports, 
+        and the RAG (Retrieval-Augmented Generation) systems, analytics dashboards, and decision tools 
+        that need to reason over them.
         </p>
+
 
       <div class="cta-buttons">
         <a href="#demo" class="btn btn-primary">See the Demo</a>
@@ -61,74 +65,74 @@
   </section>
 
   <!-- Problem Section -->
-<section id="problem" class="section">
-  <div class="container">
-    <h2 class="section-title">The Problem We Solve</h2>
-    <div class="problem-content">
-      <div class="problem-text">
-        <h3>The Challenge</h3>
-        <p>
-          Traditional analysts spend hours manually reading through filings, transcripts, and 
-          reports to piece together what's driving revenue, risk, and growth. It's slow, it doesn't scale, 
-          and it keeps valuable context out of the tools that actually make decisions.
-        </p>
-        <p> 
-          The firms building the next generation of financial analytics know that unstructured text can't 
-          stay unstructured. They're building RAG systems, analyst dashboards, and data pipelines — but 
-          without structured extraction upstream, documents still go in as raw text and insight still has 
-          to come out through manual effort.
-        </p> <p>
-          Market Foundry changes that. Open-source and API-first, we give data-driven teams the extraction 
-          layer their pipelines are missing — so the narrative behind the numbers becomes just as queryable 
-          as the numbers themselves.
-        </p>
+  <section id="problem" class="section">
+    <div class="container">
+      <h2 class="section-title">Why It Matters</h2>
 
-        <h3>Document-aware extraction, built for modern financial pipelines</h3>
-        <p class="overview-summary">
-          Market Foundry classifies each document, sections it intelligently, and routes it to specialized 
-          schemas that extract entities, relationships, and where present, causal structure. The result is 
-          a unified knowledge graph your existing tools can actually work with. 
-        </p><p>  
-          <strong>Same RAG system, sharper retrieval. Same dashboard, richer context. Built open-source so you can integrate it, extend it, 
-          and make it your own.</strong>
-        </p>
-        <h3>System Scope</h3>
-        <div class="scope-grid">
-          <div class="scope-card did">
-            <h4>What The System Does</h4>
-            <ul>
-              <li>Document-type classification (5 types)</li>
-              <li>Dynamic topic sectioning &amp; YAML schema generation</li>
-              <li>Schema-guided triple extraction via OneKE</li>
-              <li>Neo4j knowledge graph construction</li>
-              <li>Multi-format ingestion (PDF, DOCX, HTML, JSON)</li>
-            </ul>
-          </div>
-          <div class="scope-card didnt">
-            <h4>What The System Doesn't Do</h4>
-            <ul>
-              <li>Query UI or chat interface</li>
-              <li>Real-time or streaming data feeds</li>
-              <li>Post-hoc ontology normalization</li>
-              <li>Cross-document co-reference resolution at scale</li>
-            </ul>
-          </div>
+      <div class="problem-content">
+        <div class="problem-text">
+          <h3>The Challenge</h3>
+          <p>
+            Traditional analysts spend hours manually reading through filings, transcripts, and
+            reports to piece together what's driving revenue, risk, and growth. It's slow, it doesn't scale,
+            and it keeps valuable context out of the tools that actually make decisions.
+          </p>
+          <p>
+            The firms building the next generation of financial intelligence know that unstructured text
+            is the last great unlocked data layer. The context buried in earnings calls, filings, and
+            internal reports holds the ground truth that numbers alone cannot explain.
+            The next leap in NLP is grounding language models in structured, verifiable, domain-specific
+            knowledge so they stop hallucinating and start reasoning.
+            Market Foundry is part of that infrastructure layer: turning the narrative behind financial
+            decisions into something machines can actually work with.
+          </p>
+          <h3>Document-aware extraction, built for modern financial pipelines</h3>
+          <p>
+            Market Foundry classifies each document, sections it intelligently, and routes it to specialized
+            schemas that extract entities, relationships, and causal structures, where present. The result is
+            a knowledge graph (a connected map of facts and relationships across your entire document set) that your existing tools can actually work with.
+          </p>
+          <p>
+            <strong>Same RAG system, sharper retrieval. Same dashboard, richer context. Built open-source so you can integrate it, extend it,
+            and make it your own.</strong>
+          </p>
         </div>
 
+          <div class="problem-visual" style="text-align:center; padding: 2rem; background: linear-gradient(135deg, #f0f7f7 0%, #e0f2f1 100%); border-radius:12px;">
+            <div class="visual-icon">📄 📄 📄</div>
+            <div class="visual-arrow">↓</div>
+            <div class="visual-icon">🕸️</div>
+            <p class="visual-caption">Unstructured Documents to Structured Knowledge Graph</p>
+          </div>
 
       </div>
-      <div class="problem-visual">
-        <!-- <img src="assets/before-after.png" alt="Raw PDF to Knowledge Graph"> -->
-        <div class="visual-placeholder">
-          <div class="visual-icon">📄 📄 📄</div>
-          <div class="visual-arrow">↓</div>
-          <div class="visual-icon">🕸️</div>
-          <p class="visual-caption">Unstructured Documents → Structured Knowledge Graph</p>
+
+      <!-- Scope: full width, outside problem-content -->
+      <h3 class="results-section-heading" style="margin-top:3rem;">System Scope</h3>
+      <div class="scope-grid">
+        <div class="scope-card did">
+          <h4>What MarketFoundry Does</h4>
+          <ul>
+            <li>Document-type classification (5 types)</li>
+            <li>Dynamic topic sectioning &amp; YAML schema generation</li>
+            <li>Schema-guided triple extraction via OneKE (a triple is a structured fact: Subject, Predicate, Object; for example, <em>Interest Rate Hike</em> triggered <em>Market Volatility</em>)</li>
+            <li>Neo4j knowledge graph construction</li>
+            <li>Multi-format ingestion (PDF, DOCX, HTML, JSON)</li>
+          </ul>
+        </div>
+        <div class="scope-card didnt">
+          <h4>What MarketFoundry Doesn't Do</h4>
+          <ul>
+            <li>Query UI or chat interface</li>
+            <li>Real-time or streaming data feeds</li>
+            <li>Post-hoc ontology normalization</li>
+            <li>Cross-document co-reference resolution at scale</li>
+          </ul>
         </div>
       </div>
+
     </div>
-  </div>
-</section>
+  </section>
 
   <!-- How It Works Section -->
   <section id="how-it-works" class="section section-alt">
@@ -149,7 +153,7 @@
         <div class="step">
           <div class="step-number">2</div>
           <h3>Document Classification</h3>
-          <p>An ensemble ML model automatically detects document type and routes it to the appropriate extraction schema. No manual configuration needed.</p>
+          <p>An dual-model classifier model automatically detects document type and routes it to the appropriate extraction schema. No manual configuration needed.</p>
         </div>
         
         <div class="step">
@@ -176,18 +180,6 @@
           <p>All triples are stored in Neo4j, creating a unified graph across your entire document corpus. Query it directly, plug it into your RAG system, or pipe it into your analytics stack.</p>
         </div>
       </div>
-
-      <div class="tech-stack">
-        <h3>Built With</h3>
-        <div class="tech-badges">
-          <span class="badge">Python</span>
-          <span class="badge">OneKE</span>
-          <span class="badge">Qwen2.5-7B</span>
-          <span class="badge">Neo4j</span>
-          <span class="badge">LangChain</span>
-          <span class="badge">SentenceTransformers</span>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -195,15 +187,23 @@
     <!-- Results Section -->
   <section id="results" class="section">
     <div class="container">
-      <h2 class="section-title">Results</h2>
+            <h2 class="section-title">Results</h2>
       <p class="section-intro">
-        Evaluated on a curated corpus of 85 labeled financial documents — spanning earnings call transcripts,
-        SEC filings, research papers, press releases, and news articles — covering publications from 2008–2025,
-        ranging from 2 to 290 pages.
+        Market Foundry was evaluated across two independent experiments: the dual-model ensemble classifier
+        and the YAML dynamic schema generation pipeline. Each is reported separately below.
       </p>
 
-      <!-- Key Metrics -->
-      <div class="metrics-grid">
+      <!-- Subsection: Classifier -->
+      <h3 class="results-section-heading">Ensemble Classifier Performance</h3>
+      <p style="font-size:1rem; line-height:1.8; color:var(--graphite); max-width:860px; margin: 0 auto 1.5rem; text-align:center;">
+        Our dual-model ensemble classifier was evaluated on a curated corpus of 85 labeled financial
+        documents spanning earnings call transcripts, SEC filings, research papers, press releases,
+        and news articles, covering publications from 2008 to 2025, ranging from 2 to 290 pages.
+        The system achieved <strong>76.1% overall classification accuracy</strong>.
+      </p>
+
+      <!-- Classifier Key Metrics -->
+      <div class="metrics-grid" style="max-width:600px; margin: 0 auto 2rem;">
         <div class="metric-card">
           <span class="metric-value">76.1%</span>
           <span class="metric-label">Overall Classification Accuracy</span>
@@ -212,25 +212,12 @@
           <span class="metric-value">0.767</span>
           <span class="metric-label">Macro F1 Score</span>
         </div>
-        <div class="metric-card">
-          <span class="metric-value">790</span>
-          <span class="metric-label">Total Extracted Triples</span>
-        </div>
-        <div class="metric-card">
-          <span class="metric-value">964</span>
-          <span class="metric-label">Unique Entities</span>
-        </div>
-        <div class="metric-card">
-          <span class="metric-value">423</span>
-          <span class="metric-label">Distinct Relationship Types</span>
-        </div>
-        <div class="metric-card">
-          <span class="metric-value">112</span>
-          <span class="metric-label">Documents Processed (YAML Pipeline)</span>
-        </div>
       </div>
+        <p style="font-size:0.90rem; line-height:1.75; color:var(--graphite); max-width:600px; margin: 0 auto 2rem; text-align:center;">
+        A Macro F1 of 0.767 reflects strong average performance across all five document classes weighted equally, meaning gains on high-frequency classes like SEC filings do not mask weaker recall on underrepresented ones like press releases.
+      </p>
 
-      <!-- Classifier Table -->
+
       <h3 class="results-section-heading">Classifier Performance by Document Type</h3>
       <div class="results-table-wrapper">
         <table class="results-table">
@@ -253,10 +240,80 @@
         </table>
       </div>
       <p class="results-note">
-        ⚠️ <strong>Press release recall (25%)</strong> is a known limitation: press releases are drafted to mimic
-        journalistic style, causing their embeddings to overlap with news articles in vector space.
+        ⚠️ <strong>Press release recall (25%)</strong> is a known limitation: press releases are drafted
+        to mimic journalistic style, causing their embeddings to overlap with news articles in vector space.
         Future versions will add keyword-based override rules (e.g., wire service datelines) to resolve this.
       </p>
+
+      <!-- Why TF-IDF + KNN -->
+      <h3 class="results-section-heading">Why a Dual-Model Approach</h3>
+      <p style="font-size:0.95rem; line-height:1.8; color:var(--graphite); max-width:860px; margin: 0 auto 2rem; text-align:center;">
+        TF-IDF logistic regression excels at detecting document-type-specific vocabulary patterns, such as
+        the dense regulatory language of SEC filings or the Q&amp;A structure of earnings calls. However,
+        TF-IDF is sensitive to surface-level noise: financial documents sourced from scanned PDFs often
+        carry OCR artifacts, inconsistent spacing, and garbled special characters that distort term
+        frequency signals. The k-nearest neighbors model, built over sentence-level semantic embeddings,
+        is more robust to this noise because it encodes meaning rather than exact tokens. By running both
+        models in parallel and deferring to whichever produces a higher-confidence prediction, the ensemble
+        hedges against the failure modes of each individual model and produces a stronger combined signal
+        for downstream schema routing.
+      </p>
+
+            <!-- Subsection: Extraction Pipeline -->
+      <h3 class="results-section-heading">Extraction Pipeline and Knowledge Graph</h3>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-value">TO-BE REMOVED</span>
+          <span class="metric-label">Total Extracted Triples</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">964</span>
+          <span class="metric-label">Unique Entities</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">423</span>
+          <span class="metric-label">Distinct Relationship Types</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">112</span>
+          <span class="metric-label">Documents Processed (YAML Pipeline)</span>
+        </div>
+      </div>
+
+      <!-- Extraction Prompt Design -->
+      <h3 class="results-section-heading">How Extraction is Guided</h3>
+      <div class="contributions-grid">
+
+          <div class="contribution-card" style="border-top: 4px solid var(--teal);">
+          <h4>OneKE Extraction Prompt</h4>
+          <p style="font-size:0.88rem; color:var(--graphite); line-height:1.6; margin-bottom:0.75rem;">
+            Keeps the model focused on factual relationships directly stated in the source text.
+          </p>
+          <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.4rem;">
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--teal);">•</span>Extracts concrete financial relationships only: results, ownership, products, partnerships, regulatory events</li>
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--teal);">•</span>No inferred causation, sentiment, or analytical conclusions</li>
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--teal);">•</span>Subjects and objects must be real-world entities: companies, metrics, products</li>
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--teal);">•</span>Output enforced as strict JSON for direct graph ingestion</li>
+          </ul>
+        </div>
+
+        <div class="contribution-card" style="border-top: 4px solid var(--copper);">
+          <h4>YAML Generator Prompt</h4>
+          <p style="font-size:0.88rem; color:var(--graphite); line-height:1.6; margin-bottom:0.75rem;">
+            Generates document-specific extraction plans from each document's topic map.
+          </p>
+          <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.4rem;">
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--copper);">•</span>Defines entity types and relation types tailored to that document's content</li>
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--copper);">•</span>Entity types must be stable real-world categories, no abstract concepts</li>
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--copper);">•</span>Number of entity and relation types is capped to reduce fragmentation</li>
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--copper);">•</span>Multiple plans generated per document for broad topical coverage</li>
+          </ul>
+        </div>
+        </div>
+
+
+      <!-- TODO: Add YAML generation success rate breakdown by document type,
+           topic extraction examples, and comparison of dynamic vs. fallback schema outputs -->
 
       <!-- What We Built vs. Reused -->
       <h3 class="results-section-heading">What We Built vs. What We Used</h3>
@@ -265,8 +322,8 @@
           <h4>Original Work (Built by Our Team)</h4>
           <ul>
             <li>Ensemble document classifier (TF-IDF logistic regression + KNN)</li>
-            <li>Dynamic topic extraction and multi-perspective YAML schema generation</li>
             <li>Document-type-aware pipeline routing logic</li>
+            <li>Dynamic topic extraction and multi-perspective YAML schema generation</li>
             <li>Engineering robustness layer: JSON validation, fallback schemas, edge-case handling</li>
             <li>Incremental result persistence and reproducibility tooling</li>
           </ul>
@@ -278,6 +335,7 @@
             <li>Qwen2.5-7B and Meta-Llama, open-source LLM inference</li>
             <li>Neo4j, graph database and storage layer</li>
             <li>SentenceTransformers, semantic embeddings for the k-NN classifier</li>
+            <li>Modal, serverless GPU infrastructure for API hosting</li>
           </ul>
         </div>
       </div>
@@ -285,42 +343,96 @@
 
       <!-- Limitations -->
       <h3 class="results-section-heading">Limitations</h3>
-      <div class="limitations-grid">
-        <div class="limitation-card">
-          <h4>Schema Fragmentation</h4>
-          <p>Open-schema design produced 423 distinct relationship types across 15 documents, reducing cross-document comparability without additional ontology normalization.</p>
+      <div class="limitations-accordion">
+        <div class="limitation-row">
+          <button class="limitation-trigger" aria-expanded="false">
+            <h4>Schema Fragmentation</h4>
+            <i class="limitation-chevron">&#8964;</i>
+          </button>
+          <div class="limitation-body">
+            Open-schema design produced 423 distinct relationship types across 15 documents. Because schemas are generated dynamically per document, the same underlying relationship can appear under slightly different names across files: one document may produce <code>revenue_growth</code> while another produces <code>revenue_increase</code> or <code>revenue_acceleration</code> for an identical fact. These are treated as separate edge types in the graph, so nodes that should be connected are not, reducing cross-document comparability and limiting the graph's ability to aggregate patterns without a normalization layer.
+          </div>
         </div>
-        <div class="limitation-card">
+          <div class="limitation-row">
+          <button class="limitation-trigger" aria-expanded="false">
           <h4>Sparse Graph Connectivity</h4>
-          <p>Average node degree of ~1.64 means most entities participate in only 1–2 relationships, limiting multi-hop reasoning without further graph enrichment.</p>
+          <i class="limitation-chevron">&#8964;</i>
+          </button>
+          <div class="limitation-body">Average node degree of ~1.64 means most entities participate in only 1–2 relationships, limiting multi-hop reasoning without further graph enrichment.</div>
         </div>
-        <div class="limitation-card">
+        <div class="limitation-row">
+          <button class="limitation-trigger" aria-expanded="false">
           <h4>Long-Document Instability</h4>
-          <p>Dynamic YAML generation succeeded for 47.3% of documents; long regulatory filings and earnings call transcripts triggered context-window saturation more frequently.</p>
+          <i class="limitation-chevron">&#8964;</i>
+          </button>
+            <div class="limitation-body">Dynamic YAML generation succeeded for 47.3% of documents. Long regulatory filings and earnings call transcripts caused context-window saturation, leading the LLM to time out or return malformed JSON. The pipeline catches this and falls back to a pre-built general-purpose config for that document type, so no document is dropped, but the extraction schema is less tailored than what dynamic generation would have produced.</div>
         </div>
-        <div class="limitation-card">
+        <div class="limitation-row">
+          <button class="limitation-trigger" aria-expanded="false">
           <h4>Compute Constraints</h4>
-          <p>Evaluated on 1–4B parameter open-source models. Larger models would likely improve coreference resolution, relation naming consistency, and extraction depth.</p>
+          <i class="limitation-chevron">&#8964;</i>
+          </button>
+            <div class="limitation-body">Topic extraction uses Qwen2.5-1.5B-Instruct and triple extraction uses Qwen3-4B, both selected to fit within consumer-grade GPU memory constraints. This limited our ability to benchmark larger alternatives. Upgrading to models such as Qwen2.5-72B, Llama 3.3-70B, or GPT-4o would likely improve coreference resolution, relation naming consistency, and extraction depth on complex long-form documents.</div>
         </div>
-        <div class="limitation-card">
+        <div class="limitation-row">
+          <button class="limitation-trigger" aria-expanded="false">
           <h4>LLM Hallucination Risk</h4>
-          <p>Schema-guided prompting significantly reduces hallucinated relations, but cannot eliminate them entirely. The Reflection Agent was observed renaming relation labels to semantically similar alternatives outside the defined schema, introducing subtle inconsistencies even when outputs appear structurally valid.</p>
+          <i class="limitation-chevron">&#8964;</i>
+          </button>
+                    <div class="limitation-body">
+            Schema-guided prompting substantially reduces hallucinated outputs, but cannot eliminate them entirely. Three failure modes were observed in practice:
+            <div style="margin-top:0.85rem; display:flex; flex-direction:column; gap:0.6rem;">
+              <div style="padding:0.7rem 1rem; background:#f7f9fb; border-radius:8px; font-size:0.85rem; color:var(--graphite); line-height:1.6;">
+                <strong>Fabricated triples:</strong> the model occasionally extracts a relationship that sounds financially plausible but has no grounding in the source text, particularly in dense filings with forward-looking language.
+              </div>
+              <div style="padding:0.7rem 1rem; background:#f7f9fb; border-radius:8px; font-size:0.85rem; color:var(--graphite); line-height:1.6;">
+                <strong>Entity boundary errors:</strong> the model splits or merges entities incorrectly, for example treating <code>Q3 2024 revenue</code> and <code>Q3 revenue</code> as separate nodes when they refer to the same fact.
+              </div>
+              <div style="padding:0.7rem 1rem; background:#f7f9fb; border-radius:8px; font-size:0.85rem; color:var(--graphite); line-height:1.6;">
+                <strong>Predicate inversion:</strong> subject and object roles occasionally get swapped, producing a triple with the correct entities but the wrong causal direction.
+              </div>
+            </div>
+          </div>
         </div>
-
+        <div class="limitation-row">
+          <button class="limitation-trigger" aria-expanded="false">
+            <h4>API Hosting Budget</h4>
+            <i class="limitation-chevron">&#8964;</i>
+          </button>
+          <div class="limitation-body">
+            Market Foundry is fully open-source and free to run locally. Hosted API access is limited by infrastructure costs: we run GPU inference on Modal.com using Nvidia A10 GPUs at $1.10 per hour. We would love to expand API availability and throughput as the project grows, but current usage is constrained by budget.
+          </div>
+        </div>
       </div>
 
       <!-- Next Steps -->
-      <div class="next-steps-box">
-        <h3>Next Steps</h3>
-        <p>
-          Market Foundry's intelligence layer plugs directly into existing RAG pipelines, analyst dashboards,
-          and causal inference workflows without replacing them. Same retrieval system, sharper context.
-          Next steps include stronger schema constraint enforcement, corpus expansion, and two-stage extraction
-          strategies to improve robustness on long-form documents without requiring larger models.
-        </p>
+      <h3 class="results-section-heading">Next Steps</h3>
+      <div class="next-steps-list">
+        <div class="next-step-row">
+          <span class="next-step-num">1</span>
+          <span><strong>Ontology Normalization</strong>Build a post-processing consolidation layer to reduce schema fragmentation and improve cross-document comparability of relationship types.</span>
+        </div>
+        <div class="next-step-row">
+          <span class="next-step-num">2</span>
+          <span><strong>Cross-Document Entity Linking</strong>Introduce entity resolution to increase graph connectivity and enable multi-hop reasoning beyond the current average node degree of 1.64.</span>
+        </div>
+        <div class="next-step-row">
+          <span class="next-step-num">3</span>
+          <span><strong>Two-Stage Extraction</strong>Adopt schema caching strategies to improve YAML generation stability on long regulatory filings and earnings call transcripts.</span>
+        </div>
+        <div class="next-step-row">
+          <span class="next-step-num">4</span>
+          <span><strong>Stronger Schema Enforcement</strong>Add a validation layer to prevent the Reflection Agent from renaming relation labels outside the defined schema, reducing hallucination-driven inconsistencies.</span>
+        </div>
+        <div class="next-step-row">
+          <span class="next-step-num">5</span>
+          <span><strong>Larger Model Evaluation</strong>Test extraction quality on larger hosted models to assess gains in coreference resolution, relation naming consistency, and coverage on complex documents.</span>
+        </div>
+        <div class="next-step-row">
+          <span class="next-step-num">6</span>
+          <span><strong>Expanded API Availability</strong>Scale hosted GPU capacity on Modal.com beyond the current Nvidia A10 tier to increase API throughput and reduce latency for end users.</span>
+        </div>
       </div>
-
-    </div>
   </section>
 
 
@@ -359,112 +471,99 @@
 
 
       <div class="examples-grid">
-          <div class="example-card">
-          <h3>🏦 Private Equity Acquisition Data Room</h3>
-          <div class="example-visual">
-            <div class="visual-placeholder">
-              <p>Knowledge Graph Preview</p>
-              <p class="visual-caption">Cross-document graph built from a sample VDR containing contracts, financial statements, and disclosure filings — surfacing connections no single document reveals alone.</p>
-            </div>
-          </div>
-          <div class="example-triples">
-            <h4>Connections Extracted Across Documents:</h4>
-            <ul>
-              <li><span class="subject">Revenue Concentration Risk</span> → <span class="predicate">disclosed_in</span> → <span class="object">Customer Contract Footnote (Doc 47)</span></li>
-              <li><span class="subject">Pending Litigation</span> → <span class="predicate">impacts_valuation_of</span> → <span class="object">EBITDA Projection (Doc 12)</span></li>
-              <li><span class="subject">Key-Man Clause</span> → <span class="predicate">constrains</span> → <span class="object">Post-Acquisition Integration Plan</span></li>
-            </ul>
-          </div>
-        </div>
+<div class="example-card">
+  <div class="example-card-header">
+    <h3>🏦 Private Equity Acquisition Data Room</h3>
+  </div>
+  <div class="example-card-content">
+    <div class="example-visual">
+      <div class="visual-placeholder">
+        <p>Knowledge Graph Preview</p>
+        <p class="visual-caption">Cross-document graph built from a sample VDR containing contracts, financial statements, and disclosure filings, surfacing connections no single document reveals alone.</p>
+      </div>
+    </div>
+    <div class="example-card-body">
+      <div class="example-triples">
+        <h4>Connections Extracted Across Documents:</h4>
+        <ul>
+          <li><span class="subject">Revenue Concentration Risk</span> → <span class="predicate">disclosed_in</span> → <span class="object">Customer Contract Footnote (Doc 47)</span></li>
+          <li><span class="subject">Pending Litigation</span> → <span class="predicate">impacts_valuation_of</span> → <span class="object">EBITDA Projection (Doc 12)</span></li>
+          <li><span class="subject">Key-Man Clause</span> → <span class="predicate">constrains</span> → <span class="object">Post-Acquisition Integration Plan</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="example-card">
-          <h3>📊 PayPal Earnings Call</h3>
-          <div class="example-visual">
-            <div class="visual-placeholder">
-               <p>Knowledge Graph Preview</p>
-              <p class="visual-caption">Example knowledge graph from a 15-document corpus — 790 extracted triples, 964 unique entities, 423 distinct relationship types.</p>
-
-            </div>
-            <!-- TODO: Add sample graph screenshot -->
-             <img src="images/paypal_earnings_call_kg.png" alt="PayPal Earnings Call Knowledge Graph" class="example-graph" style="max-width: 100%; height: auto;">
-          </div>
-          <div class="example-triples">
-            <h4>Extracted Triples:</h4>
-            <ul>
+<div class="example-card">
+  <div class="example-card-header">
+    <h3>PayPal Earnings Call</h3>
+  </div>
+  <div class="example-card-content">
+    <div class="example-visual">
+      <img src="images/paypal_earnings_call_kg.png" alt="PayPal Earnings Call Knowledge Graph" class="example-graph" style="max-width: 100%; height: auto;">
+    </div>
+    <div class="example-card-body">
+      <div class="example-triples">
+        <h4>Extracted Triples:</h4>
+        <ul>
               <li><span class="subject">PayPal Holdings, Inc.</span> → <span class="predicate">offers</span> → <span class="object">agentic commerce services</span></li>
               <li><span class="subject">PayPal Holdings, Inc.</span> → <span class="predicate">operates_product</span> → <span class="object">Buy Now, Pay Later</span></li>
               <li><span class="subject">Buy Now, Pay Later</span> → <span class="predicate">achieves</span> → <span class="object">NPS of 80</span></li>
-            </ul>
-          </div>
-        </div>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="example-card">
-          <h3>📈 Doom Loop News Article</h3>
-          <div class="example-visual">
-            <div class="visual-placeholder">
-              <p>Causal Chain Visualization</p>
-              <p class="visual-caption">Causal chain extracted from a strategy deck: AI Investment → Checkout Optimization → Merchant Growth.</p>
-            </div>
-            <img src="images/doom_loop_news_article_kg.png" alt="Doom Loop Article Knowledge Graph" class="example-graph" style="max-width: 100%; height: auto;">
-          </div>
-          <div class="example-triples">
-            <h4>Causal Relationships:</h4>
-            <ul>
+<div class="example-card">
+  <div class="example-card-header">
+    <h3>Doom Loop News Article</h3>
+  </div>
+  <div class="example-card-content">
+    <div class="example-visual">
+      <img src="images/doom_loop_news_article_kg.png" alt="Doom Loop Article Knowledge Graph" class="example-graph" style="max-width: 100%; height: auto;">
+    </div>
+    <div class="example-card-body">
+      <div class="example-triples">
+        <h4>Causal Relationships:</h4>
+        <ul>
               <li><span class="subject">Trade wars</span> → <span class="predicate">exacerbates</span> → <span class="object">Financial panic</span></li>
               <li><span class="subject">Financial panic</span> → <span class="predicate">triggers</span> → <span class="object">Inflation</span></li>
               <li><span class="subject">Inflation</span> → <span class="predicate">increases</span> → <span class="object">Global inequality</span></li>
-            </ul>
-          </div>
-        </div>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="example-card">
-          <h3>📝 Stock Portfolio Optimization</h3>
-          <div class="example-visual">
-            <div class="visual-placeholder">
-              <p>Multi-Document Synthesis</p>
-              <p class="visual-caption">Cross-document triples synthesized from an internal performance report, linking pricing decisions to SMB churn and NPS decline.</p>
-            </div>
-            <img src="images/stock_portfolio_research_paper_kg.png" alt="Stock Portfolio Optimization Research Paper Knowledge Graph" class="example-graph" style="max-width: 100%; height: auto;">
-          </div>
-          <div class="example-triples">
-            <h4>Research Insights:</h4>
-            <ul>
+<div class="example-card">
+  <div class="example-card-header">
+    <h3>Stock Portfolio Optimization</h3>
+  </div>
+  <div class="example-card-content">
+    <div class="example-visual">
+      <img src="images/stock_portfolio_research_paper_kg.png" alt="Stock Portfolio Optimization Research Paper Knowledge Graph" class="example-graph" style="max-width: 100%; height: auto;">
+    </div>
+    <div class="example-card-body">
+      <div class="example-triples">
+        <h4>Cross-Document Insights:</h4>
+        <ul>
               <li><span class="subject">Portfolio</span> → <span class="predicate">optimizes_for</span> → <span class="object">maximizing return on investment</span></li>
               <li><span class="subject">MVO-based Neural Network</span> → <span class="predicate">achieves</span> → <span class="object">dominating performance over other models</span></li>
               <li><span class="subject">Dataset</span> → <span class="predicate">consists_of</span> → <span class="object">daily information from Yahoo Finance</span></li>
-            </ul>
-          </div>
-        </div>
-      </div>
 
-      <!-- <div class="query-examples">
-        <h3>Query the Knowledge Graph</h3>
-        <div class="query-box">
-          <div class="query-item">
-            <span class="query-icon">💬</span>
-            <div>
-              <strong>Query:</strong> "Why did PayPal's Q3 margin grow?"<br>
-              <strong>Answer:</strong> <em>BNPL adoption increased 20%+ and Venmo debit usage surged 43%, 
-              driving higher-margin payment volume while transaction costs remained stable.</em>
-              <span class="sources">[Sources: Q3 Earnings Call, Internal Performance Report]</span>
-            </div>
-          </div>
-          <div class="query-item">
-            <span class="query-icon">💬</span>
-            <div>
-              <strong>Query:</strong> "What caused SMB churn to increase?"<br>
-              <strong>Answer:</strong> <em>Pricing changes in Q2 combined with degraded support response times 
-              led to 15% higher churn in SMB segment.</em>
-              <span class="sources">[Sources: 3 Internal Memos, Customer Health Report]</span>
-            </div>
-          </div>
-        </div> -->
+        </ul>
       </div>
+    </div>
+  </div>
+</div>
+
     </div>
   </section>
 
   <!-- Demo Section -->
-  <section id="demo" class="section section-alt">
+  <!-- <section id="demo" class="section section-alt">
     <div class="container">
       <h2 class="section-title">Demo</h2>
       <p class="section-intro">
@@ -472,7 +571,6 @@
       </p>
       
       <div class="demo-container">
-        <!-- TODO: Embed demo video -->
         <div class="video-placeholder">
           <div class="visual-placeholder">
             <p>🎥 Demo Video</p>
@@ -484,12 +582,12 @@
                on March 13 at the Price Center East Ballroom, UC San Diego.
             </p>
           </div>
-          <!-- Uncomment when video is ready:
+          Uncomment when video is ready:
           <video controls width="100%">
             <source src="assets/demo-video.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
-          -->
+         
         </div>
 
         <div class="demo-quickstart">
@@ -502,21 +600,118 @@ cd market-foundry">Copy</button>
 git clone https://github.com/jessicabat/market-foundry<br>
 cd market-foundry<br>
 <br>
-<!-- # Install dependencies<br>
+# Install dependencies<br>
 pip install -e .<br>
 <br>
 # Run on your documents<br>
 python src/run.py --file your_docs/<br>
 <br>
 # Build knowledge graph<br>
-python src/build_graph.py --input-dir your_docs/<br> -->
+python src/build_graph.py --input-dir your_docs/<br>
             </code>
           </div>
           <a href="https://github.com/jessicabat/market-foundry/blob/main/README.md" class="btn btn-primary" target="_blank">View Full Quickstart Guide →</a>
         </div>
       </div>
     </div>
+  </section> -->
+    <!-- Demo Section -->
+  <section id="demo" class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Demo</h2>
+      <p class="section-intro">
+        See MarketFoundry in action: from document upload to knowledge graph query.
+        Two paths, same pipeline.
+      </p>
+
+      <div class="demo-videos-grid">
+
+        <div class="demo-video-card">
+          <h3>Set Up Locally</h3>
+          <p>Clone the repo, configure your environment, and run the full pipeline on your own documents using Conda or Docker.</p>
+          <div class="loom-embed">
+            <!-- Replace YOUR_LOOM_ID with your actual Loom video ID -->
+            <!-- <iframe src="https://www.loom.com/embed/YOUR_LOOM_ID" allowfullscreen></iframe> -->
+            <div class="loom-placeholder">🎥 Local setup walkthrough coming soon</div>
+          </div>
+        </div>
+
+        <div class="demo-video-card">
+          <h3>Use Our API</h3>
+          <p>Send documents directly to the MarketFoundry API and receive structured knowledge graph triples in return, no local setup required.</p>
+          <div class="loom-embed">
+            <!-- Replace YOUR_LOOM_ID with your actual Loom video ID -->
+            <!-- <iframe src="https://www.loom.com/embed/YOUR_LOOM_ID" allowfullscreen></iframe> -->
+            <div class="loom-placeholder">🎥 API walkthrough coming soon</div>
+          </div>
+        </div>
+
+      </div>
+
+            <!-- Use Cases -->
+      <h3 class="results-section-heading">Which Should You Use?</h3>
+      <div class="use-cases-grid">
+
+        <div class="use-case-card">
+          <h4>Run It Locally</h4>
+          <span class="use-case-tag">Open Source</span>
+          <p style="font-size:0.88rem; color:var(--graphite); line-height:1.7; margin-bottom:1rem;">
+            Running the pipeline locally allows you to inspect intermediate outputs, modify prompts or models,
+            and experiment with different extraction configurations while keeping all documents on your own machine.
+          </p>
+          <ul>
+            <li>Working with sensitive or confidential documents that cannot leave your environment</li>
+            <li>Full control over model selection, schema configuration, and graph storage</li>
+            <li>Integrating Market Foundry into an existing internal pipeline</li>
+            <li>GPU access available and want to avoid per-request API costs</li>
+            <li>Researcher or developer extending the system for a new domain</li>
+          </ul>
+        </div>
+
+        <div class="use-case-card api">
+          <h4>Use the API</h4>
+          <span class="use-case-tag">Hosted</span>
+          <p style="font-size:0.88rem; color:var(--graphite); line-height:1.7; margin-bottom:1rem;">
+            The API provides a centralized deployment where you can submit documents and receive structured
+            extraction results without installing dependencies or managing the full pipeline locally.
+            It also supports more scalable processing for larger workloads or multi-user scenarios.
+          </p>
+          <ul>
+            <li>Easier integration with external applications and data pipelines</li>
+            <li>Prototyping a connection to a dashboard, RAG system, or data platform</li>
+            <li>No local GPU access or prefer not to manage model dependencies</li>
+            <li>Processing larger document volumes without local infrastructure</li>
+            <li>Note: hosted availability is subject to GPU budget constraints on Modal.com</li>
+          </ul>
+        </div>
+
+      </div>
+
+
+      <!-- Quickstart -->
+      <div class="demo-quickstart" style="margin-top: 2rem;">
+        <h3>Quickstart</h3>
+        <div class="code-block">
+          <button class="copy-code-btn" type="button" aria-label="Copy quickstart commands" data-copy="git clone https://github.com/jessicabat/market-foundry
+cd market-foundry">Copy</button>
+          <code>
+# Clone the repository<br>
+git clone https://github.com/jessicabat/market-foundry<br>
+cd market-foundry
+          </code>
+        </div>
+        <a href="https://github.com/jessicabat/market-foundry/blob/main/README.md" class="btn btn-primary" target="_blank">View Full Quickstart Guide</a>
+      </div>
+
+      <p style="text-align:center; margin-top:1.5rem; font-size:0.88rem; color:var(--graphite);">
+        Can't make it online? Come find us at the
+        <a href="https://www.eventbrite.com/e/hdsi-2026-senior-capstone-showcase-tickets-1977302085766?aff=oddtdtcreator" target="_blank" style="color:var(--teal); font-weight:600;">HDSI Capstone Showcase</a>
+        on March 13 at the Price Center East Ballroom, UC San Diego.
+      </p>
+
+    </div>
   </section>
+
 
   <!-- About Us Section -->
   <section id="about" class="section">
@@ -598,6 +793,7 @@ python src/build_graph.py --input-dir your_docs/<br> -->
             <li><a href="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct" target="_blank">Qwen2.5-7B</a></li>
             <li><a href="https://ai.meta.com/llama/" target="_blank">Meta-Llama</a></li>
             <li><a href="https://neo4j.com/" target="_blank">Neo4j</a></li>
+            <li><a href="https://modal.com/" target="_blank">Modal</a></li>
           </ul>
         </div>
       </div>
