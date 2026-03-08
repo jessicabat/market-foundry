@@ -13,18 +13,201 @@ We gratefully acknowledge the **OneKE** repository and its authors for enabling 
 ---
 
 ## Table of Contents  
-- [Introduction](#introduction)
-- [Workflow Overview](#workflow-overview)
-- [Directory Structure](#directory-structure)
-- [Setup Instructions](#setup-instructions)
-- [Customizations](#customizations)
-- [Running Market Foundry Pipeline](#running-market-foundry-pipeline)
-- [Pipeline Outputs](#pipeline-outputs)
-- [Final Thoughts](#final-thoughts)
+- [API vs Local: Which Should I Use?](#api-vs-local-which-should-i-use)
+- [API Documentation](#api-documentation)
+  - [How it works](#how-it-works)
+  - [Endpoints](#endpoints)
+  - [Usage](#usage)
+  - [Get a free Neo4j instance](#get-a-free-neo4j-instance)
+  - [Deploy your own API instance](#deploy-your-own-api-instance)
+- [Local Setup](#local-setup)
+  - [Introduction](#introduction)
+  - [Workflow Overview](#workflow-overview)
+  - [Directory Structure](#directory-structure)
+  - [Setup Instructions](#setup-instructions)
+  - [Customizations](#customizations)
+  - [Running Market Foundry Pipeline](#running-market-foundry-pipeline)
+  - [Pipeline Outputs](#pipeline-outputs)
+  - [Final Thoughts](#final-thoughts)
 
 ---
 
-## Introduction  
+## API vs Local: Which Should I Use?
+
+| | **API** | **Local** |
+|---|---|---|
+| **Setup time** | ~1 minute | 15–30 minutes |
+| **GPU required** | No — runs on Modal's serverless GPU | Yes — recommended for reasonable speed |
+| **Cost** | $0 to start (Modal free tier) | Your own compute costs |
+| **Best for** | Quick integration, production use, no infrastructure management | Research, customization, running your own model |
+| **Model** | Qwen2.5-1.5B-Instruct (hosted) | Any supported Hugging Face or API model |
+| **Neo4j** | Bring your own (BYOD) | Local or remote Neo4j instance |
+
+**Use the API if** you want to start extracting knowledge graphs immediately without setting up a GPU environment, managing dependencies, or hosting a model. Just send a document, get back triples.
+
+**Use local setup if** you want full control over the model, need to customize the extraction pipeline, or are running experiments that require reproducibility over a specific model configuration.
+
+---
+
+## API Documentation
+
+> **Live endpoint:** `https://marija-vukic--market-foundry-api-fastapi-app.modal.run`  
+> **Interactive docs:** `https://marija-vukic--market-foundry-api-fastapi-app.modal.run/docs`  
+> **Stack:** Modal (serverless GPU) · FastAPI · Neo4j AuraDB  
+> **Cost:** $0 to start
+
+### How it works
+
+MarketFoundry is an **open-source, API-first knowledge extraction engine** that converts any financial document format into queryable knowledge graphs.
+
+It provides the **compute and intelligence layer** — document classification, sectioning, and causal triple extraction via OneKE + Qwen.
+
+**Build Your Own Database.** Pass your Neo4j AuraDB credentials with each request and extracted triples are written directly to your own graph instance. No credentials? No problem — results are still returned as JSON.
+
+```
+Your Document
+     ↓
+MarketFoundry API (Modal GPU)
+  → classify → section → extract triples
+     ↓                        ↓
+  JSON response         Your Neo4j instance
+                        (optional, yours only)
+```
+
+---
+
+### Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/process` | Upload document + optional Neo4j credentials → extract knowledge graph |
+| `GET`  | `/result/{job_id}` | Poll for results from a submitted job |
+| `POST` | `/query` | Run a read-only Cypher query against your own Neo4j instance |
+| `GET`  | `/health` | Liveness check |
+| `GET`  | `/docs` | Swagger UI |
+
+---
+
+### Usage
+
+#### 1. Submit a job
+
+**Without Neo4j (JSON output only):**
+
+```bash
+curl -X POST "https://marija-vukic--market-foundry-api-fastapi-app.modal.run/process" \
+  -F "file=@/path/to/your/document.pdf"
+```
+
+**With your own Neo4j (triples also written to your graph):**
+
+```bash
+curl -X POST "https://marija-vukic--market-foundry-api-fastapi-app.modal.run/process" \
+  -F "file=@/path/to/your/document.pdf" \
+  -F "neo4j_uri=neo4j+s://xxxx.databases.neo4j.io" \
+  -F "neo4j_username=neo4j" \
+  -F "neo4j_password=yourpassword"
+```
+
+Response:
+```json
+{
+  "job_id": "fc-JobID",
+  "status": "processing",
+  "poll_url": "/result/fc-JobID",
+  "message": "Job started for 'document.pdf'. Poll /result/fc-JobID to get results."
+}
+```
+
+#### 2. Poll for results
+
+```bash
+curl "https://marija-vukic--market-foundry-api-fastapi-app.modal.run/result/fc-JobID"
+```
+
+While running:
+```json
+{"status": "processing", "message": "Still running, check back soon."}
+```
+
+When complete:
+```json
+{
+  "status": "complete",
+  "result": {
+    "filename": "document.pdf",
+    "document_type": "Earnings Call Transcript",
+    "triples": [
+      {
+        "head": "Apple Inc.",
+        "head_type": "company",
+        "relation": "reported",
+        "relation_type": "financial_result",
+        "tail": "record quarterly revenue of $124.3 billion",
+        "tail_type": "financial_metric"
+      }
+    ],
+    "triple_count": 1,
+    "neo4j_relationships_written": 1,
+    "neo4j_used": true,
+    "status": "success"
+  }
+}
+```
+
+#### 3. Query your graph (optional)
+
+Once triples are written to Neo4j, you can query your graph directly via the API:
+
+```bash
+curl -X POST "https://marija-vukic--market-foundry-api-fastapi-app.modal.run/query" \
+  -F "cypher=MATCH (s)-[r]->(o) RETURN s.name, type(r), o.name LIMIT 25" \
+  -F "neo4j_uri=neo4j+s://xxxx.databases.neo4j.io" \
+  -F "neo4j_username=neo4j" \
+  -F "neo4j_password=yourpassword"
+```
+
+Response:
+```json
+{
+  "results": [
+    {"s.name": "Apple Inc.", "type(r)": "REPORTED", "o.name": "record quarterly revenue"}
+  ],
+  "count": 1
+}
+```
+
+> Only `MATCH` and `CALL` queries are permitted — the endpoint is read-only.
+
+**Supported file formats:** `.pdf`, `.docx`, `.txt`, `.html`, `.json`
+
+---
+
+### Get a free Neo4j instance
+
+1. Go to [neo4j.com/cloud/aura](https://neo4j.com/cloud/aura/)
+2. Sign up and click **Create Free Instance**
+3. Save the URI, username, and password shown — **password is only displayed once**
+
+Free tier: 200k nodes, 400k relationships, $0/month.
+
+---
+
+### Deploy your own API instance
+
+```bash
+pip install modal
+modal setup
+modal deploy src/api/modal_app.py
+```
+
+No secrets needed — just Modal login. Users supply their own Neo4j credentials per request.
+
+---
+
+## Local Setup
+
+### Introduction  
 Unstructured financial text such as regulatory filings, earnings call transcripts, news articles, research reports, and internal analyses, contains critical context about real-world market events and decision drivers. However, this information is typically processed in isolation through summarization, sentiment scoring, or event tagging, leaving relationships across documents, time, and market actors disconnected. As a result, valuable narrative and causal context often remains inaccessible to the analytical tools and models that rely on structured data representations.
 
 Market Foundry addresses this by providing a reproducible, modular pipeline that classifies documents, extracts structured triples, and constructs a queryable knowledge graph in Neo4j. We use **OneKE**, an open-source framework, to drive entity and relationship extraction through a pipeline that includes document classification, dynamic topic extraction, and schema-guided semantic understanding. 
@@ -184,7 +367,7 @@ In addition to the default APIs, OneKE also supports the following model categor
 4. **MiniCPM**  
 5. **DeepSeek-R1**
 
-> **Note:** OneKE’s own model does *not* support triple extraction, so we did not include it in the list of supported models for our use case. However, you can still use it for other tasks OneKE supports, such as Named Entity Recognition (NER), Relation Extraction (RE), and Event Extraction (EE).
+> **Note:** OneKE's own model does *not* support triple extraction, so we did not include it in the list of supported models for our use case. However, you can still use it for other tasks OneKE supports, such as Named Entity Recognition (NER), Relation Extraction (RE), and Event Extraction (EE).
 
 In `src/utils/extraction_config.yaml`, you can specify any Hugging Face model from the supported categories listed above. Update the `category` and `model_name_or_path` fields in the `model` section of the configuration. If you choose an API-based model (e.g., LocalServer, OpenAI, DeepSeek), include the necessary authentication credentials (e.g., API key) and base URL if applicable.
 
