@@ -156,6 +156,7 @@ class MarketFoundryPipeline:
         neo4j_uri: str = "",
         neo4j_username: str = "",
         neo4j_password: str = "",
+        webhook_url: str = "",
     ) -> dict:
         """
         Full MarketFoundry pipeline.
@@ -233,6 +234,20 @@ class MarketFoundryPipeline:
             all_triples = [t for t in all_triples if isinstance(t, dict) and t.get("head") and t.get("tail")]
             print(f"Clean triple count after filtering: {len(all_triples)}")
 
+            # Normalize each triple to a consistent schema:
+            # { head, head_type, relation, relation_type, tail, tail_type }
+            all_triples = [
+                {
+                    "head": t.get("head", "").strip(),
+                    "head_type": t.get("head_type", "").strip().lower(),
+                    "relation": (t.get("relation") or "").strip(),
+                    "relation_type": (t.get("relation_type") or "").strip(),
+                    "tail": t.get("tail", "").strip(),
+                    "tail_type": t.get("tail_type", "").strip().lower(),
+                }
+                for t in all_triples
+            ]
+
             # Push triples to user's Neo4j
             neo4j_count = 0
             if neo4j_uri and neo4j_username and neo4j_password:
@@ -244,20 +259,20 @@ class MarketFoundryPipeline:
                         for triple in all_triples:
                             rel = triple.get("relation_type") or triple.get("relation") or "RELATED_TO"
                             rel_label = re.sub(r"[^a-zA-Z0-9_]", "_", rel).upper() or "RELATED_TO"
+                            raw_head_type = triple.get("head_type") or "entity"
+                            raw_tail_type = triple.get("tail_type") or "entity"
+                            head_label = re.sub(r"[^a-zA-Z0-9_]", "_", raw_head_type).strip("_") or "entity"
+                            tail_label = re.sub(r"[^a-zA-Z0-9_]", "_", raw_tail_type).strip("_") or "entity"
                             cypher = (
-                                f"MERGE (h:Entity {{name: $head}}) "
-                                f"SET h.type = $head_type "
-                                f"MERGE (t:Entity {{name: $tail}}) "
-                                f"SET t.type = $tail_type "
+                                f"MERGE (h:{head_label} {{name: $head}}) "
+                                f"MERGE (t:{tail_label} {{name: $tail}}) "
                                 f"MERGE (h)-[r:{rel_label}]->(t) "
                                 f"SET r.relation = $relation"
                             )
                             session.run(
                                 cypher,
                                 head=triple.get("head", ""),
-                                head_type=triple.get("head_type", ""),
                                 tail=triple.get("tail", ""),
-                                tail_type=triple.get("tail_type", ""),
                                 relation=triple.get("relation", ""),
                             )
                         result = session.run("MATCH ()-[r]->() RETURN count(r) AS cnt")
@@ -268,7 +283,7 @@ class MarketFoundryPipeline:
                 except Exception as e:
                     print(f"Neo4j write error: {e}")
 
-            return {
+            result = {
                 "filename": filename,
                 "document_type": list(classifications.values())[0] if classifications else "unknown",
                 "sections_identified": list(list(sectioned_documents.values())[0].keys()) if sectioned_documents else [],
@@ -278,6 +293,17 @@ class MarketFoundryPipeline:
                 "neo4j_used": bool(neo4j_uri),
                 "status": "success",
             }
+
+            # Fire webhook if provided — POST full results to user's endpoint
+            if webhook_url:
+                try:
+                    import requests as _requests
+                    resp = _requests.post(webhook_url, json=result, timeout=30)
+                    print(f"Webhook delivered to {webhook_url} — status {resp.status_code}")
+                except Exception as e:
+                    print(f"Webhook delivery failed: {e}")
+
+            return result
 
         finally:
             os.unlink(tmp_path)
@@ -362,6 +388,7 @@ async def process_document(
     neo4j_uri: str = Form("", description="(Optional) Your Neo4j URI — e.g. neo4j+s://xxxx.databases.neo4j.io"),
     neo4j_username: str = Form("", description="(Optional) Your Neo4j username"),
     neo4j_password: str = Form("", description="(Optional) Your Neo4j password"),
+    webhook_url: str = Form("", description="(Optional) URL to POST results to when processing completes — no polling needed"),
 ):
     """
     **Main endpoint.** Upload a financial document to extract a causal knowledge graph.
@@ -388,14 +415,19 @@ async def process_document(
     # Spawn the job in the background and return a job_id immediately
     pipeline = MarketFoundryPipeline()
     call = pipeline.process_document.spawn(
-        contents, file.filename, neo4j_uri, neo4j_username, neo4j_password
+        contents, file.filename, neo4j_uri, neo4j_username, neo4j_password, webhook_url
     )
-    return JSONResponse(content={
+    response = {
         "job_id": call.object_id,
         "status": "processing",
-        "message": f"Job started for '{file.filename}'. Poll /result/{call.object_id} to get results.",
         "poll_url": f"/result/{call.object_id}",
-    })
+    }
+    if webhook_url:
+        response["message"] = f"Job started for '{file.filename}'. Results will be POSTed to {webhook_url} when complete."
+        response["webhook_url"] = webhook_url
+    else:
+        response["message"] = f"Job started for '{file.filename}'. Poll /result/{call.object_id} to get results."
+    return JSONResponse(content=response)
 
 
 @web_app.get("/result/{job_id}", tags=["Pipeline"])
