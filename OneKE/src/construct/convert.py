@@ -37,11 +37,11 @@ def generate_cypher_statements(data):
         tail_type = triple.get("tail_type")
 
         # head_safe = sanitize_string(head) if head else None
-        head_type_safe = sanitize_string(head_type) if head_type else None
+        head_type_safe = sanitize_string(head_type).lower() if head_type else None
         # relation_safe = sanitize_string(relation) if relation else None
-        relation_type_safe = sanitize_string(relation_type) if relation_type else None
+        relation_type_safe = sanitize_string(relation_type).lower() if relation_type else None
         # tail_safe = sanitize_string(tail) if tail else None
-        tail_type_safe = sanitize_string(tail_type) if tail_type else None
+        tail_type_safe = sanitize_string(tail_type).lower() if tail_type else None
 
         statement = ""
         if head:

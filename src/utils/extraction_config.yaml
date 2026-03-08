@@ -12,8 +12,8 @@ extraction:
   show_trajectory: false # Controls whether to display the intermediate steps of extraction when finished.
 
 # For knowledge graph construction, comment out if not desired.
-# construct:
-#   database: "Neo4j"
-#   url: ${NEO4J_URL}
-#   username: ${NEO4J_USERNAME}
-#   password: ${NEO4J_PASSWORD}
+construct:
+  database: "Neo4j"
+  url: ${NEO4J_URI}
+  username: ${NEO4J_USERNAME}
+  password: ${NEO4J_PASSWORD}

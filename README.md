@@ -13,22 +13,38 @@ We gratefully acknowledge the **OneKE** repository and its authors for enabling 
 ---
 
 ## Table of Contents  
-- [Workflow Overview](#workflow-overview)  
+- [Introduction](#introduction)
+- [Workflow Overview](#workflow-overview)
 - [Directory Structure](#directory-structure)
-- [Introduction](#introduction)  
-- [Setup Instructions](#setup-instructions)  
-- [Running Market Foundry Pipeline](#running-market-foundry-pipeline)  
-- [Example Output](#example-output)  
+- [Setup Instructions](#setup-instructions)
+- [Customizations](#customizations)
+- [Running Market Foundry Pipeline](#running-market-foundry-pipeline)
+- [Pipeline Outputs](#pipeline-outputs)
 - [Final Thoughts](#final-thoughts)
 
 ---
 
+## Introduction  
+Unstructured financial text such as regulatory filings, earnings call transcripts, news articles, research reports, and internal analyses, contains critical context about real-world market events and decision drivers. However, this information is typically processed in isolation through summarization, sentiment scoring, or event tagging, leaving relationships across documents, time, and market actors disconnected. As a result, valuable narrative and causal context often remains inaccessible to the analytical tools and models that rely on structured data representations.
+
+Market Foundry addresses this by providing a reproducible, modular pipeline that classifies documents, extracts structured triples, and constructs a queryable knowledge graph in Neo4j. We use **OneKE**, an open-source framework, to drive entity and relationship extraction through a pipeline that includes document classification, dynamic topic extraction, and schema-guided semantic understanding. 
+
+To reproduce our results, users can choose between:  
+- A `conda` environment setup  
+- A `Docker` containerized setup  
+
+First, clone the repository and ensure that Docker Desktop or conda is installed. Then, follow the instructions below to set up your environment and run the pipeline.
+
+---
+
 ### Workflow Overview  
-Document (`.pdf`, `.txt`, `.docx`, `.html`, `.json`) \
-→ Document Classification \
-→ Dynamic Topic Extraction \
-→ Knowledge Extraction \
-→ Neo4j Knowledge Graph Construction  
+```mermaid
+flowchart LR
+    A["Document<br/>.pdf&nbsp;|&nbsp;.txt&nbsp;|&nbsp;.docx&nbsp;|&nbsp;.html&nbsp;|&nbsp;.json"] --> B["Document<br/>Classification"]
+    B --> C["Dynamic Topic<br/>Extraction"]
+    C --> D["Knowledge<br/>Extraction"]
+    D --> E["Neo4j Graph<br/>Construction"]
+```
 
 ---
 
@@ -44,11 +60,12 @@ We organized our codebase into the following structure for clarity and modularit
   - `models/`: Code related to TFIDF model loading and inference
   - `knn_pipeline/`: Code related to KNN-based retrieval
 - `Configs/`: Base configuration files for the project. If `topic_extractor.py` and `yaml_generator.py` fail these are the fallback configs that will be used for extraction.
-- `Papers/`: Sample financial documents for testing the pipeline
+- `Papers/`: Financial documents for testing the pipeline (126 files across earnings call transcripts, SEC filings, press releases, research papers, and news articles)
 - `Results/`: Output results from running the pipeline
   - `construct.py`: Script to construct the Neo4j graph from extracted triples (can be run separately if needed)
   - `extraction_results.json`: Extracted triples from the documents
 - `docs/`: Website documentation files
+- `evaluation_notebook.ipynb`: Notebook for evaluating the document classifier model
 - Setup Files:
   - `requirements.txt`: Python dependencies for the project
   - `environment.yml`: Conda environment configuration
@@ -56,22 +73,24 @@ We organized our codebase into the following structure for clarity and modularit
 
 ---
 
-## Introduction  
-Unstructured financial text such as regulatory filings, earnings call transcripts, news articles, research reports, and internal analyses, contains critical context about real-world market events and decision drivers. However, this information is typically processed in isolation through summarization, sentiment scoring, or event tagging, leaving relationships across documents, time, and market actors disconnected. As a result, valuable narrative and causal context often remains inaccessible to the analytical tools and models that rely on structured data representations.
-
-This project focuses on transforming unstructured financial documents into a structured knowledge graph using **Neo4j**. We use **OneKE**, an open-source framework, to extract entities and relationships from these documents through a pipeline that includes classification, sectioning, and semantic understanding.
-
-The system processes financial documents through OneKE and constructs a structured knowledge graph in Neo4j.
-
-To reproduce our results, users can choose between:  
-- A `conda` environment setup  
-- A `Docker` containerized setup  
-
-First, clone the repository and ensure that Docker Desktop or conda is installed. Then, follow the instructions below to set up your environment and run the pipeline.
-
----
-
 ## Setup Instructions  
+
+Key dependencies are pinned below. The full list is in `requirements.txt` and `environment.yml`.
+
+| Package | Version | Purpose |
+|---|---|---|
+| `python` | 3.12.12 | Runtime |
+| `torch` | 2.4.0 | Model inference |
+| `transformers` | 4.44.0 | Hugging Face model loading |
+| `accelerate` | 1.1.1 | GPU/CPU inference acceleration |
+| `sentence-transformers` | 3.3.0 | KNN-based retrieval |
+| `langchain` | 0.3.3 | Document loading and chaining |
+| `neo4j` | 5.28.1 | Knowledge graph construction |
+| `openai` | 1.55.3 | API-based model support |
+| `pdfplumber` | 0.11.9 | PDF document parsing |
+| `scikit-learn` | 1.6.1 | TF-IDF and KNN models |
+| `numpy` | 1.26.4 | Numerical operations |
+| `pandas` | 2.2.3 | Data handling |
 
 ### Two Options for Environment Setup  
 We offer two methods to set up your environment: a **conda** environment or a **Docker** container.
@@ -175,7 +194,7 @@ In `src/utils/extraction_config.yaml`, you can specify any Hugging Face model fr
 model:
   category: LocalServer
   model_name_or_path: "qwen/qwen3-4b-2507" # The model identifier.
-  api_key: LM_Studio # Include a value even though LM Stuidio does not require an API key, to avoid errors in the code that expects this field.
+  api_key: LM_Studio # Include a value even though LM Studio does not require an API key, to avoid errors in the code that expects this field.
   base_url: http://127.0.0.1:1234 # The default port for LM Studio. 
 ```
 
@@ -210,6 +229,8 @@ hf auth login
 
 Once authenticated, you are ready to run the pipeline.
 
+> **Dataset:** Sample financial documents are provided in the Papers/ folder. You can also supply your own documents — the pipeline accepts .pdf, .txt, .docx, .html, and .json files.
+
 ### Two Execution Methods  
 
 1. **Run with a single file**  
@@ -228,7 +249,7 @@ python src/run.py --folder <path_to_folder>
 
 ---
 
-## Example Output
+## Pipeline Outputs
 After running the pipeline, you will see outputs similar to the following in your terminal:
 
 ```json
@@ -261,6 +282,12 @@ Extraction Result:
       }
     ]
   }
+```
+
+These extracted triples are automatically saved to `Results/extraction_results.json` after each run. To construct the Neo4j knowledge graph from a previous extraction, run `Results/construct.py` separately:
+
+```bash
+python Results/construct.py
 ```
 
 ---

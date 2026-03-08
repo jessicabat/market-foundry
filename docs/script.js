@@ -73,3 +73,13 @@ document.querySelectorAll('.copy-code-btn').forEach(button => {
     }, 1200);
   });
 });
+
+// Limitations accordion
+document.querySelectorAll('.limitation-trigger').forEach(trigger => {
+  trigger.addEventListener('click', () => {
+    const row = trigger.closest('.limitation-row');
+    const isOpen = row.classList.contains('open');
+    row.classList.toggle('open', !isOpen);
+    trigger.setAttribute('aria-expanded', String(!isOpen));
+  });
+});
