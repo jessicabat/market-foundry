@@ -37,7 +37,7 @@ MarketFoundry API (Modal GPU)
 | `GET`  | `/result/{job_id}` | Poll for results from a submitted job |
 | `POST` | `/query` | Run a read-only Cypher query against your own Neo4j instance |
 | `GET`  | `/health` | Liveness check |
-| `GET`  | `/docs` | Swagger UI |
+| `GET`  | `/docs` | Documentation |
 
 ---
 
@@ -45,7 +45,7 @@ MarketFoundry API (Modal GPU)
 
 ### 1. Submit a job
 
-**Without Neo4j (JSON output only):**
+**Without Neo4j (in-terminal JSON output only):**
 
 ```bash
 curl -X POST "https://marija-vukic--market-foundry-api-fastapi-app.modal.run/process" \
