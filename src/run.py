@@ -56,6 +56,9 @@ def main():
     # Load the TF-IDF vectorizer from the models folder
     vectorizer_path = os.path.join(os.path.dirname(__file__), "models", "TFIDF_Vectorizer.joblib")
     vectorizer = load_tfidf_vectorizer(vectorizer_path)
+
+    stacker_bundle = load_document_stacker_bundle()
+    press_release_news_bundle = load_press_release_news_bundle()
         
     # Extract raw text from loaded files
     texts = extract_text(loaded_files)
@@ -65,7 +68,13 @@ def main():
     cleaned_texts = clean_texts(texts)
         
     # Classify documents
-    classifications = classify_document_types(model, vectorizer, cleaned_texts)
+    classifications = classify_document_types(
+        model,
+        vectorizer,
+        cleaned_texts,
+        stacker_bundle=stacker_bundle,
+        press_release_news_bundle=press_release_news_bundle,
+    )
         
     # Output the classifications
     output_classifications(classifications)
