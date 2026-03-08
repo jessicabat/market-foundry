@@ -93,11 +93,19 @@
             reports to piece together what's driving revenue, risk, and growth. It's slow, it doesn't scale,
             and it keeps valuable context out of the tools that actually make decisions.
           </p>
+          <p>The obvious shortcut is to paste documents into a large language model (LLM) and ask it to extract 
+            the key facts. But LLMs are generative by nature: they interpolate, paraphrase, and sometimes 
+            confabulate details that sound plausible but cannot be traced back to the source. There is no 
+            guarantee that a relationship an LLM describes actually appears in the document, no structured 
+            output you can query, no audit trail, and no way to verify what was grounded in text versus 
+            inferred from pretraining. For financial workflows where a misattributed figure or fabricated 
+            causal link carries real consequences, that is not an acceptable tradeoff.
+          </p>
           <p>
             The firms building the next generation of financial intelligence know that unstructured text
             is the last great unlocked data layer. The context buried in earnings calls, filings, and
             internal reports holds the ground truth that numbers alone cannot explain.
-            The next leap in NLP is grounding language models in structured, verifiable, domain-specific
+            The next leap in Natural Language Processing (NLP) is grounding language models in structured, verifiable, domain-specific
             knowledge so they stop hallucinating and start reasoning.
             Market Foundry is part of that infrastructure layer: turning the narrative behind financial
             decisions into something machines can actually work with.
@@ -132,8 +140,8 @@
             <li>Document-type classification (5 types)</li>
             <li>Dynamic topic sectioning &amp; YAML schema generation</li>
             <li>Schema-guided triple extraction via OneKE (a triple is a structured fact: Subject, Predicate, Object; for example, <em>Interest Rate Hike</em> triggered <em>Market Volatility</em>)</li>
-            <li>Neo4j knowledge graph construction</li>
-            <li>Multi-format ingestion (PDF, DOCX, HTML, JSON)</li>
+            <li>Neo4j knowledge graph construction (a graph database where entities become nodes and relationships become queryable edges)</li>
+            <li>Multi-format ingestion (PDF, DOCX, HTML, JSON, TXT)</li>
           </ul>
         </div>
         <div class="scope-card didnt" style="border-top: 4px solid var(--copper);">
@@ -163,7 +171,7 @@
         <div class="step">
           <div class="step-number">1</div>
           <h3>Document Ingestion</h3>
-          <p>Upload PDF, DOCX, HTML, or JSON files. Market Foundry handles any financial document format; earnings calls, SEC filings, press releases, research reports, and news articles.</p>
+          <p>Upload PDF, DOCX, HTML, JSON, or TXT files. Market Foundry handles any financial document format; earnings calls, SEC filings, press releases, research reports, and news articles.</p>
         </div>
         
         <div class="step">
@@ -363,14 +371,14 @@
           <div class="limitation-body">
             Open-schema design produced 423 distinct relationship types across 15 documents. Because schemas are generated dynamically per document, the same underlying relationship can appear under slightly different names across files: one document may produce <code>revenue_growth</code> while another produces <code>revenue_increase</code> or <code>revenue_acceleration</code> for an identical fact. These are treated as separate edge types in the graph, so nodes that should be connected are not, reducing cross-document comparability and limiting the graph's ability to aggregate patterns without a normalization layer.
           </div>
-        </div>
+        <!-- </div>
           <div class="limitation-row">
           <button class="limitation-trigger" aria-expanded="false">
           <h4>Sparse Graph Connectivity</h4>
           <i class="limitation-chevron">&#8964;</i>
           </button>
           <div class="limitation-body">Average node degree of ~1.64 means most entities participate in only 1–2 relationships, limiting multi-hop reasoning without further graph enrichment.</div>
-        </div>
+        </div> -->
         <div class="limitation-row">
           <button class="limitation-trigger" aria-expanded="false">
           <h4>Long-Document Instability</h4>
@@ -570,67 +578,13 @@
     </div>
   </section>
 
-  <!-- Demo Section -->
-  <!-- <section id="demo" class="section section-alt">
-    <div class="container">
-      <h2 class="section-title">Demo</h2>
-      <p class="section-intro">
-        See MarketFoundry in action: from document upload to knowledge graph query.
-      </p>
-      
-      <div class="demo-container">
-        <div class="video-placeholder">
-          <div class="visual-placeholder">
-            <p>🎥 Demo Video</p>
-            <p class="visual-caption">
-              We're finalizing a full walkthrough demo. 
-              Check back before March 13 or come find us at the 
-              <a href="https://www.eventbrite.com/e/hdsi-2026-senior-capstone-showcase-tickets-1977302085766?aff=oddtdtcreator" target="_blank">
-                HDSI Capstone Showcase</a> 
-               on March 13 at the Price Center East Ballroom, UC San Diego.
-            </p>
-          </div>
-          Uncomment when video is ready:
-          <video controls width="100%">
-            <source src="assets/demo-video.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-         
-        </div>
-
-        <div class="demo-quickstart">
-          <h3>Try It Yourself</h3>
-          <div class="code-block">
-            <button class="copy-code-btn" type="button" aria-label="Copy quickstart commands" data-copy="git clone https://github.com/jessicabat/market-foundry
-cd market-foundry">Copy</button>
-            <code>
-# Clone the repository<br>
-git clone https://github.com/jessicabat/market-foundry<br>
-cd market-foundry<br>
-<br>
-# Install dependencies<br>
-pip install -e .<br>
-<br>
-# Run on your documents<br>
-python src/run.py --file your_docs/<br>
-<br>
-# Build knowledge graph<br>
-python src/build_graph.py --input-dir your_docs/<br>
-            </code>
-          </div>
-          <a href="https://github.com/jessicabat/market-foundry/blob/main/README.md" class="btn btn-primary" target="_blank">View Full Quickstart Guide →</a>
-        </div>
-      </div>
-    </div>
-  </section> -->
-
   <!-- API section -->
     <section id="api" class="section">
       <div class="container">
       <h2 class="section-title">API Access</h2>
 
       <p class="section-intro">
-        Developers can integrate the knowledge extraction pipeline directly through our Modal API. The endpoint accepts a document and automatically extracts knowledge graph triples and stores them in a Neo4j database. 
+        Developers can integrate the knowledge extraction pipeline directly through our REST API. The endpoint accepts a document and automatically extracts knowledge graph triples and stores them in a Neo4j database. 
         Click the link below to view the API documentation and get started:
       </p>
 
