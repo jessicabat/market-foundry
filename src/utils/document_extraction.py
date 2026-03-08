@@ -108,7 +108,6 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
     total_files = len(texts)
     successful_topic_extractions = 0
     index = 1
-    successful_topic_extractions = 0
     for file, text in texts:
         file_name = get_basename(file).split(".")[0]  # Get filename without extension for YAML naming
         try:
