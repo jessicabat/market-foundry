@@ -105,7 +105,7 @@ model_cache = modal.Volume.from_name("market-foundry-model-cache", create_if_mis
 @app.cls(
     gpu="A10G",
     volumes={"/model-cache": model_cache},
-    timeout=1800,
+    timeout=3600,  # 1 hour max per request — extraction can be slow, especially with larger documents
     scaledown_window=300,
 )
 class MarketFoundryPipeline:
