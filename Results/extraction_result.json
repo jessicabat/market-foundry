@@ -5255,5 +5255,225 @@
       "tail_type": "Service"
     }
   ]
+},
+{
+  "triple_list": [
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "announces",
+      "relation_type": "event announcement",
+      "tail": "its Conference Call and Webcast to Discuss 2025 Fourth Quarter and Full Year Results",
+      "tail_type": "event"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "scheduled_for",
+      "relation_type": "release timeline",
+      "tail": "February 3, 2026",
+      "tail_type": "Date"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "available_on",
+      "relation_type": "release timeline",
+      "tail": "www.AFGinc.com",
+      "tail_type": "Website"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "scheduled_for",
+      "relation_type": "release timeline",
+      "tail": "11:30 a.m. (ET) on Wednesday, February 4, 2026",
+      "tail_type": "Time"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "available_on",
+      "relation_type": "release timeline",
+      "tail": "https://www.AFGinc.com/news-and-events/event-calendar",
+      "tail_type": "Website"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "releases",
+      "relation_type": "financial results",
+      "tail": "2025 Fourth Quarter and Full Year Results",
+      "tail_type": "Financial Results"
+    },
+    {
+      "head": "Great American Insurance Group",
+      "head_type": "Company",
+      "relation": "operates",
+      "relation_type": "business activity",
+      "tail": "property and casualty insurance",
+      "tail_type": "Service"
+    },
+    {
+      "head": "Great American Insurance Group",
+      "head_type": "Company",
+      "relation": "focuses_on",
+      "relation_type": "product specialization",
+      "tail": "specialized commercial products for businesses",
+      "tail_type": "Product"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "expects to release",
+      "relation_type": "financial result disclosure",
+      "tail": "2025 fourth quarter and full year results",
+      "tail_type": "financial result"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "will hold",
+      "relation_type": "event participation",
+      "tail": "conference call",
+      "tail_type": "event"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "will hold",
+      "relation_type": "event participation",
+      "tail": "webcast",
+      "tail_type": "event"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "will hold",
+      "relation_type": "event participation",
+      "tail": "conference call",
+      "tail_type": "event"
+    },
+    {
+      "head": "conference call",
+      "head_type": "event",
+      "relation": "will take place",
+      "relation_type": "time",
+      "tail": "11:30 a.m. (ET) on Wednesday, February 4, 2026",
+      "tail_type": "Time Period"
+    },
+    {
+      "head": "webcast",
+      "head_type": "event",
+      "relation": "will take place",
+      "relation_type": "time",
+      "tail": "11:30 a.m. (ET) on Wednesday, February 4, 2026",
+      "tail_type": "Time Period"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "has_business_structure",
+      "relation_type": "has_business_structure",
+      "tail": "Great American Insurance Group",
+      "tail_type": "Core Operation"
+    },
+    {
+      "head": "Great American Insurance Group",
+      "head_type": "Core Operation",
+      "relation": "operates_in",
+      "relation_type": "operates_in",
+      "tail": "property and casualty insurance",
+      "tail_type": "Insurance Product"
+    },
+    {
+      "head": "Great American Insurance Group",
+      "head_type": "Core Operation",
+      "relation": "has_historical_background",
+      "relation_type": "has_historical_background",
+      "tail": "1872",
+      "tail_type": "Date"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "has_historical_background",
+      "relation_type": "has_historical_background",
+      "tail": "1872",
+      "tail_type": "Date"
+    },
+    {
+      "head": "Great American Insurance Company",
+      "head_type": "Key Entity",
+      "relation": "is part of",
+      "relation_type": "includes_key_entity",
+      "tail": "Great American Insurance Group",
+      "tail_type": "Core Operation"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "has_call_schedule",
+      "relation_type": "call_schedule",
+      "tail": "11:30 a.m. (ET) on Wednesday, February 4, 2026",
+      "tail_type": "Call"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "requires_registration",
+      "relation_type": "registration_process",
+      "tail": "registration for the call",
+      "tail_type": "Registration Process"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "provides_dial_in",
+      "relation_type": "dial_in_information",
+      "tail": "dial-in number and a unique pin",
+      "tail_type": "Dial-in Information"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "offers_webcast",
+      "relation_type": "webcast_access",
+      "tail": "https://www.AFGinc.com/news-and-events/event-calendar",
+      "tail_type": "Webcast Access"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "offers_replay",
+      "relation_type": "replay_availability",
+      "tail": "approximately two hours after the completion of the call",
+      "tail_type": "Replay Availability"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "expects_to_release",
+      "relation_type": "results_release",
+      "tail": "2025 fourth quarter and full year results",
+      "tail_type": "Event"
+    },
+    {
+      "head": "American Financial Group, Inc.",
+      "head_type": "Company",
+      "relation": "has_call_schedule",
+      "relation_type": "call_schedule",
+      "tail": "5:00 p.m. (ET) on Tuesday, February 3, 2026",
+      "tail_type": "Event"
+    }
+  ]
 }
 ]

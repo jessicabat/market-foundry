@@ -56,7 +56,8 @@ if __name__ == "__main__":
     url = os.getenv("NEO4J_URL", "") 
     user = os.getenv("NEO4J_USERNAME", "")
     password = os.getenv("NEO4J_PASSWORD", "")
-    json_file_path = "extraction_result.json"
+    json_file_name = "extraction_result.json"
+    json_file_path = os.path.join(os.path.dirname(__file__), json_file_name)
     
     # Ensure variables exist before calling
     if url and user and password:
