@@ -268,10 +268,9 @@ body {
 
 /* ===== PROBLEM SECTION ===== */
 .problem-content {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 3rem;
-  align-items: center;
+display: flex;
+flex-direction: column;
+gap: 2rem;
 }
 
 .problem-text h3 {
@@ -944,7 +943,7 @@ footer {
     text-align: center;
   }
 
-  .contributions-grid, .scope-grid { grid-template-columns: 1fr; }
+  .contributions-grid, .scope-grid { grid-template-columns: 1fr 1fr; }
 
   .example-card { flex-direction: column; }
   .example-visual { width: 100%; height: 160px; }
@@ -1044,50 +1043,6 @@ footer {
   max-height: 600px;
   padding: 1.5rem 1.75rem 1.5rem;
 }
-
-/* ===== NEXT STEPS SECTION ===== */
-/* .next-steps-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1rem;
-}
-.next-step {
-  padding: 1.5rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease;
-}
-.next-step:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-}
-.next-step-number {
-  background: linear-gradient(135deg, var(--teal) 0%, var(--graphite) 100%);
-  color: white;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin: 0 0 0.85rem 0;
-}
-.next-step h4 {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 0.4rem;
-}
-.next-step p {
-  font-size: 0.88rem;
-  color: rgba(17, 24, 39, 0.72);
-  line-height: 1.6;
-  margin: 0;
-} */
 /* ===== NEXT STEPS SECTION ===== */
 .next-steps-list {
   background: white;

@@ -65,78 +65,74 @@
   </section>
 
   <!-- Problem Section -->
-<section id="problem" class="section">
-  <div class="container">
-    <h2 class="section-title">Why It Matters</h2>
-    <div class="problem-content">
-      <div class="problem-text">
-        <h3>The Challenge</h3>
-        <p>
-          Traditional analysts spend hours manually reading through filings, transcripts, and 
-          reports to piece together what's driving revenue, risk, and growth. It's slow, it doesn't scale, 
-          and it keeps valuable context out of the tools that actually make decisions.
-        </p>
-        <p> 
-          The firms building the next generation of financial intelligence know that unstructured text 
-          is the last great unlocked data layer. The context buried in earnings calls, filings, and 
-          internal reports holds the ground truth that numbers alone cannot explain. 
-          The next leap in NLP is grounding language models in structured, verifiable, domain-specific 
-          knowledge so they stop hallucinating and start reasoning. 
-          Market Foundry is part of that infrastructure layer: turning the narrative behind financial 
-          decisions into something machines can actually work with.
-        </p> 
-        <p>
-          Market Foundry changes that. Open-source and API-first, we give data-driven teams the extraction 
-          layer their pipelines are missing — so the narrative behind the numbers becomes just as queryable 
-          as the numbers themselves.
-        </p>
+  <section id="problem" class="section">
+    <div class="container">
+      <h2 class="section-title">Why It Matters</h2>
 
-        <h3>Document-aware extraction, built for modern financial pipelines</h3>
-        <p class="overview-summary">
-          Market Foundry classifies each document, sections it intelligently, and routes it to specialized 
-          schemas that extract entities, relationships, and causal structures, where present. The result is 
-          a knowledge graph (a connected map of facts and relationships across your entire document set) that your existing tools can actually work with. 
-        </p><p>  
-          <strong>Same RAG system, sharper retrieval. Same dashboard, richer context. Built open-source so you can integrate it, extend it, 
-          and make it your own.</strong>
-        </p>
-        <h3>System Scope</h3>
-        <div class="scope-grid">
-          <div class="scope-card did">
-            <h4>What MarketFoundry Does</h4>
-            <ul>
-              <li>Document-type classification (5 types)</li>
-              <li>Dynamic topic sectioning &amp; YAML schema generation</li>
-              <li>Schema-guided triple extraction via OneKE (a triple is a structured fact: Subject, Predicate, Object; for example, <em>Interest Rate Hike</em> triggered <em>Market Volatility</em>)</li>
-              <li>Neo4j knowledge graph construction</li>
-              <li>Multi-format ingestion (PDF, DOCX, HTML, JSON)</li>
-            </ul>
-          </div>
-          <div class="scope-card didnt">
-            <h4>What MarketFoundry Doesn't Do</h4>
-            <ul>
-              <li>Query UI or chat interface</li>
-              <li>Real-time or streaming data feeds</li>
-              <li>Post-hoc ontology normalization</li>
-              <li>Cross-document co-reference resolution at scale</li>
-            </ul>
-          </div>
+      <div class="problem-content">
+        <div class="problem-text">
+          <h3>The Challenge</h3>
+          <p>
+            Traditional analysts spend hours manually reading through filings, transcripts, and
+            reports to piece together what's driving revenue, risk, and growth. It's slow, it doesn't scale,
+            and it keeps valuable context out of the tools that actually make decisions.
+          </p>
+          <p>
+            The firms building the next generation of financial intelligence know that unstructured text
+            is the last great unlocked data layer. The context buried in earnings calls, filings, and
+            internal reports holds the ground truth that numbers alone cannot explain.
+            The next leap in NLP is grounding language models in structured, verifiable, domain-specific
+            knowledge so they stop hallucinating and start reasoning.
+            Market Foundry is part of that infrastructure layer: turning the narrative behind financial
+            decisions into something machines can actually work with.
+          </p>
+          <h3>Document-aware extraction, built for modern financial pipelines</h3>
+          <p>
+            Market Foundry classifies each document, sections it intelligently, and routes it to specialized
+            schemas that extract entities, relationships, and causal structures, where present. The result is
+            a knowledge graph (a connected map of facts and relationships across your entire document set) that your existing tools can actually work with.
+          </p>
+          <p>
+            <strong>Same RAG system, sharper retrieval. Same dashboard, richer context. Built open-source so you can integrate it, extend it,
+            and make it your own.</strong>
+          </p>
         </div>
 
+          <div class="problem-visual" style="text-align:center; padding: 2rem; background: linear-gradient(135deg, #f0f7f7 0%, #e0f2f1 100%); border-radius:12px;">
+            <div class="visual-icon">📄 📄 📄</div>
+            <div class="visual-arrow">↓</div>
+            <div class="visual-icon">🕸️</div>
+            <p class="visual-caption">Unstructured Documents to Structured Knowledge Graph</p>
+          </div>
 
       </div>
-      <div class="problem-visual">
-        <!-- <img src="assets/before-after.png" alt="Raw PDF to Knowledge Graph"> -->
-        <div class="visual-placeholder">
-          <div class="visual-icon">📄 📄 📄</div>
-          <div class="visual-arrow">↓</div>
-          <div class="visual-icon">🕸️</div>
-          <p class="visual-caption">Unstructured Documents → Structured Knowledge Graph</p>
+
+      <!-- Scope: full width, outside problem-content -->
+      <h3 class="results-section-heading" style="margin-top:3rem;">System Scope</h3>
+      <div class="scope-grid">
+        <div class="scope-card did">
+          <h4>What MarketFoundry Does</h4>
+          <ul>
+            <li>Document-type classification (5 types)</li>
+            <li>Dynamic topic sectioning &amp; YAML schema generation</li>
+            <li>Schema-guided triple extraction via OneKE (a triple is a structured fact: Subject, Predicate, Object; for example, <em>Interest Rate Hike</em> triggered <em>Market Volatility</em>)</li>
+            <li>Neo4j knowledge graph construction</li>
+            <li>Multi-format ingestion (PDF, DOCX, HTML, JSON)</li>
+          </ul>
+        </div>
+        <div class="scope-card didnt">
+          <h4>What MarketFoundry Doesn't Do</h4>
+          <ul>
+            <li>Query UI or chat interface</li>
+            <li>Real-time or streaming data feeds</li>
+            <li>Post-hoc ontology normalization</li>
+            <li>Cross-document co-reference resolution at scale</li>
+          </ul>
         </div>
       </div>
+
     </div>
-  </div>
-</section>
+  </section>
 
   <!-- How It Works Section -->
   <section id="how-it-works" class="section section-alt">
@@ -263,11 +259,11 @@
         for downstream schema routing.
       </p>
 
-      <!-- Subsection: Extraction Pipeline -->
+            <!-- Subsection: Extraction Pipeline -->
       <h3 class="results-section-heading">Extraction Pipeline and Knowledge Graph</h3>
       <div class="metrics-grid">
         <div class="metric-card">
-          <span class="metric-value">790</span>
+          <span class="metric-value">TO-BE REMOVED</span>
           <span class="metric-label">Total Extracted Triples</span>
         </div>
         <div class="metric-card">
@@ -284,10 +280,40 @@
         </div>
       </div>
 
-      <!-- TODO: Add YAML generation breakdown and dynamic topic extraction analysis here -->
-      <!-- Suggested content: success rate by document type, topic extraction examples,
-           comparison of dynamic vs. fallback schema outputs, and sample YAML configs -->
+      <!-- Extraction Prompt Design -->
+      <h3 class="results-section-heading">How Extraction is Guided</h3>
+      <div class="contributions-grid">
 
+          <div class="contribution-card" style="border-top: 4px solid var(--teal);">
+          <h4>OneKE Extraction Prompt</h4>
+          <p style="font-size:0.88rem; color:var(--graphite); line-height:1.6; margin-bottom:0.75rem;">
+            Keeps the model focused on factual relationships directly stated in the source text.
+          </p>
+          <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.4rem;">
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--teal);">•</span>Extracts concrete financial relationships only: results, ownership, products, partnerships, regulatory events</li>
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--teal);">•</span>No inferred causation, sentiment, or analytical conclusions</li>
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--teal);">•</span>Subjects and objects must be real-world entities: companies, metrics, products</li>
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--teal);">•</span>Output enforced as strict JSON for direct graph ingestion</li>
+          </ul>
+        </div>
+
+        <div class="contribution-card" style="border-top: 4px solid var(--copper);">
+          <h4>YAML Generator Prompt</h4>
+          <p style="font-size:0.88rem; color:var(--graphite); line-height:1.6; margin-bottom:0.75rem;">
+            Generates document-specific extraction plans from each document's topic map.
+          </p>
+          <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.4rem;">
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--copper);">•</span>Defines entity types and relation types tailored to that document's content</li>
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--copper);">•</span>Entity types must be stable real-world categories, no abstract concepts</li>
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--copper);">•</span>Number of entity and relation types is capped to reduce fragmentation</li>
+            <li style="font-size:0.85rem; color:var(--graphite); padding-left:1.2rem; position:relative;"><span style="position:absolute;left:0;color:var(--copper);">•</span>Multiple plans generated per document for broad topical coverage</li>
+          </ul>
+        </div>
+        </div>
+
+
+      <!-- TODO: Add YAML generation success rate breakdown by document type,
+           topic extraction examples, and comparison of dynamic vs. fallback schema outputs -->
 
       <!-- What We Built vs. Reused -->
       <h3 class="results-section-heading">What We Built vs. What We Used</h3>
@@ -310,7 +336,6 @@
             <li>Neo4j, graph database and storage layer</li>
             <li>SentenceTransformers, semantic embeddings for the k-NN classifier</li>
             <li>Modal, serverless GPU infrastructure for API hosting</li>
-          </ul>
           </ul>
         </div>
       </div>
@@ -378,7 +403,6 @@
             Market Foundry is fully open-source and free to run locally. Hosted API access is limited by infrastructure costs: we run GPU inference on Modal.com using Nvidia A10 GPUs at $1.10 per hour. We would love to expand API availability and throughput as the project grows, but current usage is constrained by budget.
           </div>
         </div>
-
       </div>
 
       <!-- Next Steps -->
@@ -624,35 +648,45 @@ python src/build_graph.py --input-dir your_docs/<br>
 
       </div>
 
-      <!-- Use Cases -->
+            <!-- Use Cases -->
       <h3 class="results-section-heading">Which Should You Use?</h3>
       <div class="use-cases-grid">
 
         <div class="use-case-card">
           <h4>Run It Locally</h4>
           <span class="use-case-tag">Open Source</span>
+          <p style="font-size:0.88rem; color:var(--graphite); line-height:1.7; margin-bottom:1rem;">
+            Running the pipeline locally allows you to inspect intermediate outputs, modify prompts or models,
+            and experiment with different extraction configurations while keeping all documents on your own machine.
+          </p>
           <ul>
-            <li>You are working with sensitive or confidential documents that cannot leave your environment</li>
-            <li>You want full control over model selection, schema configuration, and graph storage</li>
-            <li>You are integrating Market Foundry into an existing internal pipeline</li>
-            <li>You have GPU access and want to avoid per-request API costs</li>
-            <li>You are a researcher or developer extending the system for a new domain</li>
+            <li>Working with sensitive or confidential documents that cannot leave your environment</li>
+            <li>Full control over model selection, schema configuration, and graph storage</li>
+            <li>Integrating Market Foundry into an existing internal pipeline</li>
+            <li>GPU access available and want to avoid per-request API costs</li>
+            <li>Researcher or developer extending the system for a new domain</li>
           </ul>
         </div>
 
         <div class="use-case-card api">
           <h4>Use the API</h4>
           <span class="use-case-tag">Hosted</span>
+          <p style="font-size:0.88rem; color:var(--graphite); line-height:1.7; margin-bottom:1rem;">
+            The API provides a centralized deployment where you can submit documents and receive structured
+            extraction results without installing dependencies or managing the full pipeline locally.
+            It also supports more scalable processing for larger workloads or multi-user scenarios.
+          </p>
           <ul>
-            <li>You want to get started immediately without configuring a local environment</li>
-            <li>You are prototyping an integration into a dashboard, RAG system, or data platform</li>
-            <li>You are processing a moderate volume of documents and want managed infrastructure</li>
-            <li>You do not have local GPU access or prefer not to manage model dependencies</li>
-            <li>Note: hosted API availability is subject to GPU budget constraints on Modal.com</li>
+            <li>Easier integration with external applications and data pipelines</li>
+            <li>Prototyping a connection to a dashboard, RAG system, or data platform</li>
+            <li>No local GPU access or prefer not to manage model dependencies</li>
+            <li>Processing larger document volumes without local infrastructure</li>
+            <li>Note: hosted availability is subject to GPU budget constraints on Modal.com</li>
           </ul>
         </div>
 
       </div>
+
 
       <!-- Quickstart -->
       <div class="demo-quickstart" style="margin-top: 2rem;">
