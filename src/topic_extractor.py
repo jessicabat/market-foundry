@@ -15,8 +15,10 @@ with open(os.path.join(os.path.dirname(__file__), "utils", "extraction_config.ya
 
 MODEL = model_info.get("model_name_or_path", "")
 # Expand environment variables if present in the config
-base_url = os.path.expandvars(str(model_info.get("base_url", "")))
-api_key = os.path.expandvars(str(model_info.get("api_key", "")))
+base_url = os.path.expandvars(str(model_info.get("base_url")))
+api_key = os.path.expandvars(str(model_info.get("api_key")))
+if api_key == "":
+    api_key = "EMPTY_API_KEY"
 
 def load_model_hf():
     tokenizer = AutoTokenizer.from_pretrained(
