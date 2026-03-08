@@ -53,7 +53,7 @@ def merge_market_foundry_triples(url, user, password, json_file_path):
     print("Ingestion complete.")
     
 if __name__ == "__main__":
-    url = os.getenv("NEO4J_URL", "") 
+    url = os.getenv("NEO4J_URI", "") 
     user = os.getenv("NEO4J_USERNAME", "")
     password = os.getenv("NEO4J_PASSWORD", "")
     json_file_name = "extraction_result.json"

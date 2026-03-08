@@ -145,12 +145,13 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
                         text=text_lookup[file],
                         document_type=classifications[file],
                         base_config_dir=temp_dir,
+                        keep_construct=True,
                     )
 
         except Exception as e:
             print(f"Error writing YAML files for {file}")
             print(f"Running OneKE using default config for {classifications[file]} due to YAML generation failure.\n")
-            run_oneke_from_text(file, text_lookup[file], classifications[file])
+            run_oneke_from_text(file, text_lookup[file], classifications[file], keep_construct=True)
         finally:
             print(f"Completed processing {index} of {total_files} files.")
             index += 1
@@ -199,6 +200,7 @@ def extract_topics_and_run_oneke_modal(texts, classifications, text_lookup):
                         text=text_lookup[file],
                         document_type=classifications[file],
                         base_config_dir=temp_dir,
+                        keep_construct=False,
                     )
                     # Collect triples after each YAML run before file gets overwritten
                     all_triples.extend(_read_and_clear_triples())
@@ -206,7 +208,7 @@ def extract_topics_and_run_oneke_modal(texts, classifications, text_lookup):
         except Exception as e:
             print(f"Error writing YAML files for {file}")
             print(f"Running OneKE using default config for {classifications[file]} due to YAML generation failure.\n")
-            run_oneke_from_text(file, text_lookup[file], classifications[file])
+            run_oneke_from_text(file, text_lookup[file], classifications[file], keep_construct=False)
             all_triples.extend(_read_and_clear_triples())
         finally:
             print(f"Completed processing {index} of {total_files} files.")
@@ -215,7 +217,7 @@ def extract_topics_and_run_oneke_modal(texts, classifications, text_lookup):
 
     return all_triples
 
-def run_oneke_from_text(file_path, text, document_type, section_name=None, base_config_dir=None):
+def run_oneke_from_text(file_path, text, document_type, keep_construct, section_name=None, base_config_dir=None):
     start_time = time.time()
     base_config_name = CLASS_TO_CONFIG.get(document_type)
     if base_config_name is None:
@@ -240,16 +242,19 @@ def run_oneke_from_text(file_path, text, document_type, section_name=None, base_
     # Update text in temp config
     config['extraction']['text'] = text
     
+    if not keep_construct and "construct" in config:
+        config.pop("construct", None)  # Remove construct block if not needed for this run
+    
     # Strip construct block before passing to OneKE subprocess.
     # We handle Neo4j writes ourselves after cleaning the triple list,
     # because OneKE's convert.py crashes on malformed triples (plain strings in triple_list).
-    config_for_oneke = {k: v for k, v in config.items() if k != "construct"}
+    # config_for_oneke = {k: v for k, v in config.items() if k != "construct"}
 
     # Write temp config
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".yaml", delete=False
     ) as tmp:
-        yaml.safe_dump(config_for_oneke, tmp)
+        yaml.safe_dump(config, tmp)
         temp_config_path = tmp.name
 
     # Run OneKE with safe cleanup
