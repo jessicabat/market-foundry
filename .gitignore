@@ -9,3 +9,4 @@ __pycache__
 .env
 .venv
 .ipynb_checkpoints
+Results/extraction_result.json

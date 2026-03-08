@@ -156,6 +156,7 @@ class MarketFoundryPipeline:
         neo4j_uri: str = "",
         neo4j_username: str = "",
         neo4j_password: str = "",
+        webhook_url: str = "",
     ) -> dict:
         """
         Full MarketFoundry pipeline.
@@ -233,6 +234,20 @@ class MarketFoundryPipeline:
             all_triples = [t for t in all_triples if isinstance(t, dict) and t.get("head") and t.get("tail")]
             print(f"Clean triple count after filtering: {len(all_triples)}")
 
+            # Normalize each triple to a consistent schema:
+            # { head, head_type, relation, relation_type, tail, tail_type }
+            all_triples = [
+                {
+                    "head": t.get("head", "").strip(),
+                    "head_type": t.get("head_type", "").strip().lower(),
+                    "relation": (t.get("relation") or "").strip(),
+                    "relation_type": (t.get("relation_type") or "").strip(),
+                    "tail": t.get("tail", "").strip(),
+                    "tail_type": t.get("tail_type", "").strip().lower(),
+                }
+                for t in all_triples
+            ]
+
             # Push triples to user's Neo4j
             neo4j_count = 0
             if neo4j_uri and neo4j_username and neo4j_password:
@@ -244,20 +259,20 @@ class MarketFoundryPipeline:
                         for triple in all_triples:
                             rel = triple.get("relation_type") or triple.get("relation") or "RELATED_TO"
                             rel_label = re.sub(r"[^a-zA-Z0-9_]", "_", rel).upper() or "RELATED_TO"
+                            raw_head_type = triple.get("head_type") or "entity"
+                            raw_tail_type = triple.get("tail_type") or "entity"
+                            head_label = re.sub(r"[^a-zA-Z0-9_]", "_", raw_head_type).strip("_") or "entity"
+                            tail_label = re.sub(r"[^a-zA-Z0-9_]", "_", raw_tail_type).strip("_") or "entity"
                             cypher = (
-                                f"MERGE (h:Entity {{name: $head}}) "
-                                f"SET h.type = $head_type "
-                                f"MERGE (t:Entity {{name: $tail}}) "
-                                f"SET t.type = $tail_type "
+                                f"MERGE (h:{head_label} {{name: $head}}) "
+                                f"MERGE (t:{tail_label} {{name: $tail}}) "
                                 f"MERGE (h)-[r:{rel_label}]->(t) "
                                 f"SET r.relation = $relation"
                             )
                             session.run(
                                 cypher,
                                 head=triple.get("head", ""),
-                                head_type=triple.get("head_type", ""),
                                 tail=triple.get("tail", ""),
-                                tail_type=triple.get("tail_type", ""),
                                 relation=triple.get("relation", ""),
                             )
                         result = session.run("MATCH ()-[r]->() RETURN count(r) AS cnt")
@@ -268,7 +283,7 @@ class MarketFoundryPipeline:
                 except Exception as e:
                     print(f"Neo4j write error: {e}")
 
-            return {
+            result = {
                 "filename": filename,
                 "document_type": list(classifications.values())[0] if classifications else "unknown",
                 "sections_identified": list(list(sectioned_documents.values())[0].keys()) if sectioned_documents else [],
@@ -278,6 +293,17 @@ class MarketFoundryPipeline:
                 "neo4j_used": bool(neo4j_uri),
                 "status": "success",
             }
+
+            # Fire webhook if provided — POST full results to user's endpoint
+            if webhook_url:
+                try:
+                    import requests as _requests
+                    resp = _requests.post(webhook_url, json=result, timeout=30)
+                    print(f"Webhook delivered to {webhook_url} — status {resp.status_code}")
+                except Exception as e:
+                    print(f"Webhook delivery failed: {e}")
+
+            return result
 
         finally:
             os.unlink(tmp_path)
@@ -311,15 +337,135 @@ class MarketFoundryPipeline:
 from fastapi import FastAPI, File, Form, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import Any, List, Optional
+
+# --- Response models ---
+class ProcessResponse(BaseModel):
+    job_id: str
+    status: str
+    poll_url: str
+    message: str
+    webhook_url: Optional[str] = None
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "job_id": "fc-01ABC123",
+                "status": "processing",
+                "poll_url": "/result/fc-01ABC123",
+                "message": "Job started for 'earnings.pdf'. Poll /result/fc-01ABC123 to get results."
+            }
+        }
+    }
+
+class Triple(BaseModel):
+    head: str
+    head_type: str
+    relation: str
+    relation_type: str
+    tail: str
+    tail_type: str
+
+class ExtractionResult(BaseModel):
+    filename: str
+    document_type: str
+    sections_identified: List[str]
+    triples: List[Triple]
+    triple_count: int
+    neo4j_relationships_written: int
+    neo4j_used: bool
+    status: str
+
+class ResultResponse(BaseModel):
+    status: str
+    result: Optional[ExtractionResult] = None
+    message: Optional[str] = None
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "status": "complete",
+                "result": {
+                    "filename": "earnings.pdf",
+                    "document_type": "Earnings Call Transcript",
+                    "triples": [
+                        {
+                            "head": "Apple Inc.",
+                            "head_type": "company",
+                            "relation": "reported",
+                            "relation_type": "financial_result",
+                            "tail": "record quarterly revenue of $124.3 billion",
+                            "tail_type": "financial_metric"
+                        }
+                    ],
+                    "triple_count": 1,
+                    "neo4j_relationships_written": 1,
+                    "neo4j_used": True,
+                    "status": "success"
+                }
+            }
+        }
+    }
+
+class QueryResponse(BaseModel):
+    results: List[Any]
+    count: int
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "results": [
+                    {"s.name": "Apple Inc.", "type(r)": "REPORTED", "o.name": "record quarterly revenue"}
+                ],
+                "count": 1
+            }
+        }
+    }
 
 web_app = FastAPI(
     title="MarketFoundry API",
     description=(
-        "Open-source API for extracting causal knowledge graphs from financial documents.\n\n"
-        "**Bring Your Own Database:** Optionally pass your Neo4j AuraDB credentials "
-        "and extracted triples will be written directly to your own graph instance.\n\n"
-        "Get a free Neo4j instance at https://neo4j.com/cloud/aura/\n\n"
-        "GitHub: https://github.com/jessicabat/market-foundry"
+        "### An open-source, API-first knowledge extraction engine that converts any financial document format into queryable knowledge graphs.\n\n"
+        "---\n\n"
+        "**Build Your Own Database:** Optionally pass your Neo4j AuraDB credentials and extracted triples will be written directly to your own graph instance.\n\n"
+        "Get a free Neo4j instance at [https://neo4j.com/cloud/aura/](https://neo4j.com/cloud/aura/)\n\n"
+        "---\n\n"
+        "## Learn More\n\n"
+        "- **GitHub:** [https://github.com/jessicabat/market-foundry](https://github.com/jessicabat/market-foundry)\n"
+        "- **Website:** [https://jessicabat.github.io/market-foundry/](https://jessicabat.github.io/market-foundry/)\n\n"
+        "---\n\n"
+        "## Quick Start\n\n"
+        "### 1. Submit a job with Neo4j Credentials\n\n"
+        "```bash\n"
+        "curl -X POST \"https://marija-vukic--market-foundry-api-fastapi-app.modal.run/process\" \\\n"
+        "  -F \"file=@/path/to/your/document.pdf\" \\\n"
+        "  -F \"neo4j_uri=neo4j+s://xxxx.databases.neo4j.io\" \\\n"
+        "  -F \"neo4j_username=neo4j\" \\\n"
+        "  -F \"neo4j_password=yourpassword\"\n"
+        "```\n\n"
+        "**Response:**\n"
+        "```json\n"
+        "{\"job_id\": \"fc-JobID\", \"status\": \"processing\", \"poll_url\": \"/result/fc-JobID\", \"message\": \"Job started for 'file.pdf'. Poll /result/fc-JobID to get results.\"}\n"
+        "```\n\n"
+        "### 2. Poll for results\n\n"
+        "```bash\n"
+        "curl \"https://marija-vukic--market-foundry-api-fastapi-app.modal.run/result/fc-JobID\"\n"
+        "```\n\n"
+        "While processing:\n"
+        "```json\n"
+        "{\"status\":\"processing\",\"message\":\"Still running, check back soon.\"}\n"
+        "```\n\n"
+        "When complete: returns the full result JSON with all extracted triples."
+        "```\n\n"
+        "### 3. Query your graph via API in your terminal (optional)\n\n"
+        "Once triples are written to Neo4j, you can query your graph directly via the API:\n\n"
+        "```bash\n"
+        "curl -X POST \"https://marija-vukic--market-foundry-api-fastapi-app.modal.run/query\" \\\n"
+        "  -F \"cypher=MATCH (s)-[r]->(o) RETURN s.name, type(r), o.name LIMIT 25\" \\\n"
+        "  -F \"neo4j_uri=neo4j+s://xxxx.databases.neo4j.io\" \\\n"
+        "  -F \"neo4j_username=neo4j\" \\\n"
+        "  -F \"neo4j_password=yourpassword\"\n"
     ),
     version="1.0.0",
     docs_url="/docs",
@@ -356,12 +502,13 @@ async def health():
     return await pipeline.health.remote.aio()
 
 
-@web_app.post("/process", tags=["Pipeline"])
+@web_app.post("/process", tags=["Pipeline"], response_model=ProcessResponse)
 async def process_document(
     file: UploadFile = File(..., description="PDF, DOCX, TXT, HTML, or JSON financial document"),
     neo4j_uri: str = Form("", description="(Optional) Your Neo4j URI — e.g. neo4j+s://xxxx.databases.neo4j.io"),
     neo4j_username: str = Form("", description="(Optional) Your Neo4j username"),
     neo4j_password: str = Form("", description="(Optional) Your Neo4j password"),
+    webhook_url: str = Form("", description="(Optional) URL to POST results to when processing completes — no polling needed"),
 ):
     """
     **Main endpoint.** Upload a financial document to extract a causal knowledge graph.
@@ -369,8 +516,8 @@ async def process_document(
     Returns a `job_id` immediately. Poll `/result/{job_id}` to get the output
     once processing is complete (typically 3-10 minutes).
 
-    **Without Neo4j credentials:** Results returned as JSON only.
-    **With Neo4j credentials:** Triples written to your Neo4j instance + returned as JSON.
+    **Without Neo4j credentials:** Results returned as JSON only in terminal when job is POLLed.
+    **With Neo4j credentials:** Triples written to your Neo4j instance + returned as JSON in terminal when job is POLLed.
 
     Supported formats: `.pdf`, `.docx`, `.txt`, `.html`, `.json`
     """
@@ -388,17 +535,22 @@ async def process_document(
     # Spawn the job in the background and return a job_id immediately
     pipeline = MarketFoundryPipeline()
     call = pipeline.process_document.spawn(
-        contents, file.filename, neo4j_uri, neo4j_username, neo4j_password
+        contents, file.filename, neo4j_uri, neo4j_username, neo4j_password, webhook_url
     )
-    return JSONResponse(content={
+    response = {
         "job_id": call.object_id,
         "status": "processing",
-        "message": f"Job started for '{file.filename}'. Poll /result/{call.object_id} to get results.",
         "poll_url": f"/result/{call.object_id}",
-    })
+    }
+    if webhook_url:
+        response["message"] = f"Job started for '{file.filename}'. Results will be POSTed to {webhook_url} when complete."
+        response["webhook_url"] = webhook_url
+    else:
+        response["message"] = f"Job started for '{file.filename}'. Poll /result/{call.object_id} to get results."
+    return JSONResponse(content=response)
 
 
-@web_app.get("/result/{job_id}", tags=["Pipeline"])
+@web_app.get("/result/{job_id}", tags=["Pipeline"], response_model=ResultResponse)
 async def get_result(job_id: str):
     """
     Poll this endpoint with the `job_id` from `/process` to check if your
@@ -418,7 +570,7 @@ async def get_result(job_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@web_app.post("/query", tags=["Graph"])
+@web_app.post("/query", tags=["Graph"], response_model=QueryResponse)
 async def query_graph(
     cypher: str = Form(..., description="Cypher query (MATCH/CALL only)"),
     neo4j_uri: str = Form(..., description="Your Neo4j URI"),

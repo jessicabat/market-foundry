@@ -83,8 +83,33 @@ def _read_and_clear_triples():
     return []
 
 # Extract topics from the documents using the topic_extractor module
+def _purge_results_files():
+    """Delete any stale extraction_result.json files before a new job starts.
+    Critical for warm container reuse — without this, previous job's results
+    bleed into the next job."""
+    candidates = _glob_mod.glob("/root/**/extraction_result.json", recursive=True)
+    candidates += [
+        "/root/Results/extraction_result.json",
+        "/root/market-foundry/Results/extraction_result.json",
+        os.path.join(os.getcwd(), "Results", "extraction_result.json"),
+    ]
+    seen = set()
+    for path in candidates:
+        if path in seen:
+            continue
+        seen.add(path)
+        if os.path.exists(path):
+            try:
+                os.remove(path)
+                print(f"[_purge_results_files] Deleted stale file: {path}")
+            except Exception as e:
+                print(f"[_purge_results_files] Could not delete {path}: {e}")
+
 def extract_topics_and_run_oneke(texts, classifications, text_lookup):
+    _purge_results_files()  # Always purge stale results before starting a new job
     total_files = len(texts)
+    all_triples = []
+    successful_topic_extractions = 0
     index = 1
     for file, text in texts:
         file_name = get_basename(file).split(".")[0]  # Get filename without extension for YAML naming
@@ -134,6 +159,8 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
         finally:
             print(f"Completed processing {index} of {total_files} files.")
             index += 1
+
+    return all_triples
 
 def run_oneke_from_text(file_path, text, document_type, section_name=None, base_config_dir=None):
     start_time = time.time()
