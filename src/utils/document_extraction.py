@@ -38,6 +38,50 @@ CLASS_TO_CONFIG = {
     "Press Release": "press_release.yaml",
 }
 
+import json as _json_mod
+import glob as _glob_mod
+
+def _read_and_clear_triples():
+    """Read triples from OneKE results file, searching multiple paths."""
+    candidates = _glob_mod.glob("/root/**/extraction_result.json", recursive=True)
+    candidates += [
+        "/root/Results/extraction_result.json",
+        "/root/market-foundry/Results/extraction_result.json",
+        os.path.join(os.getcwd(), "Results", "extraction_result.json"),
+    ]
+    print(f"[_read_and_clear_triples] cwd={os.getcwd()}")
+    print(f"[_read_and_clear_triples] candidates={candidates}")
+    for path in candidates:
+        if not os.path.exists(path):
+            continue
+        try:
+            with open(path) as f:
+                data = _json_mod.load(f)
+            # Handle all formats OneKE might write:
+            # 1. [{"triple_list": [...]}]  — array of extraction objects (most common)
+            # 2. {"triple_list": [...]}    — single extraction object
+            # 3. [{"head": ...}, ...]      — flat triple array
+            if isinstance(data, list):
+                triples = []
+                for item in data:
+                    if isinstance(item, dict) and "triple_list" in item:
+                        triples.extend(item["triple_list"])
+                    elif isinstance(item, dict) and item.get("head") and item.get("tail"):
+                        triples.append(item)
+            elif isinstance(data, dict):
+                triples = data.get("triple_list", [])
+            else:
+                triples = []
+            triples = [t for t in triples if isinstance(t, dict) and t.get("head") and t.get("tail")]
+            with open(path, "w") as f:
+                _json_mod.dump([], f)  # keep array shape to match OneKE append logic
+            print(f"[_read_and_clear_triples] Read {len(triples)} triples from {path}")
+            return triples
+        except Exception as e:
+            print(f"[_read_and_clear_triples] Error reading {path}: {e}")
+    print("[_read_and_clear_triples] WARNING: no results file found")
+    return []
+
 # Extract topics from the documents using the topic_extractor module
 def extract_topics_and_run_oneke(texts, classifications, text_lookup):
     total_files = len(texts)
@@ -69,6 +113,8 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
                     output_dir=temp_dir,
                     input_file_path=file
                 )
+                
+                successful_topic_extractions += 1
 
                 for temp_file in os.listdir(temp_dir):
                     run_oneke_from_text(
@@ -77,15 +123,16 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
                         document_type=classifications[file],
                         base_config_dir=temp_dir,
                     )
-            
-                # If you later run another pipeline stage that needs the YAMLs,
-                # run it HERE inside the with-block.
+                    # Collect triples after each YAML run before file gets overwritten
+                    all_triples.extend(_read_and_clear_triples())
+
         except Exception as e:
             print(f"Error writing YAML files for {file}")
             print(f"Running OneKE using default config for {classifications[file]} due to YAML generation failure.\n")
             run_oneke_from_text(file, text_lookup[file], classifications[file])
+            all_triples.extend(_read_and_clear_triples())
         finally:
-            print(f"Completed processing {index} of {total_files} files.\n")
+            print(f"Completed processing {index} of {total_files} files.")
             index += 1
 
 def run_oneke_from_text(file_path, text, document_type, section_name=None, base_config_dir=None):
@@ -113,11 +160,16 @@ def run_oneke_from_text(file_path, text, document_type, section_name=None, base_
     # Update text in temp config
     config['extraction']['text'] = text
     
+    # Strip construct block before passing to OneKE subprocess.
+    # We handle Neo4j writes ourselves after cleaning the triple list,
+    # because OneKE's convert.py crashes on malformed triples (plain strings in triple_list).
+    config_for_oneke = {k: v for k, v in config.items() if k != "construct"}
+
     # Write temp config
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".yaml", delete=False
     ) as tmp:
-        yaml.safe_dump(config, tmp)
+        yaml.safe_dump(config_for_oneke, tmp)
         temp_config_path = tmp.name
 
     # Run OneKE with safe cleanup
@@ -139,20 +191,3 @@ def run_oneke_from_text(file_path, text, document_type, section_name=None, base_
     else:
         print(f"Processed {get_basename(file_path)} in {time.time() - start_time:.2f} seconds.")
             
-# Run OneKE for knowledge extraction on each section of each document
-def run_oneke_pipeline(sectioned_documents, text_lookup, classifications):
-    for file, sections in sectioned_documents.items():
-        if not any(sections.values()):
-            start_time = time.time()
-            print(f"No sections identified for {get_basename(file)}.")
-            print(f"Running OneKE on the entire document.\n")
-            run_oneke_from_text(file, text_lookup[file], classifications[file])
-            end_time = time.time()
-            print(f"Time taken for {get_basename(file)}: {end_time - start_time:.2f} seconds\n")
-        else:
-            start_time = time.time()
-            for section_name, section_text in sections.items():
-                print(f"Running OneKE on {get_basename(file)} - Section: {section_name}")
-                run_oneke_from_text(file, section_text, classifications[file], section_name=section_name)
-            end_time = time.time()
-            print(f"Time taken for {get_basename(file)}: {end_time - start_time:.2f} seconds\n")

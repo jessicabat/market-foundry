@@ -21,7 +21,6 @@ Example:
 
 import os
 import argparse
-import tempfile
 from annotated_types import doc
 from matplotlib import text
 from utils import *

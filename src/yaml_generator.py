@@ -1,5 +1,4 @@
 from sympy import content
-
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from topic_extractor import load_model_hf, load_model_openai
 from openai import OpenAI
@@ -16,7 +15,7 @@ load_dotenv()
 BASE_YAML_TEMPLATE = {
     "model": {
         "category": "Qwen",
-        "model_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+        "model_name_or_path": "Qwen/Qwen2.5-1.5B-Instruct",
         "api_key": "",
         "base_url": "",
         "device": "auto"
@@ -122,8 +121,8 @@ def generate_yaml_configs_openai(document_name, document_type, topic_map):
 
         RULES (CRITICAL):
 
-        - Generate EXACTLY 1 YAML file.
-        - The YAML must cover ALL main topics from the topic map.
+        - Generate EXACTLY 3 YAML files.
+        - Each YAML file should have a distinct focus on different main topics and their subtopics from the topic map.
 
         ONTOLOGY DISCIPLINE RULES:
 
@@ -161,9 +160,10 @@ def generate_yaml_configs_openai(document_name, document_type, topic_map):
         - Types must be reusable across multiple triples.
         - Avoid narrow variants of the same concept.
 
-        file_name MUST be:
-        {document_name}.yaml
-
+        file_names MUST be:
+        {document_name}_1.yaml
+        {document_name}_2.yaml
+        {document_name}_3.yaml
         Return ONLY valid JSON.
         """
         }
@@ -176,6 +176,14 @@ def generate_yaml_configs_openai(document_name, document_type, topic_map):
         max_tokens=1024,
     )
     content = response.choices[0].message.content.strip()
+    
+    # Remove markdown fences if present
+    if content.startswith("```"):
+        content = content.split("```")[1]
+        if content.startswith("json"):
+            content = content[4:]
+        content = content.strip()
+        
     # print("\nRAW MODEL RESPONSE:\n", content)
     return safe_json_parse(content)
 
@@ -232,8 +240,8 @@ def generate_yaml_configs(document_name, document_type, topic_map):
 
         RULES (CRITICAL):
 
-        - Generate EXACTLY 1 YAML file.
-        - The YAML must cover ALL main topics from the topic map.
+        - Generate EXACTLY 3 YAML files.
+        - Each YAML file should have a distinct focus on different main topics and their subtopics from the topic map.
 
         ONTOLOGY DISCIPLINE RULES:
 
@@ -271,8 +279,10 @@ def generate_yaml_configs(document_name, document_type, topic_map):
         - Types must be reusable across multiple triples.
         - Avoid narrow variants of the same concept.
 
-        file_name MUST be:
-        {document_name}.yaml
+        file_names MUST be:
+        {document_name}_1.yaml
+        {document_name}_2.yaml
+        {document_name}_3.yaml
 
         Return ONLY valid JSON.
         """
@@ -297,6 +307,14 @@ def generate_yaml_configs(document_name, document_type, topic_map):
         outputs[0][inputs["input_ids"].shape[-1]:],
         skip_special_tokens=True
     ).strip()
+    
+    # Remove markdown fences if present
+    if response.startswith("```"):
+        response = response.split("```")[1]
+        if response.startswith("json"):
+            response = response[4:]
+        response = response.strip()
+        
 
     # print("\nRAW MODEL RESPONSE:\n", response)
 
@@ -309,7 +327,7 @@ def write_yaml_files(config_json, output_dir="generated_yamls", input_file_path=
 
     seen_files = set()
 
-    for i, config in enumerate(config_json.get("yaml_files", [])[:3]):
+    for i, config in enumerate(config_json.get("yaml_files", [])):
 
         yaml_obj = copy.deepcopy(BASE_YAML_TEMPLATE)
 
