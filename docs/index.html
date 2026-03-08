@@ -19,6 +19,7 @@
         <li><a href="#overview" class="nav-link">Overview</a></li>
         <li><a href="#problem" class="nav-link">Problem</a></li>
         <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+        <li><a href="#results" class="nav-link">Results</a></li>
         <li><a href="#examples" class="nav-link">Examples</a></li>
         <li><a href="#demo" class="nav-link">Demo</a></li>
         <li><a href="#about" class="nav-link">About Us</a></li>
@@ -39,8 +40,7 @@
       <p class="hero-tagline">From documents to intelligence — built your way.</p>
       <p class="hero-subtitle">
         An open-source, API-first knowledge extraction engine that 
-        converts earnings calls, SEC filings, press releases, and research reports 
-        into queryable knowledge graphs.
+        converts any financial document format into queryable knowledge graphs.
       </p>
       <p class="hero-hook">
         Financial analysts dedicate hours reading reports to understand the causal relationships 
@@ -48,6 +48,10 @@
         data source, automatically building custom knowledge graphs that answer "Why did Q3 miss?" 
         or "What caused churn?" with evidence from across your entire document corpus.
       </p>
+        <p style="font-size:0.9rem; opacity:0.75; font-style:italic; margin-bottom:2rem; margin-top:-1rem;">
+        Built for data engineers, quantitative analysts, and fintech teams building
+        Retrieval-Augmented Generation (RAG) systems, analytics dashboards, and document intelligence pipelines.
+        </p>
 
       <div class="cta-buttons">
         <a href="#demo" class="btn btn-primary">See the Demo</a>
@@ -67,27 +71,53 @@
           Traditional analysts spend hours manually reading through filings, transcripts, and 
           reports to piece together what's driving revenue, risk, and growth. It's slow, it doesn't scale, 
           and it keeps valuable context out of the tools that actually make decisions.
+        </p>
+        <p> 
           The firms building the next generation of financial analytics know that unstructured text can't 
           stay unstructured. They're building RAG systems, analyst dashboards, and data pipelines — but 
           without structured extraction upstream, documents still go in as raw text and insight still has 
           to come out through manual effort.
+        </p> <p>
           Market Foundry changes that. Open-source and API-first, we give data-driven teams the extraction 
           layer their pipelines are missing — so the narrative behind the numbers becomes just as queryable 
           as the numbers themselves.
         </p>
 
-        <h3>Our Solution: <i>Document-aware extraction, built for modern financial pipelines</i></h3>
+        <h3>Document-aware extraction, built for modern financial pipelines</h3>
         <p class="overview-summary">
           Market Foundry classifies each document, sections it intelligently, and routes it to specialized 
           schemas that extract entities, relationships, and where present, causal structure. The result is 
-          a unified knowledge graph your existing tools can actually work with. Same RAG system, sharper 
-          retrieval. Same dashboard, richer context. Built open-source so you can integrate it, extend it, 
-          and make it your own.
+          a unified knowledge graph your existing tools can actually work with. 
+        </p><p>  
+          <strong>Same RAG system, sharper retrieval. Same dashboard, richer context. Built open-source so you can integrate it, extend it, 
+          and make it your own.</strong>
         </p>
+        <h3>System Scope</h3>
+        <div class="scope-grid">
+          <div class="scope-card did">
+            <h4>What The System Does</h4>
+            <ul>
+              <li>Document-type classification (5 types)</li>
+              <li>Dynamic topic sectioning &amp; YAML schema generation</li>
+              <li>Schema-guided triple extraction via OneKE</li>
+              <li>Neo4j knowledge graph construction</li>
+              <li>Multi-format ingestion (PDF, DOCX, HTML, JSON)</li>
+            </ul>
+          </div>
+          <div class="scope-card didnt">
+            <h4>What The System Doesn't Do</h4>
+            <ul>
+              <li>Query UI or chat interface</li>
+              <li>Real-time or streaming data feeds</li>
+              <li>Post-hoc ontology normalization</li>
+              <li>Cross-document co-reference resolution at scale</li>
+            </ul>
+          </div>
+        </div>
+
 
       </div>
       <div class="problem-visual">
-        <!-- TODO: Add before/after diagram -->
         <!-- <img src="assets/before-after.png" alt="Raw PDF to Knowledge Graph"> -->
         <div class="visual-placeholder">
           <div class="visual-icon">📄 📄 📄</div>
@@ -137,7 +167,7 @@
         <div class="step">
           <div class="step-number">5</div>
           <h3>Extraction</h3>
-          <p>OneKE + Qwen2.5-7B extracts structured triples; subject, predicate, object, with source citations so every insight is traceable back to its document.</p>
+          <p>OneKE (a schema-guided knowledge extraction framework) + Qwen2.5-7B extracts structured triples: subject, predicate, object, with source citations so every insight is traceable back to its document.</p>
         </div>
         
         <div class="step">
@@ -161,6 +191,140 @@
     </div>
   </section>
 
+
+    <!-- Results Section -->
+  <section id="results" class="section">
+    <div class="container">
+      <h2 class="section-title">Results</h2>
+      <p class="section-intro">
+        Evaluated on a curated corpus of 85 labeled financial documents — spanning earnings call transcripts,
+        SEC filings, research papers, press releases, and news articles — covering publications from 2008–2025,
+        ranging from 2 to 290 pages.
+      </p>
+
+      <!-- Key Metrics -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-value">76.1%</span>
+          <span class="metric-label">Overall Classification Accuracy</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">0.767</span>
+          <span class="metric-label">Macro F1 Score</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">790</span>
+          <span class="metric-label">Total Extracted Triples</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">964</span>
+          <span class="metric-label">Unique Entities</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">423</span>
+          <span class="metric-label">Distinct Relationship Types</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">112</span>
+          <span class="metric-label">Documents Processed (YAML Pipeline)</span>
+        </div>
+      </div>
+
+      <!-- Classifier Table -->
+      <h3 class="results-section-heading">Classifier Performance by Document Type</h3>
+      <div class="results-table-wrapper">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Document Type</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1 Score</th>
+              <th>Support</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Earnings Call</td><td>1.000</td><td>0.923</td><td>0.960</td><td>13</td></tr>
+            <tr><td>Research Paper</td><td>1.000</td><td>0.857</td><td>0.923</td><td>7</td></tr>
+            <tr><td>SEC Filing</td><td>0.792</td><td>1.000</td><td>0.884</td><td>19</td></tr>
+            <tr><td>News Article</td><td>0.500</td><td>1.000</td><td>0.667</td><td>12</td></tr>
+            <tr><td>Press Release</td><td>1.000</td><td>0.250</td><td>0.400</td><td>20</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="results-note">
+        ⚠️ <strong>Press release recall (25%)</strong> is a known limitation: press releases are drafted to mimic
+        journalistic style, causing their embeddings to overlap with news articles in vector space.
+        Future versions will add keyword-based override rules (e.g., wire service datelines) to resolve this.
+      </p>
+
+      <!-- What We Built vs. Reused -->
+      <h3 class="results-section-heading">What We Built vs. What We Used</h3>
+      <div class="contributions-grid">
+        <div class="contribution-card built-card">
+          <h4>Original Work (Built by Our Team)</h4>
+          <ul>
+            <li>Ensemble document classifier (TF-IDF logistic regression + KNN)</li>
+            <li>Dynamic topic extraction and multi-perspective YAML schema generation</li>
+            <li>Document-type-aware pipeline routing logic</li>
+            <li>Engineering robustness layer: JSON validation, fallback schemas, edge-case handling</li>
+            <li>Incremental result persistence and reproducibility tooling</li>
+          </ul>
+        </div>
+        <div class="contribution-card reused-card">
+          <h4>Third-Party Tools (Integrated and Extended)</h4>
+          <ul>
+            <li>OneKE, base schema-guided extraction framework (Luo et al., 2025)</li>
+            <li>Qwen2.5-7B and Meta-Llama, open-source LLM inference</li>
+            <li>Neo4j, graph database and storage layer</li>
+            <li>SentenceTransformers, semantic embeddings for the k-NN classifier</li>
+          </ul>
+        </div>
+      </div>
+
+
+      <!-- Limitations -->
+      <h3 class="results-section-heading">Limitations</h3>
+      <div class="limitations-grid">
+        <div class="limitation-card">
+          <h4>Schema Fragmentation</h4>
+          <p>Open-schema design produced 423 distinct relationship types across 15 documents, reducing cross-document comparability without additional ontology normalization.</p>
+        </div>
+        <div class="limitation-card">
+          <h4>Sparse Graph Connectivity</h4>
+          <p>Average node degree of ~1.64 means most entities participate in only 1–2 relationships, limiting multi-hop reasoning without further graph enrichment.</p>
+        </div>
+        <div class="limitation-card">
+          <h4>Long-Document Instability</h4>
+          <p>Dynamic YAML generation succeeded for 47.3% of documents; long regulatory filings and earnings call transcripts triggered context-window saturation more frequently.</p>
+        </div>
+        <div class="limitation-card">
+          <h4>Compute Constraints</h4>
+          <p>Evaluated on 1–4B parameter open-source models. Larger models would likely improve coreference resolution, relation naming consistency, and extraction depth.</p>
+        </div>
+        <div class="limitation-card">
+          <h4>LLM Hallucination Risk</h4>
+          <p>Schema-guided prompting significantly reduces hallucinated relations, but cannot eliminate them entirely. The Reflection Agent was observed renaming relation labels to semantically similar alternatives outside the defined schema, introducing subtle inconsistencies even when outputs appear structurally valid.</p>
+        </div>
+
+      </div>
+
+      <!-- Next Steps -->
+      <div class="next-steps-box">
+        <h3>Next Steps</h3>
+        <p>
+          Market Foundry's intelligence layer plugs directly into existing RAG pipelines, analyst dashboards,
+          and causal inference workflows without replacing them. Same retrieval system, sharper context.
+          Next steps include stronger schema constraint enforcement, corpus expansion, and two-stage extraction
+          strategies to improve robustness on long-form documents without requiring larger models.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+
+
   <!-- Examples Section -->
   <section id="examples" class="section">
     <div class="container">
@@ -168,11 +332,59 @@
       <p class="section-intro">
         See how MarketFoundry transforms real financial documents into structured knowledge graphs.
       </p>
-      
+        <div style="
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        background: #fff8e1;
+        border-left: 4px solid #f0b429;
+        border-radius: 0 8px 8px 0;
+        padding: 0.9rem 1.2rem;
+        margin-bottom: 2.5rem;
+        font-size: 0.9rem;
+        color: #7a5c00;
+        line-height: 1.6;
+        max-width: 860px;
+        margin-left: auto;
+        margin-right: auto;
+      ">
+        <span style="font-size: 1.2rem; flex-shrink: 0;">⚠️</span>
+        <span>
+          <strong>Heads up:</strong> MarketFoundry uses LLMs for extraction. While we do our best
+          to constrain outputs through schema-guided prompting, hallucinations can still occur.
+          Treat extracted triples as a starting point for analysis, not as a substitute for
+          source verification.
+        </span>
+      </div>
+
+
       <div class="examples-grid">
+          <div class="example-card">
+          <h3>🏦 Private Equity Acquisition Data Room</h3>
+          <div class="example-visual">
+            <div class="visual-placeholder">
+              <p>Knowledge Graph Preview</p>
+              <p class="visual-caption">Cross-document graph built from a sample VDR containing contracts, financial statements, and disclosure filings — surfacing connections no single document reveals alone.</p>
+            </div>
+          </div>
+          <div class="example-triples">
+            <h4>Connections Extracted Across Documents:</h4>
+            <ul>
+              <li><span class="subject">Revenue Concentration Risk</span> → <span class="predicate">disclosed_in</span> → <span class="object">Customer Contract Footnote (Doc 47)</span></li>
+              <li><span class="subject">Pending Litigation</span> → <span class="predicate">impacts_valuation_of</span> → <span class="object">EBITDA Projection (Doc 12)</span></li>
+              <li><span class="subject">Key-Man Clause</span> → <span class="predicate">constrains</span> → <span class="object">Post-Acquisition Integration Plan</span></li>
+            </ul>
+          </div>
+        </div>
+
         <div class="example-card">
           <h3>📊 PayPal Earnings Call</h3>
           <div class="example-visual">
+            <div class="visual-placeholder">
+               <p>Knowledge Graph Preview</p>
+              <p class="visual-caption">Example knowledge graph from a 15-document corpus — 790 extracted triples, 964 unique entities, 423 distinct relationship types.</p>
+
+            </div>
             <!-- TODO: Add sample graph screenshot -->
              <img src="images/paypal_earnings_call_kg.png" alt="PayPal Earnings Call Knowledge Graph" class="example-graph" style="max-width: 100%; height: auto;">
           </div>
@@ -189,6 +401,10 @@
         <div class="example-card">
           <h3>📈 Doom Loop News Article</h3>
           <div class="example-visual">
+            <div class="visual-placeholder">
+              <p>Causal Chain Visualization</p>
+              <p class="visual-caption">Causal chain extracted from a strategy deck: AI Investment → Checkout Optimization → Merchant Growth.</p>
+            </div>
             <img src="images/doom_loop_news_article_kg.png" alt="Doom Loop Article Knowledge Graph" class="example-graph" style="max-width: 100%; height: auto;">
           </div>
           <div class="example-triples">
@@ -204,6 +420,10 @@
         <div class="example-card">
           <h3>📝 Stock Portfolio Optimization</h3>
           <div class="example-visual">
+            <div class="visual-placeholder">
+              <p>Multi-Document Synthesis</p>
+              <p class="visual-caption">Cross-document triples synthesized from an internal performance report, linking pricing decisions to SMB churn and NPS decline.</p>
+            </div>
             <img src="images/stock_portfolio_research_paper_kg.png" alt="Stock Portfolio Optimization Research Paper Knowledge Graph" class="example-graph" style="max-width: 100%; height: auto;">
           </div>
           <div class="example-triples">
@@ -292,7 +512,7 @@ python src/run.py --file your_docs/<br>
 python src/build_graph.py --input-dir your_docs/<br> -->
             </code>
           </div>
-          <a href="https://github.com/jessicabat/market-foundry#quickstart" class="btn btn-primary" target="_blank">View Full Quickstart Guide →</a>
+          <a href="https://github.com/jessicabat/market-foundry/blob/main/README.md" class="btn btn-primary" target="_blank">View Full Quickstart Guide →</a>
         </div>
       </div>
     </div>
@@ -316,7 +536,6 @@ python src/build_graph.py --input-dir your_docs/<br> -->
           </div>
         </div>
 
-        <!-- TODO: Add more team members -->
         <div class="team-member">
           <img src="images/jessica_headshot.jpeg" alt="Jessica Batbayar headshot" class="member-photo">
           <h3>Jessica Batbayar</h3>
@@ -370,6 +589,15 @@ python src/build_graph.py --input-dir your_docs/<br> -->
             <li><a href="#problem">Problem</a></li>
             <li><a href="#demo">Demo</a></li>
             <li><a href="#about">About Us</a></li>
+          </ul>
+        </div>
+          <div class="footer-links">
+          <h4>Built With</h4>
+          <ul>
+            <li><a href="https://github.com/zjunlp/OneKE" target="_blank">OneKE — Luo et al., 2025</a></li>
+            <li><a href="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct" target="_blank">Qwen2.5-7B</a></li>
+            <li><a href="https://ai.meta.com/llama/" target="_blank">Meta-Llama</a></li>
+            <li><a href="https://neo4j.com/" target="_blank">Neo4j</a></li>
           </ul>
         </div>
       </div>

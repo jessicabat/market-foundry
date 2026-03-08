@@ -795,7 +795,7 @@ footer {
 
 .footer-content {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 3rem;
   margin-bottom: 2rem;
 }
@@ -926,4 +926,45 @@ footer {
     width: 100%;
     text-align: center;
   }
+}
+
+/* ===== RESULTS SECTION ===== */
+.metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem; }
+.metric-card { background: white; border-radius: 12px; padding: 1.5rem 1rem; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-top: 4px solid var(--teal); }
+.metric-card .metric-value { font-size: 2rem; font-weight: 700; color: var(--teal); display: block; line-height: 1.1; margin-bottom: 0.4rem; }
+.metric-card .metric-label { font-size: 0.85rem; color: var(--graphite); font-weight: 500; line-height: 1.3; }
+.results-section-heading { font-size: 1.4rem; font-weight: 700; color: var(--midnight-blue); margin: 2.5rem 0 1rem; text-align: center; }
+.results-table-wrapper { overflow-x: auto; margin-bottom: 1rem; }
+.results-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); font-size: 0.95rem; }
+.results-table th { background: #2A2D34; color: white; padding: 0.9rem 1.2rem; text-align: left; font-weight: 600; white-space: nowrap; }
+.results-table td { padding: 0.75rem 1.2rem; border-bottom: 1px solid #E6E8EB; color: var(--graphite); }
+.results-table tr:last-child td { border-bottom: none; }
+.results-table tr:hover td { background: #f7f9fb; }
+.results-note { font-size: 0.875rem; color: #7a5c00; background: #fff8e1; border-left: 4px solid #f0b429; padding: 0.75rem 1rem; border-radius: 0 6px 6px 0; margin-bottom: 3rem; }
+.contributions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+.contribution-card { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.contribution-card h4 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--midnight-blue); }
+.contribution-card ul { list-style: none; padding: 0; margin: 0; }
+.contribution-card li { padding: 0.35rem 0 0.35rem 1.6rem; font-size: 0.92rem; color: var(--graphite); position: relative; line-height: 1.4; }
+.built-card li::before { content: "✅"; position: absolute; left: 0; }
+.reused-card li::before { content: "🔌"; position: absolute; left: 0; }
+.limitations-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+.limitation-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 4px solid var(--copper); }
+.limitation-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--midnight-blue); margin-bottom: 0.5rem; }
+.limitation-card p { font-size: 0.88rem; color: var(--graphite); line-height: 1.6; margin: 0; }
+.next-steps-box { background: linear-gradient(135deg, var(--teal) 0%, var(--graphite) 100%); color: white; border-radius: 12px; padding: 2.5rem; text-align: center; }
+.next-steps-box h3 { font-size: 1.4rem; margin-bottom: 1rem; }
+.next-steps-box p { font-size: 1rem; line-height: 1.75; opacity: 0.92; max-width: 720px; margin: 0 auto; }
+
+/* ===== SCOPE GRID (Problem Section) ===== */
+.scope-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+.scope-card { background: #f7f9fb; border-radius: 10px; padding: 1.5rem; border: 1px solid rgba(17,24,39,0.08); }
+.scope-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--midnight-blue); }
+.scope-card ul { list-style: none; padding: 0; margin: 0; }
+.scope-card li { padding: 0.3rem 0 0.3rem 1.6rem; font-size: 0.88rem; color: var(--graphite); position: relative; line-height: 1.4; }
+.scope-card.did li::before { content: "✅"; position: absolute; left: 0; font-size: 0.8rem; }
+.scope-card.didnt li::before { content: "❌"; position: absolute; left: 0; font-size: 0.8rem; }
+
+@media (max-width: 768px) {
+  .contributions-grid, .scope-grid { grid-template-columns: 1fr; }
 }

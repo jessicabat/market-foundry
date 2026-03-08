@@ -2,6 +2,84 @@
 {
   "triple_list": [
     {
+      "head": "G-eval: Nlg evaluation using gpt-4 with better human alignment",
+      "head_type": "Evaluation Metric",
+      "relation": "published_in",
+      "relation_type": "publication",
+      "tail": "arXiv preprint arXiv:2303.16634",
+      "tail_type": "Preprint"
+    },
+    {
+      "head": "Benchmarking large language models in retrieval-augmented generation",
+      "head_type": "Benchmark",
+      "relation": "presented_at",
+      "relation_type": "conference",
+      "tail": "Proceedings of the AAAI Conference on Artificial Intelligence",
+      "tail_type": "Conference"
+    },
+    {
+      "head": "Agentic retrieval-augmented generation: A survey on agentic rag",
+      "head_type": "Survey",
+      "relation": "published_in",
+      "relation_type": "publication",
+      "tail": "arXiv preprint arXiv:2501.09136",
+      "tail_type": "Preprint"
+    },
+    {
+      "head": "Multi-agent retrieval-augmented generation via collaborative chain-of-thought reasoning",
+      "head_type": "Retrieval System",
+      "relation": "published_in",
+      "relation_type": "publication",
+      "tail": "arXiv preprint arXiv:2505.20096",
+      "tail_type": "Preprint"
+    },
+    {
+      "head": "Adaptive agents for real-time rag: Domain-specific ai for legal, finance & healthcare",
+      "head_type": "Retrieval System",
+      "relation": "developed_by",
+      "relation_type": "development",
+      "tail": "Pathway Community",
+      "tail_type": "Organization"
+    },
+    {
+      "head": "Domain-specific retrieval-augmented generation using vector stores, knowledge graphs, and tensor factorization",
+      "head_type": "Retrieval System",
+      "relation": "published_in",
+      "relation_type": "publication",
+      "tail": "arXiv preprint arXiv:2410.02721",
+      "tail_type": "Preprint"
+    },
+    {
+      "head": "Leveraging large language models (llms) for enhanced risk monitoring in fintech",
+      "head_type": "Research Paper",
+      "relation": "discussed_in",
+      "relation_type": "citation",
+      "tail": "IEEE Computer Society Tech News",
+      "tail_type": "Journal"
+    },
+    {
+      "head": "Large language models: How they help fintechs",
+      "head_type": "Article",
+      "relation": "published_by",
+      "relation_type": "publication",
+      "tail": "The Payments Association",
+      "tail_type": "Organization"
+    },
+    {
+      "head": "Ai in finance: The promise and risks of rag",
+      "head_type": "Article",
+      "relation": "published_by",
+      "relation_type": "publication",
+      "tail": "Lumenova AI",
+      "tail_type": "Organization"
+    },
+    {
+      "head": "Building a financial education chatbot with retrieval-augmented generation (rag)",
+      "head_type": "Project",
+      "relation": "uses",
+      "relation_type": "utilization",
+      "tail": "retrieval-augmented generation",
+      "tail_type": "Retrieval System"
       "head": "Deutsche Bank",
       "head_type": "Company",
       "relation": "appointed as successor depositary bank for",
@@ -154,6 +232,68 @@
 {
   "triple_list": [
     {
+      "head": "Bank of America",
+      "head_type": "Company",
+      "relation": "commits",
+      "relation_type": "financial commitment",
+      "tail": "$25 billion",
+      "tail_type": "Amount of Money"
+    },
+    {
+      "head": "JPMorgan Chase",
+      "head_type": "Company",
+      "relation": "allocates",
+      "relation_type": "financial allocation",
+      "tail": "$50 billion",
+      "tail_type": "Amount of Money"
+    },
+    {
+      "head": "Goldman Sachs",
+      "head_type": "Company",
+      "relation": "creates",
+      "relation_type": "organizational change",
+      "tail": "new division",
+      "tail_type": "Business Unit"
+    },
+    {
+      "head": "Citigroup",
+      "head_type": "Company",
+      "relation": "partners_with",
+      "relation_type": "strategic partnership",
+      "tail": "Apollo Global Management",
+      "tail_type": "Company"
+    },
+    {
+      "head": "private credit",
+      "head_type": "Asset Class",
+      "relation": "faces_exposure_to",
+      "relation_type": "exposure concern",
+      "tail": "credit quality concerns",
+      "tail_type": "Risk Factor"
+    },
+    {
+      "head": "private credit",
+      "head_type": "Asset Class",
+      "relation": "faces_exposure_to",
+      "relation_type": "exposure concern",
+      "tail": "AI-vulnerable software stocks",
+      "tail_type": "Risk Factor"
+    },
+    {
+      "head": "Blue Owl Capital",
+      "head_type": "Company",
+      "relation": "halts",
+      "relation_type": "financial action",
+      "tail": "redemptions",
+      "tail_type": "Financial Action"
+    },
+    {
+      "head": "Blue Owl Capital",
+      "head_type": "Company",
+      "relation": "sells",
+      "relation_type": "financial action",
+      "tail": "assets",
+      "tail_type": "Financial Action"
       "head": "Deutsche Bank",
       "head_type": "Company",
       "relation": "appointed as",
@@ -286,6 +426,76 @@
 {
   "triple_list": [
     {
+      "head": "Sony Group Corp.",
+      "head_type": "Company",
+      "relation": "has_net_profit",
+      "relation_type": "financial result",
+      "tail": "377.3 billion yen",
+      "tail_type": "Financial Metric"
+    },
+    {
+      "head": "Sony Group Corp.",
+      "head_type": "Company",
+      "relation": "has_quarterly_sales",
+      "relation_type": "financial result",
+      "tail": "3.71 trillion yen",
+      "tail_type": "Financial Metric"
+    },
+    {
+      "head": "Sony Group Corp.",
+      "head_type": "Company",
+      "relation": "has_quarterly_net_profit_growth",
+      "relation_type": "financial change",
+      "tail": "11%",
+      "tail_type": "Percentage"
+    },
+    {
+      "head": "Sony Group Corp.",
+      "head_type": "Company",
+      "relation": "has_full_year_profit_forecast",
+      "relation_type": "financial guidance",
+      "tail": "1.13 trillion yen",
+      "tail_type": "Financial Metric"
+    },
+    {
+      "head": "Sony Group Corp.",
+      "head_type": "Company",
+      "relation": "has_quarterly_operating_profit_improvement",
+      "relation_type": "financial change",
+      "tail": "across imaging sensors, games, and music",
+      "tail_type": "Business Segment"
+    },
+    {
+      "head": "Sony Group Corp.",
+      "head_type": "Company",
+      "relation": "has_quarterly_profit_growth_compared_to_previous_year",
+      "relation_type": "financial comparison",
+      "tail": "6%",
+      "tail_type": "Percentage"
+    },
+    {
+      "head": "Sony Group Corp.",
+      "head_type": "Company",
+      "relation": "has_full_year_profit_forecast_increase",
+      "relation_type": "financial change",
+      "tail": "from 1.05 trillion yen to 1.13 trillion yen",
+      "tail_type": "Financial Metric"
+    },
+    {
+      "head": "Sony Group Corp.",
+      "head_type": "Company",
+      "relation": "has_land_transfer_to",
+      "relation_type": "asset movement",
+      "tail": "Sony Life Insurance Co.",
+      "tail_type": "Company"
+    },
+    {
+      "head": "Sony Group Corp.",
+      "head_type": "Company",
+      "relation": "benefits_from_market_recovery",
+      "relation_type": "market condition",
+      "tail": "smartphone market",
+      "tail_type": "Market Segment"
       "head": "Sony",
       "head_type": "Company",
       "relation": "reports",
@@ -3749,6 +3959,432 @@
 {
   "triple_list": [
     {
+      "head": "Anthropic",
+      "head_type": "Company",
+      "relation": "has_valuation",
+      "relation_type": "Valuation",
+      "tail": "$380B",
+      "tail_type": "Valuation"
+    },
+    {
+      "head": "Anthropic",
+      "head_type": "Company",
+      "relation": "is_one_of",
+      "relation_type": "Market",
+      "tail": "world's most valuable startups",
+      "tail_type": "Market"
+    },
+    {
+      "head": "JPMorgan",
+      "head_type": "Company",
+      "relation": "closed",
+      "relation_type": "financial action",
+      "tail": "Trump's accounts",
+      "tail_type": "Account"
+    },
+    {
+      "head": "Supreme Court",
+      "head_type": "Institution",
+      "relation": "struck down",
+      "relation_type": "legal action",
+      "tail": "Trump's tariffs",
+      "tail_type": "Policy"
+    },
+    {
+      "head": "ICE",
+      "head_type": "Organization",
+      "relation": "purchases",
+      "relation_type": "acquisition",
+      "tail": "warehouses",
+      "tail_type": "Property"
+    },
+    {
+      "head": "ICE",
+      "head_type": "Organization",
+      "relation": "purchases for",
+      "relation_type": "purpose",
+      "tail": "big detention centers",
+      "tail_type": "Facility"
+    },
+    {
+      "head": "ICE",
+      "head_type": "Organization",
+      "relation": "bale\u00f3 de muerte a",
+      "relation_type": "event",
+      "tail": "a man in Texas",
+      "tail_type": "Person"
+    },
+    {
+      "head": "ICE",
+      "head_type": "Organization",
+      "relation": "purchases",
+      "relation_type": "acquisition",
+      "tail": "detention centers",
+      "tail_type": "Facility"
+    },
+    {
+      "head": "Hungary",
+      "head_type": "Country",
+      "relation": "will block",
+      "relation_type": "policy action",
+      "tail": "a key EU loan to Ukraine",
+      "tail_type": "Financial Instrument"
+    },
+    {
+      "head": "US military",
+      "head_type": "Organization",
+      "relation": "airlifts",
+      "relation_type": "logistical action",
+      "tail": "small reactor",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Trump",
+      "head_type": "Person",
+      "relation": "says he'll raise",
+      "relation_type": "statement",
+      "tail": "tariffs to 15 percent",
+      "tail_type": "Policy"
+    },
+    {
+      "head": "US ambassador",
+      "head_type": "Person",
+      "relation": "claims",
+      "relation_type": "assertion",
+      "tail": "Israel has a right to much of the Middle East",
+      "tail_type": "Policy"
+    },
+    {
+      "head": "Ghislaine Maxwell",
+      "head_type": "Person",
+      "relation": "fights release of",
+      "relation_type": "legal action",
+      "tail": "more Epstein documents",
+      "tail_type": "Document"
+    },
+    {
+      "head": "Ghislaine Maxwell",
+      "head_type": "Person",
+      "relation": "calls disclosure law",
+      "relation_type": "legal stance",
+      "tail": "unconstitutional",
+      "tail_type": "Legal Status"
+    },
+    {
+      "head": "OpenAI",
+      "head_type": "Company",
+      "relation": "considered alerting",
+      "relation_type": "planned action",
+      "tail": "Canadian police",
+      "tail_type": "Organization"
+    },
+    {
+      "head": "Trump",
+      "head_type": "Company",
+      "relation": "impacts",
+      "relation_type": "policy",
+      "tail": "reembolsos",
+      "tail_type": "Event"
+    },
+    {
+      "head": "Trump",
+      "head_type": "Company",
+      "relation": "threatens",
+      "relation_type": "policy",
+      "tail": "limited attacks",
+      "tail_type": "Policy"
+    },
+    {
+      "head": "Iranian diplomat",
+      "head_type": "Entity",
+      "relation": "states",
+      "relation_type": "policy",
+      "tail": "agreement is imminent",
+      "tail_type": "Policy"
+    },
+    {
+      "head": "Nevada",
+      "head_type": "State",
+      "relation": "pays",
+      "relation_type": "financial compensation",
+      "tail": "100K",
+      "tail_type": "amount of money"
+    },
+    {
+      "head": "Nevada",
+      "head_type": "State",
+      "relation": "convicted for",
+      "relation_type": "criminal charge",
+      "tail": "miscarriage under 1911 law",
+      "tail_type": "legal policy"
+    },
+    {
+      "head": "JPMorgan",
+      "head_type": "Company",
+      "relation": "closed",
+      "relation_type": "action",
+      "tail": "Trump's accounts",
+      "tail_type": "Accounts"
+    },
+    {
+      "head": "Supreme Court",
+      "head_type": "Institution",
+      "relation": "struck down",
+      "relation_type": "legal action",
+      "tail": "Trump's tariffs",
+      "tail_type": "Tariff Policy"
+    },
+    {
+      "head": "ICE",
+      "head_type": "Organization",
+      "relation": "purchases",
+      "relation_type": "action",
+      "tail": "warehouses",
+      "tail_type": "Warehouses"
+    },
+    {
+      "head": "ICE",
+      "head_type": "Organization",
+      "relation": "purchases",
+      "relation_type": "action",
+      "tail": "big detention centers",
+      "tail_type": "Detention Centers"
+    },
+    {
+      "head": "ICE",
+      "head_type": "Organization",
+      "relation": "bale\u00f3",
+      "relation_type": "action",
+      "tail": "a man in Texas",
+      "tail_type": "Person"
+    },
+    {
+      "head": "Hungary",
+      "head_type": "Country",
+      "relation": "blocks",
+      "relation_type": "action",
+      "tail": "a key EU loan to Ukraine",
+      "tail_type": "Loan"
+    },
+    {
+      "head": "Hungary",
+      "head_type": "Country",
+      "relation": "waits for",
+      "relation_type": "condition",
+      "tail": "resumption of Russian oil shipments",
+      "tail_type": "Event"
+    },
+    {
+      "head": "US military",
+      "head_type": "Organization",
+      "relation": "airlifts",
+      "relation_type": "action",
+      "tail": "a small reactor",
+      "tail_type": "Reactor"
+    },
+    {
+      "head": "Trump",
+      "head_type": "Person",
+      "relation": "raises tariffs to",
+      "relation_type": "policy change",
+      "tail": "15 percent",
+      "tail_type": "Percentage"
+    },
+    {
+      "head": "Justice Department",
+      "head_type": "Organization",
+      "relation": "fired",
+      "relation_type": "action",
+      "tail": "a lawyer",
+      "tail_type": "Person"
+    },
+    {
+      "head": "US ambassador",
+      "head_type": "Person",
+      "relation": "claims",
+      "relation_type": "statement",
+      "tail": "Israel has a right to much of the Middle East",
+      "tail_type": "Policy"
+    },
+    {
+      "head": "Ghislaine Maxwell",
+      "head_type": "Person",
+      "relation": "fights",
+      "relation_type": "action",
+      "tail": "the release of more Epstein documents",
+      "tail_type": "Event"
+    },
+    {
+      "head": "Ghislaine Maxwell",
+      "head_type": "Person",
+      "relation": "calls",
+      "relation_type": "action",
+      "tail": "the disclosure of the law unconstitutional",
+      "tail_type": "Legal Claim"
+    },
+    {
+      "head": "OpenAI",
+      "head_type": "Company",
+      "relation": "considered",
+      "relation_type": "evaluation",
+      "tail": "alerting Canadian police about a school shooting suspect",
+      "tail_type": "Event"
+    },
+    {
+      "head": "AP-NORC polls",
+      "head_type": "Dataset",
+      "relation": "updated",
+      "relation_type": "action",
+      "tail": "the latest",
+      "tail_type": "Poll"
+    },
+    {
+      "head": "Anthropic",
+      "head_type": "Company",
+      "relation": "has_valuation",
+      "relation_type": "Valuation",
+      "tail": "$380B",
+      "tail_type": "Valuation"
+    },
+    {
+      "head": "Anthropic",
+      "head_type": "Company",
+      "relation": "competes_with",
+      "relation_type": "competition",
+      "tail": "OpenAI",
+      "tail_type": "Company"
+    }
+  ]
+},
+{
+  "head": "U.S. Department of Justice",
+  "head_type": "Regulatory Body",
+  "relation": "has_initiated_review_of",
+  "relation_type": "regulatory action",
+  "tail": "Paramount's tender offer",
+  "tail_type": "Deal"
+},
+{
+  "triple_list": [
+    {
+      "head": "US stocks",
+      "head_type": "Stock",
+      "relation": "wobble",
+      "relation_type": "reacts_to",
+      "tail": "a strong jobs report",
+      "tail_type": "Economic Indicator"
+    },
+    {
+      "head": "US stocks",
+      "head_type": "Stock",
+      "relation": "reacts_to",
+      "relation_type": "reacts_to",
+      "tail": "upside",
+      "tail_type": "Economic Indicator"
+    },
+    {
+      "head": "US stocks",
+      "head_type": "Stock",
+      "relation": "reacts_to",
+      "relation_type": "reacts_to",
+      "tail": "downside",
+      "tail_type": "Economic Indicator"
+    },
+    {
+      "head": "strong jobs report",
+      "head_type": "Economic Indicator",
+      "relation": "is_related_to",
+      "relation_type": "is_related_to",
+      "tail": "US stocks",
+      "tail_type": "Stock"
+    },
+    {
+      "head": "JPMorgan",
+      "head_type": "Company",
+      "relation": "announces",
+      "relation_type": "policy decision",
+      "tail": "closure of Trump's accounts",
+      "tail_type": "Event"
+    },
+    {
+      "head": "Supreme Court",
+      "head_type": "Federal Reserve",
+      "relation": "struck_down",
+      "relation_type": "policy decision",
+      "tail": "Trump's tariffs",
+      "tail_type": "Policy Decision"
+    },
+    {
+      "head": "Trump administration",
+      "head_type": "Policy Decision",
+      "relation": "announces",
+      "relation_type": "policy action",
+      "tail": "re-imposition of tariffs",
+      "tail_type": "Policy Action"
+    },
+    {
+      "head": "Trump administration",
+      "head_type": "Policy Decision",
+      "relation": "reacts_to",
+      "relation_type": "policy response",
+      "tail": "removal of tariffs",
+      "tail_type": "Policy Action"
+    },
+    {
+      "head": "removal of tariffs",
+      "head_type": "Policy Action",
+      "relation": "leads_to",
+      "relation_type": "causal consequence",
+      "tail": "refunds",
+      "tail_type": "Event"
+    },
+    {
+      "head": "refunds",
+      "head_type": "Event",
+      "relation": "occurs_after",
+      "relation_type": "timing",
+      "tail": "removal of tariffs",
+      "tail_type": "Policy Action"
+    },
+    {
+      "head": "Social media companies",
+      "head_type": "Company",
+      "relation": "face legal reckoning over",
+      "relation_type": "legal action",
+      "tail": "mental health harms to children",
+      "tail_type": "Health Impact"
+    },
+    {
+      "head": "JPMorgan",
+      "head_type": "Company",
+      "relation": "announces",
+      "relation_type": "policy decision",
+      "tail": "closed Trump's accounts",
+      "tail_type": "Event"
+    },
+    {
+      "head": "Supreme Court",
+      "head_type": "Federal Reserve",
+      "relation": "struck down",
+      "relation_type": "policy decision",
+      "tail": "Trump's tariffs",
+      "tail_type": "Policy Decision"
+    },
+    {
+      "head": "US stocks",
+      "head_type": "Stock",
+      "relation": "wobble",
+      "relation_type": "reacts_to",
+      "tail": "strong jobs report",
+      "tail_type": "Economic Indicator"
+    },
+    {
+      "head": "strong jobs report",
+      "head_type": "Economic Indicator",
+      "relation": "affects",
+      "relation_type": "affects",
+      "tail": "US stocks",
+      "tail_type": "Stock"
       "head": "Eswar Prasad",
       "head_type": "Economist",
       "relation": "calls",
@@ -4149,6 +4785,236 @@
 {
   "triple_list": [
     {
+      "head": "Trade wars",
+      "head_type": "GeopoliticalEvent",
+      "relation": "exacerbates",
+      "relation_type": "exacerbates",
+      "tail": "Financial panic",
+      "tail_type": "FinancialPanic"
+    },
+    {
+      "head": "Financial panic",
+      "head_type": "FinancialPanic",
+      "relation": "triggers",
+      "relation_type": "triggers",
+      "tail": "Inflation",
+      "tail_type": "Inflation"
+    },
+    {
+      "head": "Inflation",
+      "head_type": "Inflation",
+      "relation": "increases",
+      "relation_type": "increases",
+      "tail": "Global inequality",
+      "tail_type": "GlobalInequality"
+    },
+    {
+      "head": "Global inequality",
+      "head_type": "GlobalInequality",
+      "relation": "affects",
+      "relation_type": "affects",
+      "tail": "Economic order disruption",
+      "tail_type": "EconomicOrderDisruption"
+    },
+    {
+      "head": "Economic order disruption",
+      "head_type": "EconomicOrderDisruption",
+      "relation": "leads to",
+      "relation_type": "leads to",
+      "tail": "Doom loop",
+      "tail_type": "DoomLoop"
+    },
+    {
+      "head": "Doom loop",
+      "head_type": "DoomLoop",
+      "relation": "is associated with",
+      "relation_type": "is associated with",
+      "tail": "Eswar Prasad's book",
+      "tail_type": "Book"
+    },
+    {
+      "head": "Trade wars",
+      "head_type": "GeopoliticalEvent",
+      "relation": "occurs during",
+      "relation_type": "occurs during",
+      "tail": "Economic downturn",
+      "tail_type": "EconomicDownturn"
+    },
+    {
+      "head": "Inflation",
+      "head_type": "Inflation",
+      "relation": "affects",
+      "relation_type": "affects",
+      "tail": "Stock market",
+      "tail_type": "StockMarket"
+    },
+    {
+      "head": "Stock market",
+      "head_type": "StockMarket",
+      "relation": "decreases",
+      "relation_type": "decreases",
+      "tail": "Japan's Nikkei share average",
+      "tail_type": "StockIndex"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "Nvidia",
+      "head_type": "Company",
+      "relation": "invests_in",
+      "relation_type": "investment",
+      "tail": "OpenAI",
+      "tail_type": "Company"
+    },
+    {
+      "head": "OpenAI",
+      "head_type": "Company",
+      "relation": "has_target_funding_round_amount_of",
+      "relation_type": "financial metric",
+      "tail": "$100 billion",
+      "tail_type": "FundingAmount"
+    },
+    {
+      "head": "OpenAI",
+      "head_type": "Company",
+      "relation": "has_valuation_of",
+      "relation_type": "financial metric",
+      "tail": "$830 billion",
+      "tail_type": "Valuation"
+    },
+    {
+      "head": "OpenAI",
+      "head_type": "Company",
+      "relation": "expects_compute_spend_of",
+      "relation_type": "financial projection",
+      "tail": "$600 billion",
+      "tail_type": "ComputeSpend"
+    },
+    {
+      "head": "OpenAI",
+      "head_type": "Company",
+      "relation": "uses_chips_from",
+      "relation_type": "technology supply",
+      "tail": "Nvidia",
+      "tail_type": "Company"
+    },
+    {
+      "head": "Nvidia",
+      "head_type": "Company",
+      "relation": "participates_in",
+      "relation_type": "funding round",
+      "tail": "FundingRound",
+      "tail_type": "FundingRound"
+    },
+    {
+      "head": "SoftBank Group",
+      "head_type": "Company",
+      "relation": "participates_in",
+      "relation_type": "funding round",
+      "tail": "FundingRound",
+      "tail_type": "FundingRound"
+    },
+    {
+      "head": "Amazon",
+      "head_type": "Company",
+      "relation": "participates_in",
+      "relation_type": "funding round",
+      "tail": "FundingRound",
+      "tail_type": "FundingRound"
+    },
+    {
+      "head": "FundingRound",
+      "head_type": "FundingRound",
+      "relation": "has_target_amount_of",
+      "relation_type": "financial metric",
+      "tail": "$100 billion",
+      "tail_type": "FundingAmount"
+    },
+    {
+      "head": "FundingRound",
+      "head_type": "FundingRound",
+      "relation": "has_target_amount_of",
+      "relation_type": "financial metric",
+      "tail": "$100 billion",
+      "tail_type": "FundingAmount"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "Bitwise",
+      "head_type": "Asset Manager",
+      "relation": "files_filing_for",
+      "relation_type": "regulatory action",
+      "tail": "ETF",
+      "tail_type": "ETF"
+    },
+    {
+      "head": "Roundhill Investments",
+      "head_type": "Asset Manager",
+      "relation": "files_filing_for",
+      "relation_type": "regulatory action",
+      "tail": "ETF",
+      "tail_type": "ETF"
+    },
+    {
+      "head": "GraniteShares",
+      "head_type": "Asset Manager",
+      "relation": "files_filing_for",
+      "relation_type": "regulatory action",
+      "tail": "ETF",
+      "tail_type": "ETF"
+    },
+    {
+      "head": "prediction-market ETFs",
+      "head_type": "ETF",
+      "relation": "offers_access_to",
+      "relation_type": "product access",
+      "tail": "U.S. elections",
+      "tail_type": "U.S. Election"
+    },
+    {
+      "head": "prediction-market ETFs",
+      "head_type": "ETF",
+      "relation": "supports_betting_on",
+      "relation_type": "betting activity",
+      "tail": "U.S. elections",
+      "tail_type": "U.S. Election"
+    },
+    {
+      "head": "fintech platforms",
+      "head_type": "Retail Platform",
+      "relation": "supports_betting_on",
+      "relation_type": "betting activity",
+      "tail": "college basketball games",
+      "tail_type": "Betting Market"
+    },
+    {
+      "head": "fintech platforms",
+      "head_type": "Retail Platform",
+      "relation": "supports_betting_on",
+      "relation_type": "betting activity",
+      "tail": "Winter Olympics",
+      "tail_type": "Betting Market"
+    },
+    {
+      "head": "asset managers",
+      "head_type": "Asset Manager",
+      "relation": "operates_on",
+      "relation_type": "market activity",
+      "tail": "prediction markets",
+      "tail_type": "Betting Market"
+    },
+    {
+      "head": "Securities and Exchange Commission",
+      "head_type": "Regulatory Body",
+      "relation": "regulates",
+      "relation_type": "oversight",
+      "tail": "prediction-market ETFs",
+      "tail_type": "ETF"
       "head": "stock portfolio optimization",
       "head_type": "Model",
       "relation": "is_targeted_by",
