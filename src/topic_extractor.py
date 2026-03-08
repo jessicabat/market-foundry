@@ -19,6 +19,8 @@ base_url = os.path.expandvars(str(model_info.get("base_url")))
 api_key = os.path.expandvars(str(model_info.get("api_key")))
 if api_key == "":
     api_key = "EMPTY_API_KEY"
+if base_url == "":
+    base_url = "http://localhost:1234/v1"
 
 def load_model_hf():
     tokenizer = AutoTokenizer.from_pretrained(

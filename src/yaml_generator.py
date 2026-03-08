@@ -321,7 +321,7 @@ def generate_yaml_configs(document_name, document_type, topic_map):
     return safe_json_parse(response)
 
 
-def write_yaml_files(config_json, output_dir="generated_yamls", input_file_path=""):
+def write_yaml_files(config_json, document_name, output_dir="generated_yamls", input_file_path=""):
 
     os.makedirs(output_dir, exist_ok=True)
 
@@ -337,7 +337,7 @@ def write_yaml_files(config_json, output_dir="generated_yamls", input_file_path=
         yaml_obj["extraction"]["constraint"] = [entities, relations]
         yaml_obj["extraction"]["file_path"] = input_file_path
 
-        file_name = config.get("file_name", f"generated_{i}.yaml")
+        file_name = config.get("file_name", f"{document_name}_{i}.yaml")
 
         if file_name in seen_files:
             file_name = file_name.replace(".yaml", f"_{i}.yaml")

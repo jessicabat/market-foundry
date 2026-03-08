@@ -136,6 +136,7 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
                 
                 yaml_generator.write_yaml_files(
                     topic_configs,
+                    file_name,
                     output_dir=temp_dir,
                     input_file_path=file
                 )
@@ -187,6 +188,7 @@ def extract_topics_and_run_oneke_modal(texts, classifications, text_lookup):
                 
                 yaml_generator.write_yaml_files(
                     topic_configs,
+                    file_name,
                     output_dir=temp_dir,
                     input_file_path=file
                 )
