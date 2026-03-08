@@ -212,25 +212,25 @@
       <!-- Subsection: Classifier -->
       <h3 class="results-section-heading">Ensemble Classifier Performance</h3>
       <p style="font-size:1rem; line-height:1.8; color:var(--graphite); max-width:860px; margin: 0 auto 1.5rem; text-align:center;">
-        Our dual-model ensemble classifier was evaluated on a curated corpus of 85 labeled financial
+        Our dual-model ensemble classifier was evaluated on a curated corpus of 71 labeled financial
         documents spanning earnings call transcripts, SEC filings, research papers, press releases,
         and news articles, covering publications from 2008 to 2025, ranging from 2 to 290 pages.
-        The system achieved <strong>76.1% overall classification accuracy</strong>.
+        The system achieved <strong>78.9% overall classification accuracy</strong>.
       </p>
 
       <!-- Classifier Key Metrics -->
       <div class="metrics-grid" style="max-width:600px; margin: 0 auto 2rem;">
         <div class="metric-card">
-          <span class="metric-value">76.1%</span>
+          <span class="metric-value">78.9%</span>
           <span class="metric-label">Overall Classification Accuracy</span>
         </div>
         <div class="metric-card">
-          <span class="metric-value">0.767</span>
+          <span class="metric-value">0.802</span>
           <span class="metric-label">Macro F1 Score</span>
         </div>
       </div>
         <p style="font-size:0.90rem; line-height:1.75; color:var(--graphite); max-width:600px; margin: 0 auto 2rem; text-align:center;">
-        A Macro F1 of 0.767 reflects strong average performance across all five document classes weighted equally, meaning gains on high-frequency classes like SEC filings do not mask weaker recall on underrepresented ones like press releases.
+        A Macro F1 of 0.802 reflects strong average performance across all five document classes weighted equally, meaning gains on high-frequency classes like SEC filings do not mask weaker recall on underrepresented ones like press releases.
       </p>
 
 
@@ -247,16 +247,16 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Earnings Call</td><td>1.000</td><td>0.923</td><td>0.960</td><td>13</td></tr>
-            <tr><td>Research Paper</td><td>1.000</td><td>0.857</td><td>0.923</td><td>7</td></tr>
-            <tr><td>SEC Filing</td><td>0.792</td><td>1.000</td><td>0.884</td><td>19</td></tr>
-            <tr><td>News Article</td><td>0.500</td><td>1.000</td><td>0.667</td><td>12</td></tr>
-            <tr><td>Press Release</td><td>1.000</td><td>0.250</td><td>0.400</td><td>20</td></tr>
+            <tr><td>Earnings Call</td><td>0.923</td><td>0.923</td><td>0.923</td><td>13</td></tr>
+            <tr><td>Research Paper</td><td>0.875</td><td>1.000</td><td>0.933</td><td>7</td></tr>
+            <tr><td>SEC Filing</td><td>1.000</td><td>0.947</td><td>0.973</td><td>19</td></tr>
+            <tr><td>News Article</td><td>0.500</td><td>0.917</td><td>0.647</td><td>12</td></tr>
+            <tr><td>Press Release</td><td>0.800</td><td>0.400</td><td>0.533</td><td>20</td></tr>
           </tbody>
         </table>
       </div>
       <p class="results-note">
-        ⚠️ <strong>Press release recall (25%)</strong> is a known limitation: press releases are drafted
+        ⚠️ <strong>Press release recall (40%)</strong> is a known limitation: press releases are drafted
         to mimic journalistic style, causing their embeddings to overlap with news articles in vector space.
         Future versions will add keyword-based override rules (e.g., wire service datelines) to resolve this.
       </p>
@@ -264,15 +264,14 @@
       <!-- Why TF-IDF + KNN -->
       <h3 class="results-section-heading">Why a Dual-Model Approach</h3>
       <p style="font-size:0.95rem; line-height:1.8; color:var(--graphite); max-width:860px; margin: 0 auto 2rem; text-align:center;">
-        TF-IDF logistic regression excels at detecting document-type-specific vocabulary patterns, such as
-        the dense regulatory language of SEC filings or the Q&amp;A structure of earnings calls. However,
-        TF-IDF is sensitive to surface-level noise: financial documents sourced from scanned PDFs often
-        carry OCR artifacts, inconsistent spacing, and garbled special characters that distort term
-        frequency signals. The k-nearest neighbors model, built over sentence-level semantic embeddings,
-        is more robust to this noise because it encodes meaning rather than exact tokens. By running both
-        models in parallel and deferring to whichever produces a higher-confidence prediction, the ensemble
-        hedges against the failure modes of each individual model and produces a stronger combined signal
-        for downstream schema routing.
+        TF-IDF logistic regression excels at detecting document-type-specific vocabulary patterns, such as the dense regulatory language of 
+        SEC filings or the Q&A structure of earnings calls. However, it is sensitive to surface-level noise: scanned PDFs often carry OCR 
+        artifacts, inconsistent spacing, and garbled characters that distort term frequency signals. The k-nearest neighbors model, built 
+        over sentence-level semantic embeddings, is more robust to this noise because it encodes meaning rather than exact tokens. Rather 
+        than directly comparing raw probabilities and cosine similarity scores (which are not on the same scale), their outputs are passed 
+        into a trained stacker that produces the final multiclass prediction. If the document remains ambiguous between a press release and 
+        a news article, a specialized binary reranker refines only that boundary using a small set of hand-engineered signals. This two-stage 
+        design isolates the hardest class pair without disrupting the general classifier.
       </p>
 
             <!-- Subsection: Extraction Pipeline -->
