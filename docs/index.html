@@ -114,11 +114,62 @@
           </p>
         </div>
 
-          <div class="problem-visual" style="text-align:center; padding: 2rem; background: linear-gradient(135deg, #f0f7f7 0%, #e0f2f1 100%); border-radius:12px;">
-            <div class="visual-icon">📄 📄 📄</div>
-            <div class="visual-arrow">↓</div>
-            <div class="visual-icon">🕸️</div>
-            <p class="visual-caption">Unstructured Documents to Structured Knowledge Graph</p>
+          <style>
+          .problem-visual img {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+          }
+
+          .problem-visual img:hover {
+            transform: scale(1.08);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+          }
+          </style>
+
+            <p style="text-align:center; font-size:1.5rem; font-weight:700; margin-top:2rem; margin-bottom:1.5rem; color:var(--graphite); letter-spacing:-0.5px;">
+            Turn Unstructured Documents Into a Structured Knowledge Graph
+            </p>
+
+          <div class="problem-visual" style="
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:3rem;
+            padding:3rem;
+            background: linear-gradient(135deg, #f0f7f7 0%, #e0f2f1 100%);
+            border-radius:12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+          ">
+
+            <div class="doc-group" style="display:flex; gap:1.5rem;">
+              <a href="images/c1_8k.png" target="_blank">
+              <img src="images/c1_8k.png"
+              style="width:170px; aspect-ratio:8.5/11; object-fit:contain; box-shadow: 0 6px 18px rgba(0,0,0,0.12); border-radius: 8px;">
+              </a>
+
+              <a href="images/c1_earnings_call.png" target="_blank">
+              <img src="images/c1_earnings_call.png"
+              style="width:170px; aspect-ratio:8.5/11; object-fit:contain; box-shadow: 0 6px 18px rgba(0,0,0,0.12); border-radius: 8px;">
+              </a>
+
+              <a href="images/c1_press_release.png" target="_blank">
+              <img src="images/c1_press_release.png"
+              style="width:170px; aspect-ratio:8.5/11; object-fit:contain; box-shadow: 0 6px 18px rgba(0,0,0,0.12); border-radius: 8px;">
+              </a>
+            </div>
+
+            <div style="font-size:3rem; font-weight:600; color:#2f4f4f;">→</div>
+
+            <div>
+              <div style="background: #ffffff; padding: 1rem; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.08);">
+                <a href="images/demo_kg.png" target="_blank">
+                  <img src="images/demo_kg.png"
+                    alt="Structured knowledge graph"
+                    style="width:250px; display:block;">
+                </a>
+              </div>
+            </div>
+
           </div>
 
       </div>
@@ -425,22 +476,18 @@
         </div>
         <div class="next-step-row">
           <span class="next-step-num">2</span>
-          <span><strong>Cross-Document Entity Linking</strong>Introduce entity resolution to increase graph connectivity and enable multi-hop reasoning beyond the current average node degree of 1.64.</span>
-        </div>
-        <div class="next-step-row">
-          <span class="next-step-num">3</span>
           <span><strong>Two-Stage Extraction</strong>Adopt schema caching strategies to improve YAML generation stability on long regulatory filings and earnings call transcripts.</span>
         </div>
         <div class="next-step-row">
-          <span class="next-step-num">4</span>
+          <span class="next-step-num">3</span>
           <span><strong>Stronger Schema Enforcement</strong>Add a validation layer to prevent the Reflection Agent from renaming relation labels outside the defined schema, reducing hallucination-driven inconsistencies.</span>
         </div>
         <div class="next-step-row">
-          <span class="next-step-num">5</span>
+          <span class="next-step-num">4</span>
           <span><strong>Larger Model Evaluation</strong>Test extraction quality on larger hosted models to assess gains in coreference resolution, relation naming consistency, and coverage on complex documents.</span>
         </div>
         <div class="next-step-row">
-          <span class="next-step-num">6</span>
+          <span class="next-step-num">5</span>
           <span><strong>Expanded API Availability</strong>Scale hosted GPU capacity on Modal.com beyond the current Nvidia A10 tier to increase API throughput and reduce latency for end users.</span>
         </div>
       </div>
@@ -721,17 +768,25 @@ python src/build_graph.py --input-dir your_docs/<br>
 
       <div class="demo-videos-grid">
 
-        <div class="demo-video-card">
+        <div class="demo-video-card" style="border-top: 4px solid var(--teal);">
           <h3>Set Up Locally</h3>
-          <p>Clone the repo, configure your environment, and run the full pipeline on your own documents using Conda or Docker.</p>
-          <div class="loom-embed">
-            <!-- Replace YOUR_LOOM_ID with your actual Loom video ID -->
-            <!-- <iframe src="https://www.loom.com/embed/YOUR_LOOM_ID" allowfullscreen></iframe> -->
-            <div class="loom-placeholder">🎥 Local setup walkthrough coming soon</div>
+          <p>
+            Clone the repo, configure your environment, and run the full pipeline on your
+            own documents using Conda or Docker.
+          </p>
+
+          <div class="loom-embed" style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
+            <iframe
+              src="https://www.youtube.com/embed/VAp729cktj0"
+              title="Local setup walkthrough"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;">
+            </iframe>
           </div>
         </div>
 
-        <div class="demo-video-card">
+        <div class="demo-video-card" style="border-top: 4px solid var(--copper);">
           <h3>Use Our API</h3>
           <p>Send documents directly to the MarketFoundry API and receive structured knowledge graph triples in return, no local setup required.</p>
           <div class="loom-embed">
