@@ -117,7 +117,17 @@ def extract_topics_openai(document):
 
 def extract_topics(document):
     tokenizer, model = load_model_hf()
-    
+    try:
+        return _run_extraction(tokenizer, model, document)
+    finally:
+        del model
+        del tokenizer
+        import gc
+        gc.collect()
+        torch.cuda.empty_cache()
+        print("[topic_extractor] Model freed from GPU memory.")
+
+def _run_extraction(tokenizer, model, document):
     messages=[
             {
                 "role": "system",
