@@ -42,6 +42,47 @@ body {
   backdrop-filter: blur(10px);
 }
 
+/* dropdown container */
+.nav-dropdown {
+  position: relative;
+}
+
+/* hidden dropdown */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border-radius: 8px;
+  list-style: none;
+  padding: 0.4rem 0;
+  margin: 0;
+  min-width: 200px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  display: none;
+  z-index: 1000;
+}
+
+/* dropdown items */
+.dropdown-menu li a {
+  display: block;
+  padding: 0.5rem 0.9rem;
+  text-decoration: none;
+  color: var(--graphite);
+  font-size: 0.9rem;
+}
+
+/* hover effects */
+.dropdown-menu li a:hover {
+  background: #f5f7f7;
+  color: var(--teal);
+}
+
+/* show dropdown */
+.nav-dropdown:hover .dropdown-menu {
+  display: block;
+}
+
 .nav-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -262,7 +303,7 @@ body {
   line-height: 1.8;
   text-align: center;
   max-width: 900px;
-  margin: 0 auto 4rem;
+  margin: 0 auto 2rem;
   color: #2A2D34;
 }
 
@@ -1000,7 +1041,7 @@ footer {
   width: 100%;
   background: none;
   border: none;
-  border-left: 4px solid var(--copper);
+  border-left: 4px solid var(--midnight-blue);
   padding: 1.35rem 1.75rem;
   display: flex;
   justify-content: space-between;
@@ -1078,6 +1119,59 @@ footer {
   font-size: 0.92rem;
   color: var(--graphite);
   line-height: 1.6;
+}
+
+/* ===== API ACCESS ===== */
+.api-doc-link {
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: white;
+  background: var(--teal);
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.api-doc-link:hover {
+  opacity: 0.9;
+}
+
+.api-button-wrapper {
+  text-align: center;
+  margin-top: 0.2rem;
+  margin-bottom: 2.5rem;
+}
+
+.api-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 0.6rem;
+}
+
+.api-list li {
+  position: relative;
+  padding-left: 1.2rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.95rem;
+  color: var(--graphite);
+}
+
+.api-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+/* teal bullets */
+.api-list-teal li::before {
+  color: var(--teal);
+}
+
+/* copper bullets */
+.api-list-copper li::before {
+  color: var(--copper);
 }
 
 /* ===== DEMO VIDEOS ===== */

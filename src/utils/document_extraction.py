@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 import yaml
 import tempfile
 import subprocess
-import pandas as pd
 from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2txtLoader, BSHTMLLoader, JSONLoader
 import time
 from utils import *
@@ -106,9 +105,7 @@ def _purge_results_files():
                 print(f"[_purge_results_files] Could not delete {path}: {e}")
 
 def extract_topics_and_run_oneke(texts, classifications, text_lookup):
-    _purge_results_files()  # Always purge stale results before starting a new job
     total_files = len(texts)
-    all_triples = []
     successful_topic_extractions = 0
     index = 1
     for file, text in texts:
@@ -135,6 +132,61 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
                 
                 yaml_generator.write_yaml_files(
                     topic_configs,
+                    file_name,
+                    output_dir=temp_dir,
+                    input_file_path=file
+                )
+                
+                successful_topic_extractions += 1
+
+                for temp_file in os.listdir(temp_dir):
+                    run_oneke_from_text(
+                        file_path=os.path.join(temp_dir, temp_file),
+                        text=text_lookup[file],
+                        document_type=classifications[file],
+                        base_config_dir=temp_dir,
+                    )
+
+        except Exception as e:
+            print(f"Error writing YAML files for {file}")
+            print(f"Running OneKE using default config for {classifications[file]} due to YAML generation failure.\n")
+            run_oneke_from_text(file, text_lookup[file], classifications[file])
+        finally:
+            print(f"Completed processing {index} of {total_files} files.")
+            index += 1
+        print(f"Successfully extracted topics for {successful_topic_extractions}/{total_files} files.")
+        
+def extract_topics_and_run_oneke_modal(texts, classifications, text_lookup):
+    _purge_results_files()  # Always purge stale results before starting a new job
+    total_files = len(texts)
+    index = 1
+    all_triples = []
+    successful_topic_extractions = 0
+    for file, text in texts:
+        file_name = get_basename(file).split(".")[0]  # Get filename without extension for YAML naming
+        try:
+            with tempfile.TemporaryDirectory() as temp_dir:
+                
+                if reference_config.get("model", {}).get("category", "LocalServer") == "LocalServer":
+                    topics = topic_extractor.extract_topics_openai(text)
+                    
+                    topic_configs = yaml_generator.generate_yaml_configs_openai(
+                        file_name,
+                        classifications[file],
+                        topics
+                    )
+                else:
+                    topics = topic_extractor.extract_topics(text)
+                
+                    topic_configs = yaml_generator.generate_yaml_configs(
+                        file_name,
+                        classifications[file],
+                        topics
+                    )
+                
+                yaml_generator.write_yaml_files(
+                    topic_configs,
+                    file_name,
                     output_dir=temp_dir,
                     input_file_path=file
                 )
@@ -159,6 +211,7 @@ def extract_topics_and_run_oneke(texts, classifications, text_lookup):
         finally:
             print(f"Completed processing {index} of {total_files} files.")
             index += 1
+        print(f"Successfully extracted topics for {successful_topic_extractions}/{total_files} files.")
 
     return all_triples
 

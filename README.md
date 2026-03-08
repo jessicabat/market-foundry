@@ -383,7 +383,7 @@ In `src/utils/extraction_config.yaml`, you can specify any Hugging Face model fr
 model:
   category: LocalServer
   model_name_or_path: "qwen/qwen3-4b-2507" # The model identifier.
-  api_key: LM_Studio # Include a value even though LM Studio does not require an API key, to avoid errors in the code that expects this field.
+  api_key: ""
   base_url: http://127.0.0.1:1234 # The default port for LM Studio. 
 ```
 

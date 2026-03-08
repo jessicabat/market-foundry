@@ -21,6 +21,22 @@
         <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
         <li><a href="#results" class="nav-link">Results</a></li>
         <li><a href="#examples" class="nav-link">Examples</a></li>
+        <li class="nav-dropdown">
+          <a href="#" class="nav-link">API ▾</a>
+
+          <ul class="dropdown-menu">
+            <li>
+              <a href="#api">
+          API Usage on This Page
+              </a>
+            </li>
+            <li>
+              <a href="https://marija-vukic--market-foundry-api-fastapi-app.modal.run/docs#/" target="_blank">
+          API Documentation
+              </a>
+            </li>
+          </ul>
+        </li>
         <li><a href="#demo" class="nav-link">Demo</a></li>
         <li><a href="#about" class="nav-link">About Us</a></li>
         <li><a href="https://github.com/jessicabat/market-foundry" class="nav-link nav-github" target="_blank">GitHub</a></li>
@@ -40,7 +56,7 @@
       <p class="hero-tagline">From documents to intelligence — built your way.</p>
       <p class="hero-subtitle">
         An open-source, API-first knowledge extraction engine that 
-        converts any financial document format into queryable knowledge graphs.
+        converts any financial document format into queryable knowledge graphs. Run locally or through a hosted API.
       </p>
       <p class="hero-hook">
         Financial analysts dedicate hours reading reports to understand the causal relationships 
@@ -110,7 +126,7 @@
       <!-- Scope: full width, outside problem-content -->
       <h3 class="results-section-heading" style="margin-top:3rem;">System Scope</h3>
       <div class="scope-grid">
-        <div class="scope-card did">
+        <div class="scope-card did" style="border-top: 4px solid var(--teal);">
           <h4>What MarketFoundry Does</h4>
           <ul>
             <li>Document-type classification (5 types)</li>
@@ -120,7 +136,7 @@
             <li>Multi-format ingestion (PDF, DOCX, HTML, JSON)</li>
           </ul>
         </div>
-        <div class="scope-card didnt">
+        <div class="scope-card didnt" style="border-top: 4px solid var(--copper);">
           <h4>What MarketFoundry Doesn't Do</h4>
           <ul>
             <li>Query UI or chat interface</li>
@@ -263,10 +279,6 @@
       <h3 class="results-section-heading">Extraction Pipeline and Knowledge Graph</h3>
       <div class="metrics-grid">
         <div class="metric-card">
-          <span class="metric-value">TO-BE REMOVED</span>
-          <span class="metric-label">Total Extracted Triples</span>
-        </div>
-        <div class="metric-card">
           <span class="metric-value">964</span>
           <span class="metric-label">Unique Entities</span>
         </div>
@@ -318,7 +330,7 @@
       <!-- What We Built vs. Reused -->
       <h3 class="results-section-heading">What We Built vs. What We Used</h3>
       <div class="contributions-grid">
-        <div class="contribution-card built-card">
+        <div class="contribution-card built-card" style="border-top: 4px solid var(--teal);">
           <h4>Original Work (Built by Our Team)</h4>
           <ul>
             <li>Ensemble document classifier (TF-IDF logistic regression + KNN)</li>
@@ -328,7 +340,7 @@
             <li>Incremental result persistence and reproducibility tooling</li>
           </ul>
         </div>
-        <div class="contribution-card reused-card">
+        <div class="contribution-card reused-card" style="border-top: 4px solid var(--copper);">
           <h4>Third-Party Tools (Integrated and Extended)</h4>
           <ul>
             <li>OneKE, base schema-guided extraction framework (Luo et al., 2025)</li>
@@ -372,7 +384,7 @@
           <h4>Compute Constraints</h4>
           <i class="limitation-chevron">&#8964;</i>
           </button>
-            <div class="limitation-body">Topic extraction uses Qwen2.5-1.5B-Instruct and triple extraction uses Qwen3-4B, both selected to fit within consumer-grade GPU memory constraints. This limited our ability to benchmark larger alternatives. Upgrading to models such as Qwen2.5-72B, Llama 3.3-70B, or GPT-4o would likely improve coreference resolution, relation naming consistency, and extraction depth on complex long-form documents.</div>
+            <div class="limitation-body">In our tests topic extraction uses Qwen2.5-1.5B-Instruct and triple extraction uses Qwen3-4B, both selected to fit within our consumer-grade memory constraints. This limited our ability to benchmark larger alternatives. Upgrading to models such as Qwen2.5-72B, Llama 3.3-70B, or GPT-4o would likely improve coreference resolution, relation naming consistency, and extraction depth on complex long-form documents.</div>
         </div>
         <div class="limitation-row">
           <button class="limitation-trigger" aria-expanded="false">
@@ -473,14 +485,11 @@
       <div class="examples-grid">
 <div class="example-card">
   <div class="example-card-header">
-    <h3>🏦 Private Equity Acquisition Data Room</h3>
+    <h3>Private Equity Acquisition Data Room</h3>
   </div>
   <div class="example-card-content">
     <div class="example-visual">
-      <div class="visual-placeholder">
-        <p>Knowledge Graph Preview</p>
-        <p class="visual-caption">Cross-document graph built from a sample VDR containing contracts, financial statements, and disclosure filings, surfacing connections no single document reveals alone.</p>
-      </div>
+      <img src="images/private_equity_kg.png" alt="Private Equity Acquisition Data Room Knowledge Graph" class="example-graph" style="max-width: 100%; height: auto;">
     </div>
     <div class="example-card-body">
       <div class="example-triples">
@@ -615,6 +624,91 @@ python src/build_graph.py --input-dir your_docs/<br>
       </div>
     </div>
   </section> -->
+
+  <!-- API section -->
+    <section id="api" class="section">
+      <div class="container">
+      <h2 class="section-title">API Access</h2>
+
+      <p class="section-intro">
+        Developers can integrate the knowledge extraction pipeline directly through our Modal API. The endpoint accepts a document and automatically extracts knowledge graph triples and stores them in a Neo4j database. 
+        Click the link below to view the API documentation and get started:
+      </p>
+
+      <div class="api-button-wrapper">
+        <a class="api-doc-link"
+          href="https://marija-vukic--market-foundry-api-fastapi-app.modal.run/docs"
+          target="_blank">
+          View API Documentation
+        </a>
+      </div>
+
+      <div style="
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        background: #fff8e1;
+        border-left: 4px solid #f0b429;
+        border-radius: 0 8px 8px 0;
+        padding: 0.9rem 1.2rem;
+        margin-bottom: 2.5rem;
+        font-size: 0.9rem;
+        color: #7a5c00;
+        line-height: 1.6;
+        max-width: 860px;
+        margin-left: auto;
+        margin-right: auto;
+      ">
+        <span style="font-size: 1.2rem; flex-shrink: 0;">⚠️</span>
+        <span>
+          <strong>Note on document size:</strong> The API is optimized for documents up to ~50 pages. Very large documents (100+ pages) may exceed GPU memory limits and fail to process. If you need to process large documents, consider splitting them into sections before submitting, or deploy your own instance on Modal with a larger GPU (e.g. A100 80GB).
+        </span>
+      </div>
+
+      <h3 class="results-section-heading">Example Request</h3>
+
+      <div class="code-block">
+        <button class="copy-code-btn" type="button" aria-label="Copy API request" data-copy="curl -X POST \"https://marija-vukic--market-foundry-api-fastapi-app.modal.run/process\" \
+      -F \"file=@/path/to/your/document.pdf\" \
+      -F \"neo4j_uri=neo4j+s://xxxx.databases.neo4j.io\" \
+      -F \"neo4j_username=neo4j\" \
+      -F \"neo4j_password=yourpassword\"">Copy</button>
+        <code>
+    curl -X POST "https://marija-vukic--market-foundry-api-fastapi-app.modal.run/process" \<br>
+      -F "file=@/path/to/your/document.pdf" \<br>
+      -F "neo4j_uri=neo4j+s://xxxx.databases.neo4j.io" \<br>
+      -F "neo4j_username=neo4j" \<br>
+      -F "neo4j_password=yourpassword"
+        </code>
+      </div>
+
+      <h3 class="results-section-heading">API Parameters & Functionality</h3>
+      <div class="contributions-grid">
+        <div class="contribution-card api-list-teal" style="border-top: 4px solid var(--teal);">
+          <h4>Parameters</h4>
+          <ul class="api-list">
+            <li><strong>file</strong> – Document to process (PDF, DOCX, HTML, JSON)</li>
+            <li><strong>neo4j_uri</strong> – URI for the Neo4j database</li>
+            <li><strong>neo4j_username</strong> – Neo4j database username</li>
+            <li><strong>neo4j_password</strong> – Neo4j database password</li>
+          </ul>
+        </div>
+
+        <div class="contribution-card api-list-copper" style="border-top: 4px solid var(--copper);">
+          <h4>What the API Does</h4>
+          <ul class="api-list">
+            <li>Classifies the document type automatically</li>
+            <li>Extracts entities, relationships, and causal structures</li>
+            <li>Constructs a knowledge graph with triples</li>
+            <li>Stores the graph in your Neo4j database</li>
+          </ul>
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+
     <!-- Demo Section -->
   <section id="demo" class="section section-alt">
     <div class="container">

@@ -203,7 +203,7 @@ class MarketFoundryPipeline:
         # Import AFTER patching the config file so reference_config picks up Neo4j credentials
         import utils.document_extraction as _doc_ext
         importlib.reload(_doc_ext)
-        extract_topics_and_run_oneke = _doc_ext.extract_topics_and_run_oneke
+        extract_topics_and_run_oneke_modal = _doc_ext.extract_topics_and_run_oneke_modal
 
         # Write file bytes to temp path (loaders need a file path)
         suffix = os.path.splitext(filename)[1] or ".txt"
@@ -225,8 +225,8 @@ class MarketFoundryPipeline:
 
             sectioned_documents = section_documents(texts)
 
-            # extract_topics_and_run_oneke now returns accumulated triples from all YAML runs
-            all_triples = extract_topics_and_run_oneke(cleaned_texts, classifications, text_lookup) or []
+            # extract_topics_and_run_oneke_modal now returns accumulated triples from all YAML runs
+            all_triples = extract_topics_and_run_oneke_modal(cleaned_texts, classifications, text_lookup) or []
             print(f"Total triples collected across all YAML runs: {len(all_triples)}")
 
             # Filter out malformed entries — model sometimes outputs plain strings
