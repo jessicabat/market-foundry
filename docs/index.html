@@ -72,6 +72,89 @@
     </div>
   </section>
 
+  <section class="section pipeline-showcase">
+    <div class="container">
+      <div class="pipeline-showcase-header">
+        <p class="pipeline-kicker">Interactive Walkthrough</p>
+        <h2 class="section-title">From Source Document to Queryable Graph</h2>
+        <p class="section-intro">
+          Scroll through a sample financial document, then explore the extracted knowledge graph with
+          zoom controls and selectable nodes.
+        </p>
+      </div>
+
+      <div class="pipeline-showcase-grid">
+        <div class="showcase-card">
+          <div class="showcase-card-header">
+            <span class="showcase-label">Input Document</span>
+          </div>
+          <div class="document-viewer-shell">
+            <div class="document-toolbar">
+              <span class="document-dot"></span>
+              <span class="document-dot"></span>
+              <span class="document-dot"></span>
+              <span class="document-toolbar-title">ADBE Q3FY25 Earnings Script and Slides.pdf</span>
+            </div>
+            <div class="document-viewer" aria-label="Scrollable document preview">
+              <iframe
+                src="interactive/ADBE%20Q3FY25%20Earnings%20Script%20and%20Slides.pdf#view=FitH"
+                title="ADBE Q3FY25 Earnings Script and Slides PDF"
+                class="document-page document-pdf">
+              </iframe>
+              <div class="document-note">
+                <strong>What MarketFoundry reads:</strong> headers, sections, financial entities, causal language,
+                product references, and numerical claims grounded in the source text.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-connector" aria-hidden="true">
+          <div class="connector-copy">Market Foundry Pipeline</div>
+          <div class="connector-arrow">→</div>
+        </div>
+
+        <div class="showcase-card">
+          <div class="showcase-card-header">
+            <span class="showcase-label">Output Knowledge Graph</span>
+          </div>
+          <div class="kg-shell" data-kg-shell>
+            <div class="kg-toolbar">
+              <div class="kg-controls">
+                <button type="button" class="kg-control-btn" data-kg-zoom="out" aria-label="Zoom out">−</button>
+                <button type="button" class="kg-control-btn" data-kg-zoom="in" aria-label="Zoom in">+</button>
+                <button type="button" class="kg-control-btn" data-kg-reset aria-label="Reset graph view">Reset</button>
+              </div>
+              <div class="kg-toolbar-meta">
+                <div class="kg-graph-stats" data-kg-stats>27 nodes • 30 relations</div>
+                <div class="kg-toolbar-note">Click a node to inspect it</div>
+              </div>
+            </div>
+
+            <div class="kg-stage" data-kg-stage>
+              <div class="kg-viewport" data-kg-viewport>
+                <svg class="kg-edges" viewBox="0 0 1600 1000" aria-hidden="true" data-kg-edges></svg>
+                <div data-kg-nodes></div>
+              </div>
+            </div>
+
+            <div class="kg-detail-panel" data-kg-detail>
+              <p class="kg-detail-label">Selected Node</p>
+              <div class="kg-detail-header">
+                <h3 data-kg-detail-title>Adobe</h3>
+                <span data-kg-detail-type>Company</span>
+              </div>
+              <p data-kg-detail-body>
+                Central entity extracted from the earnings call. Other nodes represent products, metrics,
+                strategic themes, and financial outcomes linked back to the document.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Problem Section -->
   <section id="problem" class="section">
     <div class="container">
