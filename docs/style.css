@@ -15,14 +15,26 @@
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
   color: var(--midnight-blue);
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
   padding-top: 70px; /* Space for fixed navbar */
+}
+
+img {
+  max-width: 100%;
 }
 
 .container {
@@ -284,6 +296,7 @@ body {
 /* ===== SECTION STYLES ===== */
 .section {
   padding: 5rem 0;
+  overflow-x: clip;
 }
 
 .section-alt {
@@ -325,6 +338,90 @@ gap: 2rem;
   line-height: 1.8;
   margin-bottom: 1.5rem;
   color: #2A2D34;
+}
+
+.problem-visual-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--graphite);
+  letter-spacing: -0.5px;
+}
+
+.problem-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 3rem);
+  padding: clamp(1rem, 4vw, 3rem);
+  background: linear-gradient(135deg, #f0f7f7 0%, #e0f2f1 100%);
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.doc-group {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  width: min(100%, 580px);
+  min-width: 0;
+}
+
+.problem-doc-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.problem-doc-image {
+  width: 100%;
+  max-width: 170px;
+  aspect-ratio: 8.5 / 11;
+  object-fit: contain;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  border-radius: 8px;
+}
+
+.problem-arrow {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  color: #2f4f4f;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.problem-graph-panel {
+  background: #ffffff;
+  padding: clamp(0.75rem, 2vw, 1rem);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  width: min(100%, 282px);
+  flex-shrink: 1;
+}
+
+.problem-graph-link {
+  display: block;
+}
+
+.problem-graph-image {
+  width: 100%;
+  display: block;
+}
+
+.problem-visual img {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.problem-visual img:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.18);
 }
 
 .visual-placeholder {
@@ -551,19 +648,21 @@ color: #111827;
 margin: 0;
 }
 .example-card-content {
-display: flex;
-flex-direction: row;
+display: grid;
+grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
 align-items: center;
 padding: 1rem 2rem 2rem;
 gap: 2rem;
 }
 .example-visual {
-width: 240px;
+width: 100%;
+max-width: 260px;
 flex-shrink: 0;
 display: flex;
 align-items: center;
 justify-content: center;
 background: none;
+margin: 0 auto;
 }
 .example-card-body {
 flex: 1;
@@ -989,6 +1088,22 @@ footer {
   .problem-content {
     grid-template-columns: 1fr;
   }
+
+  .problem-visual {
+    gap: 1.5rem;
+  }
+
+  .doc-group {
+    width: min(100%, 480px);
+  }
+
+  .problem-doc-image {
+    max-width: 140px;
+  }
+
+  .problem-graph-panel {
+    width: min(100%, 240px);
+  }
 }
 
 @media (max-width: 768px) {
@@ -1045,6 +1160,10 @@ footer {
     font-size: 2rem;
   }
 
+  .container {
+    padding: 0 1rem;
+  }
+
   .flow-track {
     min-width: 1140px;
     gap: 1rem;
@@ -1067,12 +1186,48 @@ footer {
     text-align: center;
   }
 
-  .contributions-grid, .scope-grid { grid-template-columns: 1fr 1fr; }
+  .problem-visual-title {
+    font-size: 1.2rem;
+    margin-top: 1.5rem;
+  }
 
-  .example-card { flex-direction: column; }
-  .example-visual { width: 100%; height: 160px; }
+  .problem-visual {
+    flex-direction: column;
+    padding: 1.25rem;
+    align-items: stretch;
+  }
 
-  .demo-videos-grid, .use-cases-grid { grid-template-columns: 1fr; }
+  .doc-group {
+    width: 100%;
+  }
+
+  .problem-arrow {
+    transform: rotate(90deg);
+    align-self: center;
+  }
+
+  .problem-graph-panel {
+    width: min(100%, 320px);
+    align-self: center;
+  }
+
+  .contributions-grid, .scope-grid, .demo-videos-grid, .use-cases-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .example-card-header {
+    padding: 1.25rem 1rem 0.5rem;
+  }
+
+  .example-card-content {
+    grid-template-columns: 1fr;
+    padding: 0.75rem 1rem 1.5rem;
+    gap: 1rem;
+  }
+
+  .example-visual {
+    max-width: 300px;
+  }
 
 }
 

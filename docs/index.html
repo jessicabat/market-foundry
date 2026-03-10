@@ -114,60 +114,37 @@
           </p>
         </div>
 
-          <style>
-          .problem-visual img {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            cursor: pointer;
-          }
-
-          .problem-visual img:hover {
-            transform: scale(1.08);
-            box-shadow: 0 10px 24px rgba(0,0,0,0.18);
-          }
-          </style>
-
-            <p style="text-align:center; font-size:1.5rem; font-weight:700; margin-top:2rem; margin-bottom:1.5rem; color:var(--graphite); letter-spacing:-0.5px;">
+            <p class="problem-visual-title">
             Turn Unstructured Documents Into a Structured Knowledge Graph
             </p>
 
-          <div class="problem-visual" style="
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            gap:3rem;
-            padding:3rem;
-            background: linear-gradient(135deg, #f0f7f7 0%, #e0f2f1 100%);
-            border-radius:12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-          ">
+          <div class="problem-visual">
 
-            <div class="doc-group" style="display:flex; gap:1.5rem;">
-              <a href="images/c1_8k.png" target="_blank">
+            <div class="doc-group">
+              <a href="images/c1_8k.png" target="_blank" class="problem-doc-link">
               <img src="images/c1_8k.png"
-              style="width:170px; aspect-ratio:8.5/11; object-fit:contain; box-shadow: 0 6px 18px rgba(0,0,0,0.12); border-radius: 8px;">
+              class="problem-doc-image">
               </a>
 
-              <a href="images/c1_earnings_call.png" target="_blank">
+              <a href="images/c1_earnings_call.png" target="_blank" class="problem-doc-link">
               <img src="images/c1_earnings_call.png"
-              style="width:170px; aspect-ratio:8.5/11; object-fit:contain; box-shadow: 0 6px 18px rgba(0,0,0,0.12); border-radius: 8px;">
+              class="problem-doc-image">
               </a>
 
-              <a href="images/c1_press_release.png" target="_blank">
+              <a href="images/c1_press_release.png" target="_blank" class="problem-doc-link">
               <img src="images/c1_press_release.png"
-              style="width:170px; aspect-ratio:8.5/11; object-fit:contain; box-shadow: 0 6px 18px rgba(0,0,0,0.12); border-radius: 8px;">
+              class="problem-doc-image">
               </a>
             </div>
 
-            <div style="font-size:3rem; font-weight:600; color:#2f4f4f;">→</div>
+            <div class="problem-arrow" aria-hidden="true">→</div>
 
-            <div>
-              <div style="background: #ffffff; padding: 1rem; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.08);">
-                <a href="images/demo_kg.png" target="_blank">
+            <div class="problem-graph-panel">
+                <a href="images/demo_kg.png" target="_blank" class="problem-graph-link">
                   <img src="images/demo_kg.png"
                     alt="Structured knowledge graph"
-                    style="width:250px; display:block;">
+                    class="problem-graph-image">
                 </a>
-              </div>
             </div>
 
           </div>
@@ -468,8 +445,11 @@
         </div>
       </div>
 
-      <!-- Next Steps -->
-      <h3 class="results-section-heading">Next Steps</h3>
+  </section>
+
+  <section id="next-steps" class="section">
+    <div class="container">
+      <h2 class="section-title">Next Steps</h2>
       <div class="next-steps-list">
         <div class="next-step-row">
           <span class="next-step-num">1</span>
@@ -492,6 +472,7 @@
           <span><strong>Expanded API Availability</strong>Scale hosted GPU capacity on Modal.com beyond the current Nvidia A10 tier to increase API throughput and reduce latency for end users.</span>
         </div>
       </div>
+    </div>
   </section>
 
 
@@ -884,7 +865,7 @@ cd market-foundry
           <h4>Resources</h4>
           <ul>
             <li><a href="https://github.com/jessicabat/market-foundry">GitHub Repository</a></li>
-            <li><a href="report.pdf">Full Report (PDF)</a></li>
+            <li><a href="https://github.com/jessicabat/market-foundry/blob/main/report.pdf" target="_blank">Full Report (PDF)</a></li>
             <li><a href="#how-it-works">Documentation</a></li>
             <li><a href="#examples">Examples</a></li>
           </ul>
