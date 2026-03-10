@@ -192,9 +192,9 @@ body {
 .hero {
   background: linear-gradient(180deg, #62ddd7 0%, var(--teal) 42%, var(--graphite) 100%);
   color: white;
-  padding: 6rem 2rem 5rem;
+  padding: 4rem 2rem 3.5rem;
   text-align: center;
-  min-height: 90vh;
+  min-height: 72vh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -202,14 +202,14 @@ body {
 
 .hero-content {
   max-width: 900px;
-  margin-top: 0.5rem;
+  margin-top: 0;
 }
 
 .logo {
-  width: min(330px, 66vw);
+  width: min(280px, 58vw);
   max-width: 100%;
   height: auto;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.5rem;
 }
 
 .hero-title {
@@ -227,7 +227,7 @@ body {
 }
 
 .hero-subtitle {
-  font-size: 1.25rem;
+  font-size: 1.38rem;
   margin-bottom: 2rem;
   opacity: 0.9;
   font-weight: 400;
@@ -688,6 +688,89 @@ flex: 1;
   font-size: 1.5rem;
   margin-bottom: 1rem;
   color: #111827;
+}
+
+.showcase-panel {
+  margin-top: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.showcase-copy {
+  margin: 0;
+  padding: 1.25rem 1.5rem 0.75rem;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--graphite);
+  text-align: center;
+}
+
+.showcase-copy a {
+  color: var(--teal);
+  font-weight: 600;
+}
+
+.showcase-trigger {
+  width: 100%;
+  background: none;
+  border: none;
+  border-top: 1px solid #E6E8EB;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--midnight-blue);
+  cursor: pointer;
+  text-align: left;
+}
+
+.showcase-trigger:hover {
+  background: #f7f9fb;
+}
+
+.showcase-chevron {
+  font-size: 1.1rem;
+  color: var(--teal);
+  font-style: normal;
+  line-height: 1;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.showcase-panel.open .showcase-chevron {
+  transform: rotate(180deg);
+}
+
+.showcase-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+  padding: 0 1.5rem;
+}
+
+.showcase-panel.open .showcase-body {
+  max-height: 1400px;
+  padding: 0.5rem 1.5rem 1.5rem;
+}
+
+.showcase-poster-link {
+  display: block;
+  width: min(100%, 900px);
+  margin: 0 auto;
+}
+
+.showcase-poster {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid #E6E8EB;
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.12);
 }
 
 .code-block {

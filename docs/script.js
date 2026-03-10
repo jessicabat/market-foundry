@@ -83,3 +83,15 @@ document.querySelectorAll('.limitation-trigger').forEach(trigger => {
     trigger.setAttribute('aria-expanded', String(!isOpen));
   });
 });
+
+// Capstone showcase poster toggle
+const showcaseTrigger = document.querySelector('.showcase-trigger');
+
+if (showcaseTrigger) {
+  showcaseTrigger.addEventListener('click', () => {
+    const panel = showcaseTrigger.closest('.showcase-panel');
+    const isOpen = panel.classList.contains('open');
+    panel.classList.toggle('open', !isOpen);
+    showcaseTrigger.setAttribute('aria-expanded', String(!isOpen));
+  });
+}
