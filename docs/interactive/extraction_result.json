@@ -1,0 +1,254 @@
+[
+{
+  "triple_list": [
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "achieves",
+      "relation_type": "financial result",
+      "tail": "record revenue of $5.99 billion",
+      "tail_type": "Revenue"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "grows_by",
+      "relation_type": "financial result",
+      "tail": "10 percent year-over-year growth",
+      "tail_type": "Segment Growth"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "achieves",
+      "relation_type": "financial result",
+      "tail": "GAAP earnings per share of $4.18",
+      "tail_type": "Earnings"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "achieves",
+      "relation_type": "financial result",
+      "tail": "non-GAAP earnings per share of $5.31",
+      "tail_type": "Earnings"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "grows_by",
+      "relation_type": "financial result",
+      "tail": "14 percent year-over-year growth",
+      "tail_type": "Profitability"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "infuses",
+      "relation_type": "product activity",
+      "tail": "AI across flagship Creative Cloud applications",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "delivers",
+      "relation_type": "product activity",
+      "tail": "end-to-end, ideation-to-creation solution in Firefly application",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "offers",
+      "relation_type": "product activity",
+      "tail": "first-party, commercially safe models and leading third-party models",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "adds",
+      "relation_type": "product activity",
+      "tail": "Google Gemini Flash 2.5, Google's Veo, and Imagen models",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "infuses",
+      "relation_type": "product activity",
+      "tail": "AI into Adobe Experience Manager",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "delivers",
+      "relation_type": "product activity",
+      "tail": "LLM Optimizer release",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Adobe Experience Platform (AEP)",
+      "head_type": "Product",
+      "relation": "has",
+      "relation_type": "market feature",
+      "tail": "70 percent of eligible customers leveraging AI Assistant functionality",
+      "tail_type": "Market Position"
+    },
+    {
+      "head": "Workfront, Frame, AEM Assets, Firefly Services, GenStudio for Performance Marketing",
+      "head_type": "Product",
+      "relation": "exceeds",
+      "relation_type": "financial metric",
+      "tail": "$1 billion in ARR",
+      "tail_type": "Revenue"
+    },
+    {
+      "head": "Workfront, Frame, AEM Assets, Firefly Services, GenStudio for Performance Marketing",
+      "head_type": "Product",
+      "relation": "grows_by",
+      "relation_type": "financial metric",
+      "tail": "25 percent year-over-year",
+      "tail_type": "Segment Growth"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "Express Premium plans",
+      "head_type": "Subscription Tier",
+      "relation": "grows_year_over_year_by",
+      "relation_type": "subscription growth",
+      "tail": "over 80 percent",
+      "tail_type": "percentage"
+    }
+  ]
+},
+{
+  "triple_list": [
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "delivered",
+      "relation_type": "financial result",
+      "tail": "record revenue of $5.99 billion",
+      "tail_type": "Revenue"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "achieved",
+      "relation_type": "growth rate",
+      "tail": "10 percent year-over-year growth",
+      "tail_type": "Revenue Growth"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "reported",
+      "relation_type": "financial metric",
+      "tail": "GAAP earnings per share of $4.18",
+      "tail_type": "Earnings Per Share"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "reported",
+      "relation_type": "financial metric",
+      "tail": "non-GAAP earnings per share of $5.31",
+      "tail_type": "Earnings Per Share"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "reported",
+      "relation_type": "growth rate",
+      "tail": "14 percent year-over-year growth",
+      "tail_type": "Earnings Per Share Growth"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "infusing",
+      "relation_type": "technology integration",
+      "tail": "AI across flagship Creative Cloud applications",
+      "tail_type": "Application"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "delivering",
+      "relation_type": "product offering",
+      "tail": "new Firefly application",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "offering",
+      "relation_type": "product offering",
+      "tail": "standalone Firefly subscription",
+      "tail_type": "Subscription"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "added",
+      "relation_type": "model integration",
+      "tail": "Google Gemini Flash 2.5",
+      "tail_type": "AI Model"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "offering",
+      "relation_type": "product offering",
+      "tail": "Creative Cloud Pro",
+      "tail_type": "Product Offering"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "delivering",
+      "relation_type": "product offering",
+      "tail": "end-to-end ideation-to-creation solution",
+      "tail_type": "Solution"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "integrating",
+      "relation_type": "technology",
+      "tail": "AI into Adobe Experience Manager",
+      "tail_type": "Application"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "delivering",
+      "relation_type": "product offering",
+      "tail": "LLM Optimizer",
+      "tail_type": "Product"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "has",
+      "relation_type": "revenue",
+      "tail": "Workfront, Frame, AEM Assets, Firefly Services, and GenStudio for Performance Marketing products exceeding $1 billion in ARR",
+      "tail_type": "Revenue"
+    },
+    {
+      "head": "Adobe",
+      "head_type": "Company",
+      "relation": "has",
+      "relation_type": "adoption rate",
+      "tail": "70 percent of eligible AEP customers leveraging Adobe Experience Platform AI Assistant",
+      "tail_type": "Adoption Rate"
+    }
+  ]
+}
+]

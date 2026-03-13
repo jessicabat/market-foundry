@@ -72,6 +72,100 @@
     </div>
   </section>
 
+  <section class="section pipeline-showcase">
+    <div class="container">
+      <div class="pipeline-showcase-header">
+        <p class="pipeline-kicker">Interactive Walkthrough</p>
+        <h2 class="section-title">From Source Document to Queryable Graph</h2>
+        <p class="section-intro">
+          Scroll through a sample financial document, then explore the extracted knowledge graph with
+          zoom controls and selectable nodes.
+        </p>
+      </div>
+
+      <div class="pipeline-showcase-grid">
+        <div class="showcase-card">
+          <div class="showcase-card-header">
+            <span class="showcase-label">Input Document</span>
+          </div>
+          <div class="document-viewer-shell">
+            <div class="document-toolbar">
+              <span class="document-dot"></span>
+              <span class="document-dot"></span>
+              <span class="document-dot"></span>
+              <span class="document-toolbar-title">ADBE Q3FY25 Earnings Script and Slides.pdf</span>
+            </div>
+            <div class="document-viewer" aria-label="Scrollable document preview">
+              <iframe
+                src="interactive/ADBE%20Q3FY25%20Earnings%20Script%20and%20Slides.pdf#view=FitH"
+                title="ADBE Q3FY25 Earnings Script and Slides PDF"
+                class="document-page document-pdf">
+              </iframe>
+              <a class="document-pdf-fallback" href="interactive/ADBE%20Q3FY25%20Earnings%20Script%20and%20Slides.pdf" target="_blank" rel="noopener">Open PDF in new tab ↗</a>
+              <div class="document-note">
+                <strong>What MarketFoundry reads:</strong> headers, sections, financial entities, causal language,
+                product references, and numerical claims grounded in the source text.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-connector" aria-hidden="true">
+          <div class="connector-copy">MarketFoundry Pipeline</div>
+          <div class="connector-arrow">↓</div>
+        </div>
+
+        <div class="showcase-card">
+          <div class="showcase-card-header">
+            <span class="showcase-label">Output Knowledge Graph</span>
+          </div>
+          <div class="kg-shell" data-kg-shell>
+            <div class="kg-toolbar">
+              <div class="kg-controls">
+                <button type="button" class="kg-control-btn" data-kg-zoom="out" aria-label="Zoom out">−</button>
+                <button type="button" class="kg-control-btn" data-kg-zoom="in" aria-label="Zoom in">+</button>
+                <button type="button" class="kg-control-btn" data-kg-reset aria-label="Reset graph view">Reset</button>
+              </div>
+              <div class="kg-toolbar-meta">
+                <div class="kg-graph-stats" data-kg-stats>Loading…</div>
+                <div class="kg-toolbar-note">Click a node · hover an edge</div>
+              </div>
+            </div>
+
+            <div class="kg-legend" aria-label="Node type legend">
+              <div class="kg-legend-item"><span class="kg-legend-dot kg-legend-dot-core"></span>Company</div>
+              <div class="kg-legend-item"><span class="kg-legend-dot kg-legend-dot-metric"></span>Metric</div>
+              <div class="kg-legend-item"><span class="kg-legend-dot kg-legend-dot-product"></span>Product</div>
+              <div class="kg-legend-item"><span class="kg-legend-dot kg-legend-dot-theme"></span>Theme</div>
+            </div>
+
+            <div class="kg-stage" data-kg-stage>
+              <div class="kg-loading" data-kg-loading>
+                <div class="kg-loading-spinner"></div>
+                <span class="kg-loading-label">Building knowledge graph…</span>
+              </div>
+              <div class="kg-viewport" data-kg-viewport>
+                <svg class="kg-edges" viewBox="0 0 1600 1000" aria-hidden="true" data-kg-edges></svg>
+                <div data-kg-nodes></div>
+              </div>
+            </div>
+
+            <div class="kg-detail-panel" data-kg-detail>
+              <p class="kg-detail-label">Selected Node</p>
+              <div class="kg-detail-header">
+                <h3 data-kg-detail-title>Adobe</h3>
+                <span data-kg-detail-type>Company</span>
+              </div>
+              <div data-kg-detail-body>
+                <span class="kg-triple-empty">Central entity extracted from the earnings call. Other nodes represent products, metrics, strategic themes, and financial outcomes linked back to the document.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Problem Section -->
   <section id="problem" class="section">
     <div class="container">
@@ -114,12 +208,9 @@
           </p>
         </div>
 
-            <p class="problem-visual-title">
-            Turn Unstructured Documents Into a Structured Knowledge Graph
-            </p>
+            <p class="problem-visual-title">Turn Unstructured Documents Into a Structured Knowledge Graph</p>
 
           <div class="problem-visual">
-
             <div class="doc-group">
               <a href="images/c1_8k.png" target="_blank" class="problem-doc-link">
               <img src="images/c1_8k.png"
@@ -445,7 +536,7 @@
         </div>
       </div>
 
-  </section>
+      </section>
 
   <section id="next-steps" class="section">
     <div class="container">
@@ -517,7 +608,7 @@
   </div>
   <div class="example-card-content">
     <div class="example-visual">
-      <img src="images/private_equity_kg.png" alt="Private Equity Acquisition Data Room Knowledge Graph" class="example-graph" style="max-width: 100%; height: auto;">
+      <img src="images/private_equity_kg.webp" alt="Private Equity Acquisition Data Room Knowledge Graph" class="example-graph" style="max-width: 100%; height: auto;">
     </div>
     <div class="example-card-body">
       <div class="example-triples">
@@ -896,6 +987,7 @@ cd market-foundry
     </div>
   </footer>
 
+  <div class="kg-edge-tooltip" id="kg-edge-tooltip" role="tooltip" aria-hidden="true"></div>
   <script src="script.js"></script>
 </body>
 </html>
