@@ -505,6 +505,9 @@ if (kgShell) {
 
   edgesLayer?.addEventListener('mouseleave', () => edgeTooltip?.classList.remove('visible'));
 
+  // On mobile, mouseenter fires on tap but mouseleave never fires — dismiss on any touch
+  document.addEventListener('touchstart', () => edgeTooltip?.classList.remove('visible'), { passive: true });
+
   // ── Zoom controls ─────────────────────────────────────────────────────────
 
   zoomInBtn?.addEventListener('click', () =>
