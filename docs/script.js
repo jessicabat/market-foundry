@@ -479,6 +479,7 @@ if (kgShell) {
 
     loadingEl?.remove();
     fitGraphToStage(layout);
+    requestAnimationFrame(() => fitGraphToStage(layout));
   };
 
   // ── Edge tooltip ──────────────────────────────────────────────────────────
