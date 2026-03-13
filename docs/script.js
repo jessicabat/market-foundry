@@ -459,7 +459,7 @@ if (kgShell) {
       el.addEventListener('click', () => setActiveNode(el));
 
       // Show full name tooltip on hover (only when label is truncated)
-      if (node.name.length > 22 && edgeTooltip) {
+      if (node.name.length > 1 && edgeTooltip) {
         el.addEventListener('mouseenter', () => {
           edgeTooltip.textContent = node.name;
           edgeTooltip.classList.add('visible');

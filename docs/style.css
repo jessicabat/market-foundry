@@ -204,9 +204,9 @@ img {
 .hero {
   background: linear-gradient(180deg, #62ddd7 0%, var(--teal) 42%, var(--graphite) 100%);
   color: white;
-  padding: 4rem 2rem 3.5rem;
+  padding: 3rem 2rem 2rem;
   text-align: center;
-  min-height: 72vh;
+  min-height: 62vh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -321,6 +321,7 @@ img {
 }
 
 .pipeline-showcase {
+  padding-top: 2.25rem;
   background:
     radial-gradient(circle at 1px 1px, rgba(17, 24, 39, 0.08) 1px, transparent 0);
   background-size: 22px 22px;
@@ -471,7 +472,8 @@ img {
   justify-content: center;
   gap: 0.75rem;
   color: var(--midnight-blue);
-  padding: 0.75rem 0;
+  /* padding: 0.75rem 0; */
+  padding: 5rem 0;
 }
 
 .connector-copy {
@@ -488,7 +490,7 @@ img {
 }
 
 .connector-arrow {
-  font-size: 1.6rem;
+  font-size: 3rem;
   color: var(--teal);
   line-height: 1;
 }
@@ -558,6 +560,7 @@ img {
   border: 1px solid rgba(17, 24, 39, 0.08);
   background:
     radial-gradient(circle at top left, rgba(15, 185, 177, 0.12), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(15, 185, 177, 0.12), transparent 34%),
     linear-gradient(180deg, #ffffff 0%, #f7fafb 100%);
   cursor: grab;
   touch-action: none;
@@ -2266,24 +2269,28 @@ footer {
 }
 
 .kg-triple-scroll {
+  position: relative;
   max-height: 120px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(15, 185, 177, 0.35) transparent;
-  padding-right: 4px;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  scrollbar-width: auto;
+  scrollbar-color: rgba(15, 185, 177, 0.9) rgba(15, 185, 177, 0.2);
+  padding-right: 6px;
 }
 
 .kg-triple-scroll::-webkit-scrollbar {
-  width: 4px;
+  width: 10px;
 }
 
 .kg-triple-scroll::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(15, 185, 177, 0.2);
+  border-radius: 999px;
 }
 
 .kg-triple-scroll::-webkit-scrollbar-thumb {
-  background: rgba(15, 185, 177, 0.35);
-  border-radius: 4px;
+  background: rgba(15, 185, 177, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
 }
 
 .kg-triple-list {
