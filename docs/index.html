@@ -13,7 +13,7 @@
     <div class="nav-container">
       <a href="#overview" class="nav-logo">
         <img src="images/logo.png" alt="MarketFoundry logo" class="nav-logo-image">
-        <span class="nav-logo-text">Market Foundry</span>
+        <span class="nav-logo-text">MarketFoundry</span>
       </a>
       <ul class="nav-menu">
         <li><a href="#overview" class="nav-link">Overview</a></li>
@@ -59,7 +59,7 @@
         converts any financial document format into queryable knowledge graphs.
       </p>
       <p style="font-size:0.95rem; opacity:0.82; margin-bottom:2rem; margin-top:-1rem; line-height:1.7;">
-      Built for data engineers, quants, and fintech teams. Market Foundry bridges the gap between documents in VDRs,
+      Built for data engineers, quants, and fintech teams. MarketFoundry bridges the gap between documents in VDRs,
       regulatory filings, and internal reports, and the RAG systems, dashboards, and decision tools that need to 
       reason over them.
       </p>
@@ -75,7 +75,7 @@
   <section class="section pipeline-showcase">
     <div class="container">
       <div class="pipeline-showcase-header">
-        <p class="pipeline-kicker">Interactive Walkthrough</p>
+        <p class="pipeline-kicker">Watch a Document Become a Graph</p>
         <h2 class="section-title">From Source Document to Queryable Graph</h2>
         <p class="section-intro">
           Scroll through a sample financial document, then explore the extracted knowledge graph with
@@ -193,12 +193,12 @@
             internal reports holds the ground truth that numbers alone cannot explain.
             The next leap in Natural Language Processing (NLP) is grounding language models in structured, verifiable, domain-specific
             knowledge so they stop hallucinating and start reasoning.
-            Market Foundry is part of that infrastructure layer: turning the narrative behind financial
+            MarketFoundry is part of that infrastructure layer: turning the narrative behind financial
             decisions into something machines can actually work with.
           </p>
           <h3>Document-aware extraction, built for modern financial pipelines</h3>
           <p>
-            Market Foundry classifies each document, sections it intelligently, and routes it to specialized
+            MarketFoundry classifies each document, sections it intelligently, and routes it to specialized
             schemas that extract entities, relationships, and causal structures, where present. The result is
             a knowledge graph (a connected map of facts and relationships across your entire document set) that your existing tools can actually work with.
           </p>
@@ -282,13 +282,13 @@
         <div class="step">
           <div class="step-number">1</div>
           <h3>Document Ingestion</h3>
-          <p>Upload PDF, DOCX, HTML, JSON, or TXT files. Market Foundry handles any financial document format; earnings calls, SEC filings, press releases, research reports, and news articles.</p>
+          <p>Upload PDF, DOCX, HTML, JSON, or TXT files. MarketFoundry handles any financial document format; earnings calls, SEC filings, press releases, research reports, and news articles.</p>
         </div>
         
         <div class="step">
           <div class="step-number">2</div>
           <h3>Document Classification</h3>
-          <p>An dual-model classifier model automatically detects document type and routes it to the appropriate extraction schema. No manual configuration needed.</p>
+          <p>An ensemble classifier model automatically detects document type and routes it to the appropriate extraction schema. No manual configuration needed.</p>
         </div>
         
         <div class="step">
@@ -324,14 +324,14 @@
     <div class="container">
             <h2 class="section-title">Results</h2>
       <p class="section-intro">
-        Market Foundry was evaluated across two independent experiments: the dual-model ensemble classifier
+        MarketFoundry was evaluated across two independent experiments: the stacked ensemble classifier
         and the YAML dynamic schema generation pipeline. Each is reported separately below.
       </p>
 
       <!-- Subsection: Classifier -->
-      <h3 class="results-section-heading">Ensemble Classifier Performance</h3>
+      <h3 class="results-section-heading">Stacked Classifier Performance</h3>
       <p style="font-size:1rem; line-height:1.8; color:var(--graphite); max-width:860px; margin: 0 auto 1.5rem; text-align:center;">
-        Our dual-model ensemble classifier was evaluated on a curated corpus of 71 labeled financial
+        Our ensemble classifier was evaluated on a curated corpus of 71 labeled financial
         documents spanning earnings call transcripts, SEC filings, research papers, press releases,
         and news articles, covering publications from 2008 to 2025, ranging from 2 to 290 pages.
         The system achieved <strong>78.9% overall classification accuracy</strong>.
@@ -381,16 +381,16 @@
       </p>
 
       <!-- Why TF-IDF + KNN -->
-      <h3 class="results-section-heading">Why a Dual-Model Approach</h3>
+      <h3 class="results-section-heading">Why a Stacked Approach</h3>
       <p style="font-size:0.95rem; line-height:1.8; color:var(--graphite); max-width:860px; margin: 0 auto 2rem; text-align:center;">
         TF-IDF logistic regression excels at detecting document-type-specific vocabulary patterns, such as the dense regulatory language of 
         SEC filings or the Q&A structure of earnings calls. However, it is sensitive to surface-level noise: scanned PDFs often carry OCR 
-        artifacts, inconsistent spacing, and garbled characters that distort term frequency signals. The k-nearest neighbors model, built 
-        over sentence-level semantic embeddings, is more robust to this noise because it encodes meaning rather than exact tokens. Rather 
-        than directly comparing raw probabilities and cosine similarity scores (which are not on the same scale), their outputs are passed 
-        into a trained stacker that produces the final multiclass prediction. If the document remains ambiguous between a press release and 
-        a news article, a specialized binary reranker refines only that boundary using a small set of hand-engineered signals. This two-stage 
-        design isolates the hardest class pair without disrupting the general classifier.
+        artifacts, inconsistent spacing, and garbled characters that distort term frequency signals. The k-nearest neighbors model, which 
+        scores each document by its similarity to reference examples of each class, is more robust to this noise because it encodes meaning 
+        rather than exact tokens. Instead of directly comparing raw probabilities and cosine similarity scores (which are not on the same scale), 
+        their outputs are passed into a trained stacker that produces the final multiclass prediction. If the document remains ambiguous between a 
+        press release and a news article, a specialized binary reranker refines only that boundary using a small set of hand-engineered signals. 
+        This two-stage design isolates the hardest class pair without disrupting the general classifier.
       </p>
 
             <!-- Subsection: Extraction Pipeline -->
@@ -441,9 +441,72 @@
         </div>
         </div>
 
+      <!-- Subsection: LLM Benchmark -->
+      <h3 class="results-section-heading">Extraction Performance vs. Frontier Models</h3>
+      <p style="font-size:1rem; line-height:1.8; color:var(--graphite); max-width:860px; margin: 0 auto 1.5rem; text-align:center;">
+        We benchmarked MarketFoundry against three state-of-the-art models — <strong>Gemini 3 Flash</strong>, <strong>GPT 5.3</strong>, and <strong>Sonnet 4.6</strong> — using the same task: extract structured knowledge triples from a Capital One SEC Form 8-K. All models received the same system prompt designed for our pipeline.
+      </p>
 
-      <!-- TODO: Add YAML generation success rate breakdown by document type,
-           topic extraction examples, and comparison of dynamic vs. fallback schema outputs -->
+      <!-- Benchmark Key Metrics -->
+      <div class="metrics-grid" style="max-width:700px; margin: 0 auto 2rem;">
+        <div class="metric-card">
+          <span class="metric-value">5.2×</span>
+          <span class="metric-label">More Triples than Gemini 3 Flash</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">2.1×</span>
+          <span class="metric-label">More Triples than Sonnet 4.6</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">3×</span>
+          <span class="metric-label">More Unique Relation Types than Sonnet 4.6</span>
+        </div>
+      </div>
+
+      <!-- Benchmark Table -->
+      <div class="results-table-wrapper">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Model / Pipeline</th>
+              <th>Total Triples</th>
+              <th>Volume vs. Market Foundry</th>
+              <th>Unique Relation Types</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>MarketFoundry (Qwen3-4b)</strong></td><td><strong>68</strong></td><td><strong>100%</strong></td><td><strong>18</strong></td></tr>
+            <tr><td>Sonnet 4.6</td><td>32</td><td>47%</td><td>6</td></tr>
+            <tr><td>GPT 5.3</td><td>22</td><td>32%</td><td>11</td></tr>
+            <tr><td>Gemini 3 Flash</td><td>13</td><td>19%</td><td>8</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Key Findings -->
+      <div class="contributions-grid" style="margin-top:1.5rem;">
+        <div class="contribution-card" style="border-top: 4px solid var(--teal);">
+          <h4>High-Density Extraction</h4>
+          <p style="font-size:0.88rem; color:var(--graphite); line-height:1.6; margin-bottom:0;">
+            Frontier models tend to skim for a narrative summary. MarketFoundry's structured pipeline extracts the full data layer of the document, including sections like Forward-Looking Statements and Risk Factors that general-purpose models largely ignored, yielding over 20 additional triples from those sections alone.
+          </p>
+        </div>
+        <div class="contribution-card" style="border-top: 4px solid var(--copper);">
+          <h4>Structural Awareness</h4>
+          <p style="font-size:0.88rem; color:var(--graphite); line-height:1.6; margin-bottom:0;">
+            MarketFoundry was the only system to capture document-internal structure. For example, linking <em>Exhibit 2.1</em> as a named entity to the <em>Agreement and Plan of Merger</em>. No frontier model identified or mapped this relationship.
+          </p>
+        </div>
+        <div class="contribution-card" style="border-top: 4px solid var(--navy);">
+          <h4>Lightweight Architecture</h4>
+          <p style="font-size:0.88rem; color:var(--graphite); line-height:1.6; margin-bottom:0;">
+            These results were achieved with a 4B parameter model. Swapping in a larger backend would likely push extraction quality further, particularly for complex financial nuances and niche administrative identifiers.
+          </p>
+        </div>
+      </div>
+      <p class="results-note" style="margin-top:1.5rem;">
+        * Benchmark conducted on the Capital One SEC Form 8-K using identical system prompts across all models. Triple counts reflect valid structured outputs only.
+      </p>
 
       <!-- What We Built vs. Reused -->
       <h3 class="results-section-heading">What We Built vs. What We Used</h3>
@@ -451,7 +514,7 @@
         <div class="contribution-card built-card" style="border-top: 4px solid var(--teal);">
           <h4>Original Work (Built by Our Team)</h4>
           <ul>
-            <li>Ensemble document classifier (TF-IDF logistic regression + KNN)</li>
+            <li>Stacked ensemble document classifier (TF-IDF logistic regression + KNN)</li>
             <li>Document-type-aware pipeline routing logic</li>
             <li>Dynamic topic extraction and multi-perspective YAML schema generation</li>
             <li>Engineering robustness layer: JSON validation, fallback schemas, edge-case handling</li>
@@ -531,7 +594,7 @@
             <i class="limitation-chevron">&#8964;</i>
           </button>
           <div class="limitation-body">
-            Market Foundry is fully open-source and free to run locally. Hosted API access is limited by infrastructure costs: we run GPU inference on Modal.com using Nvidia A10 GPUs at $1.10 per hour. We would love to expand API availability and throughput as the project grows, but current usage is constrained by budget.
+            MarketFoundry is fully open-source and free to run locally. Hosted API access is limited by infrastructure costs: we run GPU inference on Modal.com using Nvidia A10 GPUs at $1.10 per hour. We would love to expand API availability and throughput as the project grows, but current usage is constrained by budget.
           </div>
         </div>
       </div>
@@ -835,7 +898,7 @@
           <ul>
             <li>Working with sensitive or confidential documents that cannot leave your environment</li>
             <li>Full control over model selection, schema configuration, and graph storage</li>
-            <li>Integrating Market Foundry into an existing internal pipeline</li>
+            <li>Integrating MarketFoundry into an existing internal pipeline</li>
             <li>GPU access available and want to avoid per-request API costs</li>
             <li>Researcher or developer extending the system for a new domain</li>
           </ul>
@@ -888,7 +951,7 @@ cd market-foundry
         </button>
         <div class="showcase-body">
           <a href="images/capstone_poster.png" target="_blank" class="showcase-poster-link">
-            <img src="images/capstone_poster.png" alt="Market Foundry capstone poster" class="showcase-poster">
+            <img src="images/capstone_poster.png" alt="MarketFoundry capstone poster" class="showcase-poster">
           </a>
         </div>
       </div>
