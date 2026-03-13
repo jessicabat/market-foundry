@@ -56,26 +56,112 @@
       <p class="hero-tagline">From documents to intelligence — built your way.</p>
       <p class="hero-subtitle">
         An open-source, API-first knowledge extraction engine that 
-        converts any financial document format into queryable knowledge graphs. Run locally or through a hosted API.
+        converts any financial document format into queryable knowledge graphs.
       </p>
-      <p class="hero-hook">
-        Financial analysts dedicate hours reading reports to understand the causal relationships 
-        driving revenue, risk, and growth. MarketFoundry treats unstructured text as a first-class 
-        data source, automatically building connected knowledge graphs that answer "Which filing disclosure changes the valuation story?" 
-        or "What drove the revenue shortfall across these 40 documents?" with evidence traced back to every source.
+      <p style="font-size:0.95rem; opacity:0.82; margin-bottom:2rem; margin-top:-1rem; line-height:1.7;">
+      Built for data engineers, quants, and fintech teams. Market Foundry bridges the gap between documents in VDRs,
+      regulatory filings, and internal reports, and the RAG systems, dashboards, and decision tools that need to 
+      reason over them.
       </p>
-        <p style="font-size:0.95rem; opacity:0.82; margin-bottom:2rem; margin-top:-1rem; line-height:1.7;">
-        Built for data engineers, quantitative analysts, and fintech teams who are transforming how 
-        traditional finance interacts with its own data. Market Foundry bridges the gap between 
-        the documents living in Virtual Data Rooms (VDRs), regulatory filings, and internal reports, 
-        and the RAG (Retrieval-Augmented Generation) systems, analytics dashboards, and decision tools 
-        that need to reason over them.
-        </p>
 
 
       <div class="cta-buttons">
         <a href="#demo" class="btn btn-primary">See the Demo</a>
         <a href="#how-it-works" class="btn btn-secondary">How it Works</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pipeline-showcase">
+    <div class="container">
+      <div class="pipeline-showcase-header">
+        <p class="pipeline-kicker">Interactive Walkthrough</p>
+        <h2 class="section-title">From Source Document to Queryable Graph</h2>
+        <p class="section-intro">
+          Scroll through a sample financial document, then explore the extracted knowledge graph with
+          zoom controls and selectable nodes.
+        </p>
+      </div>
+
+      <div class="pipeline-showcase-grid">
+        <div class="showcase-card">
+          <div class="showcase-card-header">
+            <span class="showcase-label">Input Document</span>
+          </div>
+          <div class="document-viewer-shell">
+            <div class="document-toolbar">
+              <span class="document-dot"></span>
+              <span class="document-dot"></span>
+              <span class="document-dot"></span>
+              <span class="document-toolbar-title">ADBE Q3FY25 Earnings Script and Slides.pdf</span>
+            </div>
+            <div class="document-viewer" aria-label="Scrollable document preview">
+              <iframe
+                src="interactive/ADBE%20Q3FY25%20Earnings%20Script%20and%20Slides.pdf#view=FitH"
+                title="ADBE Q3FY25 Earnings Script and Slides PDF"
+                class="document-page document-pdf">
+              </iframe>
+              <a class="document-pdf-fallback" href="interactive/ADBE%20Q3FY25%20Earnings%20Script%20and%20Slides.pdf" target="_blank" rel="noopener">Open PDF in new tab ↗</a>
+              <div class="document-note">
+                <strong>What MarketFoundry reads:</strong> headers, sections, financial entities, causal language,
+                product references, and numerical claims grounded in the source text.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-connector" aria-hidden="true">
+          <div class="connector-copy">MarketFoundry Pipeline</div>
+          <div class="connector-arrow">↓</div>
+        </div>
+
+        <div class="showcase-card">
+          <div class="showcase-card-header">
+            <span class="showcase-label">Output Knowledge Graph</span>
+          </div>
+          <div class="kg-shell" data-kg-shell>
+            <div class="kg-toolbar">
+              <div class="kg-controls">
+                <button type="button" class="kg-control-btn" data-kg-zoom="out" aria-label="Zoom out">−</button>
+                <button type="button" class="kg-control-btn" data-kg-zoom="in" aria-label="Zoom in">+</button>
+                <button type="button" class="kg-control-btn" data-kg-reset aria-label="Reset graph view">Reset</button>
+              </div>
+              <div class="kg-toolbar-meta">
+                <div class="kg-graph-stats" data-kg-stats>Loading…</div>
+                <div class="kg-toolbar-note">Click a node · hover an edge</div>
+              </div>
+            </div>
+
+            <div class="kg-legend" aria-label="Node type legend">
+              <div class="kg-legend-item"><span class="kg-legend-dot kg-legend-dot-core"></span>Company</div>
+              <div class="kg-legend-item"><span class="kg-legend-dot kg-legend-dot-metric"></span>Metric</div>
+              <div class="kg-legend-item"><span class="kg-legend-dot kg-legend-dot-product"></span>Product</div>
+              <div class="kg-legend-item"><span class="kg-legend-dot kg-legend-dot-theme"></span>Theme</div>
+            </div>
+
+            <div class="kg-stage" data-kg-stage>
+              <div class="kg-loading" data-kg-loading>
+                <div class="kg-loading-spinner"></div>
+                <span class="kg-loading-label">Building knowledge graph…</span>
+              </div>
+              <div class="kg-viewport" data-kg-viewport>
+                <svg class="kg-edges" viewBox="0 0 1600 1000" aria-hidden="true" data-kg-edges></svg>
+                <div data-kg-nodes></div>
+              </div>
+            </div>
+
+            <div class="kg-detail-panel" data-kg-detail>
+              <p class="kg-detail-label">Selected Node</p>
+              <div class="kg-detail-header">
+                <h3 data-kg-detail-title>Adobe</h3>
+                <span data-kg-detail-type>Company</span>
+              </div>
+              <div data-kg-detail-body>
+                <span class="kg-triple-empty">Central entity extracted from the earnings call. Other nodes represent products, metrics, strategic themes, and financial outcomes linked back to the document.</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -93,11 +179,19 @@
             reports to piece together what's driving revenue, risk, and growth. It's slow, it doesn't scale,
             and it keeps valuable context out of the tools that actually make decisions.
           </p>
+          <p>The obvious shortcut is to paste documents into a large language model (LLM) and ask it to extract 
+            the key facts. But LLMs are generative by nature: they interpolate, paraphrase, and sometimes 
+            confabulate details that sound plausible but cannot be traced back to the source. There is no 
+            guarantee that a relationship an LLM describes actually appears in the document, no structured 
+            output you can query, no audit trail, and no way to verify what was grounded in text versus 
+            inferred from pretraining. For financial workflows where a misattributed figure or fabricated 
+            causal link carries real consequences, that is not an acceptable tradeoff.
+          </p>
           <p>
             The firms building the next generation of financial intelligence know that unstructured text
             is the last great unlocked data layer. The context buried in earnings calls, filings, and
             internal reports holds the ground truth that numbers alone cannot explain.
-            The next leap in NLP is grounding language models in structured, verifiable, domain-specific
+            The next leap in Natural Language Processing (NLP) is grounding language models in structured, verifiable, domain-specific
             knowledge so they stop hallucinating and start reasoning.
             Market Foundry is part of that infrastructure layer: turning the narrative behind financial
             decisions into something machines can actually work with.
@@ -114,11 +208,36 @@
           </p>
         </div>
 
-          <div class="problem-visual" style="text-align:center; padding: 2rem; background: linear-gradient(135deg, #f0f7f7 0%, #e0f2f1 100%); border-radius:12px;">
-            <div class="visual-icon">📄 📄 📄</div>
-            <div class="visual-arrow">↓</div>
-            <div class="visual-icon">🕸️</div>
-            <p class="visual-caption">Unstructured Documents to Structured Knowledge Graph</p>
+            <p class="problem-visual-title">Turn Unstructured Documents Into a Structured Knowledge Graph</p>
+
+          <div class="problem-visual">
+            <div class="doc-group">
+              <a href="images/c1_8k.png" target="_blank" class="problem-doc-link">
+              <img src="images/c1_8k.png"
+              class="problem-doc-image">
+              </a>
+
+              <a href="images/c1_earnings_call.png" target="_blank" class="problem-doc-link">
+              <img src="images/c1_earnings_call.png"
+              class="problem-doc-image">
+              </a>
+
+              <a href="images/c1_press_release.png" target="_blank" class="problem-doc-link">
+              <img src="images/c1_press_release.png"
+              class="problem-doc-image">
+              </a>
+            </div>
+
+            <div class="problem-arrow" aria-hidden="true">→</div>
+
+            <div class="problem-graph-panel">
+                <a href="images/demo_kg.png" target="_blank" class="problem-graph-link">
+                  <img src="images/demo_kg.png"
+                    alt="Structured knowledge graph"
+                    class="problem-graph-image">
+                </a>
+            </div>
+
           </div>
 
       </div>
@@ -132,8 +251,8 @@
             <li>Document-type classification (5 types)</li>
             <li>Dynamic topic sectioning &amp; YAML schema generation</li>
             <li>Schema-guided triple extraction via OneKE (a triple is a structured fact: Subject, Predicate, Object; for example, <em>Interest Rate Hike</em> triggered <em>Market Volatility</em>)</li>
-            <li>Neo4j knowledge graph construction</li>
-            <li>Multi-format ingestion (PDF, DOCX, HTML, JSON)</li>
+            <li>Neo4j knowledge graph construction (a graph database where entities become nodes and relationships become queryable edges)</li>
+            <li>Multi-format ingestion (PDF, DOCX, HTML, JSON, TXT)</li>
           </ul>
         </div>
         <div class="scope-card didnt" style="border-top: 4px solid var(--copper);">
@@ -163,7 +282,7 @@
         <div class="step">
           <div class="step-number">1</div>
           <h3>Document Ingestion</h3>
-          <p>Upload PDF, DOCX, HTML, or JSON files. Market Foundry handles any financial document format; earnings calls, SEC filings, press releases, research reports, and news articles.</p>
+          <p>Upload PDF, DOCX, HTML, JSON, or TXT files. Market Foundry handles any financial document format; earnings calls, SEC filings, press releases, research reports, and news articles.</p>
         </div>
         
         <div class="step">
@@ -212,25 +331,25 @@
       <!-- Subsection: Classifier -->
       <h3 class="results-section-heading">Ensemble Classifier Performance</h3>
       <p style="font-size:1rem; line-height:1.8; color:var(--graphite); max-width:860px; margin: 0 auto 1.5rem; text-align:center;">
-        Our dual-model ensemble classifier was evaluated on a curated corpus of 85 labeled financial
+        Our dual-model ensemble classifier was evaluated on a curated corpus of 71 labeled financial
         documents spanning earnings call transcripts, SEC filings, research papers, press releases,
         and news articles, covering publications from 2008 to 2025, ranging from 2 to 290 pages.
-        The system achieved <strong>76.1% overall classification accuracy</strong>.
+        The system achieved <strong>78.9% overall classification accuracy</strong>.
       </p>
 
       <!-- Classifier Key Metrics -->
       <div class="metrics-grid" style="max-width:600px; margin: 0 auto 2rem;">
         <div class="metric-card">
-          <span class="metric-value">76.1%</span>
+          <span class="metric-value">78.9%</span>
           <span class="metric-label">Overall Classification Accuracy</span>
         </div>
         <div class="metric-card">
-          <span class="metric-value">0.767</span>
+          <span class="metric-value">0.802</span>
           <span class="metric-label">Macro F1 Score</span>
         </div>
       </div>
         <p style="font-size:0.90rem; line-height:1.75; color:var(--graphite); max-width:600px; margin: 0 auto 2rem; text-align:center;">
-        A Macro F1 of 0.767 reflects strong average performance across all five document classes weighted equally, meaning gains on high-frequency classes like SEC filings do not mask weaker recall on underrepresented ones like press releases.
+        A Macro F1 of 0.802 reflects strong average performance across all five document classes weighted equally, meaning gains on high-frequency classes like SEC filings do not mask weaker recall on underrepresented ones like press releases.
       </p>
 
 
@@ -247,16 +366,16 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Earnings Call</td><td>1.000</td><td>0.923</td><td>0.960</td><td>13</td></tr>
-            <tr><td>Research Paper</td><td>1.000</td><td>0.857</td><td>0.923</td><td>7</td></tr>
-            <tr><td>SEC Filing</td><td>0.792</td><td>1.000</td><td>0.884</td><td>19</td></tr>
-            <tr><td>News Article</td><td>0.500</td><td>1.000</td><td>0.667</td><td>12</td></tr>
-            <tr><td>Press Release</td><td>1.000</td><td>0.250</td><td>0.400</td><td>20</td></tr>
+            <tr><td>Earnings Call</td><td>0.923</td><td>0.923</td><td>0.923</td><td>13</td></tr>
+            <tr><td>Research Paper</td><td>0.875</td><td>1.000</td><td>0.933</td><td>7</td></tr>
+            <tr><td>SEC Filing</td><td>1.000</td><td>0.947</td><td>0.973</td><td>19</td></tr>
+            <tr><td>News Article</td><td>0.500</td><td>0.917</td><td>0.647</td><td>12</td></tr>
+            <tr><td>Press Release</td><td>0.800</td><td>0.400</td><td>0.533</td><td>20</td></tr>
           </tbody>
         </table>
       </div>
       <p class="results-note">
-        ⚠️ <strong>Press release recall (25%)</strong> is a known limitation: press releases are drafted
+        ⚠️ <strong>Press release recall (40%)</strong> is a known limitation: press releases are drafted
         to mimic journalistic style, causing their embeddings to overlap with news articles in vector space.
         Future versions will add keyword-based override rules (e.g., wire service datelines) to resolve this.
       </p>
@@ -264,15 +383,14 @@
       <!-- Why TF-IDF + KNN -->
       <h3 class="results-section-heading">Why a Dual-Model Approach</h3>
       <p style="font-size:0.95rem; line-height:1.8; color:var(--graphite); max-width:860px; margin: 0 auto 2rem; text-align:center;">
-        TF-IDF logistic regression excels at detecting document-type-specific vocabulary patterns, such as
-        the dense regulatory language of SEC filings or the Q&amp;A structure of earnings calls. However,
-        TF-IDF is sensitive to surface-level noise: financial documents sourced from scanned PDFs often
-        carry OCR artifacts, inconsistent spacing, and garbled special characters that distort term
-        frequency signals. The k-nearest neighbors model, built over sentence-level semantic embeddings,
-        is more robust to this noise because it encodes meaning rather than exact tokens. By running both
-        models in parallel and deferring to whichever produces a higher-confidence prediction, the ensemble
-        hedges against the failure modes of each individual model and produces a stronger combined signal
-        for downstream schema routing.
+        TF-IDF logistic regression excels at detecting document-type-specific vocabulary patterns, such as the dense regulatory language of 
+        SEC filings or the Q&A structure of earnings calls. However, it is sensitive to surface-level noise: scanned PDFs often carry OCR 
+        artifacts, inconsistent spacing, and garbled characters that distort term frequency signals. The k-nearest neighbors model, built 
+        over sentence-level semantic embeddings, is more robust to this noise because it encodes meaning rather than exact tokens. Rather 
+        than directly comparing raw probabilities and cosine similarity scores (which are not on the same scale), their outputs are passed 
+        into a trained stacker that produces the final multiclass prediction. If the document remains ambiguous between a press release and 
+        a news article, a specialized binary reranker refines only that boundary using a small set of hand-engineered signals. This two-stage 
+        design isolates the hardest class pair without disrupting the general classifier.
       </p>
 
             <!-- Subsection: Extraction Pipeline -->
@@ -365,13 +483,14 @@
             Open-schema design produced 423 distinct relationship types across 15 documents. Because schemas are generated dynamically per document, the same underlying relationship can appear under slightly different names across files: one document may produce <code>revenue_growth</code> while another produces <code>revenue_increase</code> or <code>revenue_acceleration</code> for an identical fact. These are treated as separate edge types in the graph, so nodes that should be connected are not, reducing cross-document comparability and limiting the graph's ability to aggregate patterns without a normalization layer.
           </div>
         </div>
+        <!-- </div>
           <div class="limitation-row">
           <button class="limitation-trigger" aria-expanded="false">
           <h4>Sparse Graph Connectivity</h4>
           <i class="limitation-chevron">&#8964;</i>
           </button>
           <div class="limitation-body">Average node degree of ~1.64 means most entities participate in only 1–2 relationships, limiting multi-hop reasoning without further graph enrichment.</div>
-        </div>
+        </div> -->
         <div class="limitation-row">
           <button class="limitation-trigger" aria-expanded="false">
           <h4>Long-Document Instability</h4>
@@ -417,8 +536,11 @@
         </div>
       </div>
 
-      <!-- Next Steps -->
-      <h3 class="results-section-heading">Next Steps</h3>
+      </section>
+
+  <section id="next-steps" class="section">
+    <div class="container">
+      <h2 class="section-title">Next Steps</h2>
       <div class="next-steps-list">
         <div class="next-step-row">
           <span class="next-step-num">1</span>
@@ -426,25 +548,22 @@
         </div>
         <div class="next-step-row">
           <span class="next-step-num">2</span>
-          <span><strong>Cross-Document Entity Linking</strong>Introduce entity resolution to increase graph connectivity and enable multi-hop reasoning beyond the current average node degree of 1.64.</span>
-        </div>
-        <div class="next-step-row">
-          <span class="next-step-num">3</span>
           <span><strong>Two-Stage Extraction</strong>Adopt schema caching strategies to improve YAML generation stability on long regulatory filings and earnings call transcripts.</span>
         </div>
         <div class="next-step-row">
-          <span class="next-step-num">4</span>
+          <span class="next-step-num">3</span>
           <span><strong>Stronger Schema Enforcement</strong>Add a validation layer to prevent the Reflection Agent from renaming relation labels outside the defined schema, reducing hallucination-driven inconsistencies.</span>
         </div>
         <div class="next-step-row">
-          <span class="next-step-num">5</span>
+          <span class="next-step-num">4</span>
           <span><strong>Larger Model Evaluation</strong>Test extraction quality on larger hosted models to assess gains in coreference resolution, relation naming consistency, and coverage on complex documents.</span>
         </div>
         <div class="next-step-row">
-          <span class="next-step-num">6</span>
+          <span class="next-step-num">5</span>
           <span><strong>Expanded API Availability</strong>Scale hosted GPU capacity on Modal.com beyond the current Nvidia A10 tier to increase API throughput and reduce latency for end users.</span>
         </div>
       </div>
+    </div>
   </section>
 
 
@@ -571,67 +690,13 @@
     </div>
   </section>
 
-  <!-- Demo Section -->
-  <!-- <section id="demo" class="section section-alt">
-    <div class="container">
-      <h2 class="section-title">Demo</h2>
-      <p class="section-intro">
-        See MarketFoundry in action: from document upload to knowledge graph query.
-      </p>
-      
-      <div class="demo-container">
-        <div class="video-placeholder">
-          <div class="visual-placeholder">
-            <p>🎥 Demo Video</p>
-            <p class="visual-caption">
-              We're finalizing a full walkthrough demo. 
-              Check back before March 13 or come find us at the 
-              <a href="https://www.eventbrite.com/e/hdsi-2026-senior-capstone-showcase-tickets-1977302085766?aff=oddtdtcreator" target="_blank">
-                HDSI Capstone Showcase</a> 
-               on March 13 at the Price Center East Ballroom, UC San Diego.
-            </p>
-          </div>
-          Uncomment when video is ready:
-          <video controls width="100%">
-            <source src="assets/demo-video.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-         
-        </div>
-
-        <div class="demo-quickstart">
-          <h3>Try It Yourself</h3>
-          <div class="code-block">
-            <button class="copy-code-btn" type="button" aria-label="Copy quickstart commands" data-copy="git clone https://github.com/jessicabat/market-foundry
-cd market-foundry">Copy</button>
-            <code>
-# Clone the repository<br>
-git clone https://github.com/jessicabat/market-foundry<br>
-cd market-foundry<br>
-<br>
-# Install dependencies<br>
-pip install -e .<br>
-<br>
-# Run on your documents<br>
-python src/run.py --file your_docs/<br>
-<br>
-# Build knowledge graph<br>
-python src/build_graph.py --input-dir your_docs/<br>
-            </code>
-          </div>
-          <a href="https://github.com/jessicabat/market-foundry/blob/main/README.md" class="btn btn-primary" target="_blank">View Full Quickstart Guide →</a>
-        </div>
-      </div>
-    </div>
-  </section> -->
-
   <!-- API section -->
     <section id="api" class="section">
       <div class="container">
       <h2 class="section-title">API Access</h2>
 
       <p class="section-intro">
-        Developers can integrate the knowledge extraction pipeline directly through our Modal API. The endpoint accepts a document and automatically extracts knowledge graph triples and stores them in a Neo4j database. 
+        Developers can integrate the knowledge extraction pipeline directly through our REST API. The endpoint accepts a document and automatically extracts knowledge graph triples and stores them in a Neo4j database. 
         Click the link below to view the API documentation and get started:
       </p>
 
@@ -722,23 +787,35 @@ python src/build_graph.py --input-dir your_docs/<br>
 
       <div class="demo-videos-grid">
 
-        <div class="demo-video-card">
+        <div class="demo-video-card" style="border-top: 4px solid var(--teal);">
           <h3>Set Up Locally</h3>
-          <p>Clone the repo, configure your environment, and run the full pipeline on your own documents using Conda or Docker.</p>
-          <div class="loom-embed">
-            <!-- Replace YOUR_LOOM_ID with your actual Loom video ID -->
-            <!-- <iframe src="https://www.loom.com/embed/YOUR_LOOM_ID" allowfullscreen></iframe> -->
-            <div class="loom-placeholder">🎥 Local setup walkthrough coming soon</div>
+          <p>
+            Clone the repo, configure your environment, and run the full pipeline on your
+            own documents using Conda or Docker.
+          </p>
+
+          <div class="loom-embed" style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
+            <iframe
+              src="https://www.youtube.com/embed/6-8iXWMQ-tM"
+              title="Local setup walkthrough"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;">
+            </iframe>
           </div>
         </div>
 
-        <div class="demo-video-card">
+        <div class="demo-video-card" style="border-top: 4px solid var(--copper);">
           <h3>Use Our API</h3>
           <p>Send documents directly to the MarketFoundry API and receive structured knowledge graph triples in return, no local setup required.</p>
-          <div class="loom-embed">
-            <!-- Replace YOUR_LOOM_ID with your actual Loom video ID -->
-            <!-- <iframe src="https://www.loom.com/embed/YOUR_LOOM_ID" allowfullscreen></iframe> -->
-            <div class="loom-placeholder">🎥 API walkthrough coming soon</div>
+          <div class="loom-embed" style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
+            <iframe
+              src="https://www.youtube.com/embed/SkUVR7nfMKg"
+              title="API walkthrough"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;">
+            </iframe>
           </div>
         </div>
 
@@ -799,11 +876,22 @@ cd market-foundry
         <a href="https://github.com/jessicabat/market-foundry/blob/main/README.md" class="btn btn-primary" target="_blank">View Full Quickstart Guide</a>
       </div>
 
-      <p style="text-align:center; margin-top:1.5rem; font-size:0.88rem; color:var(--graphite);">
-        Can't make it online? Come find us at the
-        <a href="https://www.eventbrite.com/e/hdsi-2026-senior-capstone-showcase-tickets-1977302085766?aff=oddtdtcreator" target="_blank" style="color:var(--teal); font-weight:600;">HDSI Capstone Showcase</a>
-        on March 13 at the Price Center East Ballroom, UC San Diego.
-      </p>
+      <div class="showcase-panel">
+        <p class="showcase-copy">
+          We welcome you to come see us present at Session One of our
+          <a href="https://www.eventbrite.com/e/hdsi-2026-senior-capstone-showcase-tickets-1977302085766?aff=oddtdtcreator" target="_blank">HDSI Capstone Showcase</a>
+          on March 13 at the Price Center East Ballroom, UC San Diego.
+        </p>
+        <button class="showcase-trigger" type="button" aria-expanded="false">
+          <span>View Capstone Poster</span>
+          <i class="showcase-chevron">&#8964;</i>
+        </button>
+        <div class="showcase-body">
+          <a href="images/capstone_poster.png" target="_blank" class="showcase-poster-link">
+            <img src="images/capstone_poster.png" alt="Market Foundry capstone poster" class="showcase-poster">
+          </a>
+        </div>
+      </div>
 
     </div>
   </section>
@@ -868,7 +956,7 @@ cd market-foundry
           <h4>Resources</h4>
           <ul>
             <li><a href="https://github.com/jessicabat/market-foundry">GitHub Repository</a></li>
-            <li><a href="report.pdf">Full Report (PDF)</a></li>
+            <li><a href="https://github.com/jessicabat/market-foundry/blob/main/report.pdf" target="_blank">Full Report (PDF)</a></li>
             <li><a href="#how-it-works">Documentation</a></li>
             <li><a href="#examples">Examples</a></li>
           </ul>
@@ -899,6 +987,7 @@ cd market-foundry
     </div>
   </footer>
 
+  <div class="kg-edge-tooltip" id="kg-edge-tooltip" role="tooltip" aria-hidden="true"></div>
   <script src="script.js"></script>
 </body>
 </html>
